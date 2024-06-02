@@ -1,0 +1,42 @@
+title: Bootcamp
+description: A simple scenario to debug
+
+
+
+players: [blue, red]
+first_player_turn: blue
+
+max_turns: 10
+
+
+map:
+  min_q:
+  max_q:
+  min_r:
+  max_r:
+
+  special_hexes:
+    cities: a1, a3
+    defensible: b1, b4
+    forest:
+    elevation:
+    road:
+    water:
+    impassable:
+    victory:
+    victory_major:
+
+
+
+units:
+  blue:
+    - {type: armored, hex: qr, id: 1}
+  red:
+    - {type: infantry, hex: qr, id: 1}
+
+
+reinforcements:
+  blue:
+  - {type: armored, hex: qr, id: 1, arrives_on_turn: 6}
+  red:
+  - {type: armored, hex: qr, id: 1, arrives_on_turn: 6}

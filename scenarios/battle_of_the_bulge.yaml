@@ -1,0 +1,40 @@
+title: Battle of the Bulge
+description:
+
+
+
+players: [germany, allies]
+first_player_turn: germany
+
+max_turns: 20
+
+
+map:
+  min_q:
+  max_q:
+  min_r:
+  max_r:
+
+  special_hexes:
+    cities: a1, a3
+    defensible: b1, b4
+    forest:
+    elevation:
+    road:
+    water:
+    impassable:
+    victory:
+    victory_major:
+
+
+
+units:
+  germany:
+    - {type: armored, hex: qr, id: 1}
+  allies:
+    - {type: infantry, hex: qr, id: 1}
+
+
+reinforcements:
+  allies:
+  - {type: armored, hex: qr, id: 1, arrives_on_turn: 6}
