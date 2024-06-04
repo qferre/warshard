@@ -41,7 +41,13 @@ class Displayer:
             # Draw hexagon grid
             draw_hex_grid(screen, WIDTH, HEIGHT, HEX_COLOR, HEX_SIZE, font, TEXT_COLOR)
 
-            pygame.display.flip()
+            # Draw pawns
+            # for pawn in blabla:
+            #     pawn_coordinates = (pawn_x_pixel, pawn_y_pixel)
+            #     screen.blit(pawn1_image, pawn_coordinates)
+
+
+            pygame.display.flip() # Update display
             clock.tick(FPS)
 
 

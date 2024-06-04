@@ -10,7 +10,7 @@ import logging
 
 class Game:
 
-    global self
+    global self # I think it's necessary so the gamestate can be passed to the display thread
 
     def __init__(
         self,
