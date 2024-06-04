@@ -2,8 +2,7 @@ title: Battle of the Bulge
 description:
 
 
-
-players: [germany, allies]
+players: [germany, usa]
 first_player_turn: germany
 
 max_turns: 20
@@ -15,8 +14,12 @@ map:
   min_r:
   max_r:
 
+  biome: winter
+
   special_hexes:
-    cities: a1, a3
+    cities:
+      - {hex: a1, name: "Bastogne"}
+      - {hex: a1, name: "Malmédy"}
     defensible: b1, b4
     forest:
     elevation:
@@ -31,10 +34,10 @@ map:
 units:
   germany:
     - {type: armored, hex: qr, id: 1}
-  allies:
+  usa:
     - {type: infantry, hex: qr, id: 1}
 
 
 reinforcements:
-  allies:
+  usa:
   - {type: armored, hex: qr, id: 1, arrives_on_turn: 6}
