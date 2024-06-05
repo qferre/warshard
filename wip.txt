@@ -17,11 +17,11 @@ while turn_counter < max_turns:
 
 def execute_turn(self, pending_orders, player):
 
-	REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE
-		
+	REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
+
 		# First upkeep phase
 		Refresh mobility for all units OF THE PLAYER
-		
+
 	# Movement phase
 	Iterate over each unit (or ask to type a list of the IDs of units you want to move) : for each, check in pending orders and if none present request movement order to a nearby hex from user (which can be “stay”) until MP are exhausted
 	Any stacked units are destroyed starting with the last arrived ones
@@ -37,9 +37,9 @@ def execute_turn(self, pending_orders, player):
 
 	# Upkeep phase
 	Iterate over each fight won and let attacker pick one unit to move there ; in headless mode the unit with strongest defensive power will be moved there and ties are broken at random
-	
+
 	Then destroy all Fights and set mobility of all units to 0
-	
+
 
 
 
@@ -115,7 +115,7 @@ class Hexagon:
     	self.q = q
     	self.r = r
     	self.defender_bonus
-	self.mobility_cost_multiplier
+		self.mobility_cost_multiplier
 
 	def self.is_accessible_to_player_side(side):
 		check if the hex or its neighbors contains any unit NOT belonging to the specified side
@@ -133,6 +133,7 @@ class HexGrid:
     		directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
     		return [(q + dq, r + dr) for dq, dr in directions if (q + dq, r + dr) in self.hexagons]
 		todo : change this code to cap to min and max q and r to avoid going offmap
+		WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
 
 	# Below : used to trace a route to HQ

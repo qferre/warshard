@@ -2,6 +2,7 @@
 pawn_background
 
 A pawn will be : a background tinted by player color + a name/ID on side + a symbol + stat values below
+At first, it can just be the nato symbol (with the ID number below the symbol) and without stat values
 
 ## Symbols
 infantry

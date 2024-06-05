@@ -7,13 +7,13 @@ import math
 class Displayer:
 
     @staticmethod
-    def draw(map: Map):
+    def draw(map_to_draw: Map):
 
         # Constants
-        WIDTH, HEIGHT = 800, 600
-        FPS = 30
-        HEX_SIZE = 40
-        FONT_SIZE = 12
+        WIDTH, HEIGHT = 1920, 1080  # 1024, 768
+        FPS = 5
+        HEX_SIZE = 40  # 30
+        FONT_SIZE = 14
         BACKGROUND_COLOR = (255, 255, 255)
         HEX_COLOR = (0, 0, 0)
         TEXT_COLOR = (255, 0, 0)
@@ -39,35 +39,78 @@ class Displayer:
             screen.fill(BACKGROUND_COLOR)
 
             # Draw hexagon grid
-            draw_hex_grid(screen, WIDTH, HEIGHT, HEX_COLOR, HEX_SIZE, font, TEXT_COLOR)
+            draw_hex_grid(
+                screen,
+                WIDTH,
+                HEIGHT,
+                HEX_COLOR,
+                HEX_SIZE,
+                font,
+                TEXT_COLOR,
+                map_to_draw,
+            )
 
             # Draw pawns
             # for pawn in blabla:
             #     pawn_coordinates = (pawn_x_pixel, pawn_y_pixel)
             #     screen.blit(pawn1_image, pawn_coordinates)
 
+            # Draw information
+            info_text = f"""
 
-            pygame.display.flip() # Update display
+            Current turn number
+            current phase and player au trait
+            
+            Victory points per side
+            Remaining power per side
+            
+            other explanations like 'please input orders in terminal'
+
+
+            """
+
+            draw_text(
+                screen,
+                text=info_text,
+                position=(WIDTH - 200, 50),
+                font=font,
+            )
+
+            pygame.display.flip()  # Update display
             clock.tick(FPS)
 
 
 # Set up display
 
 
-def draw_hex_grid(screen, WIDTH, HEIGHT, HEX_COLOR, HEX_SIZE, font, TEXT_COLOR):
+def draw_hex_grid(
+    screen,
+    WIDTH,
+    HEIGHT,
+    HEX_COLOR,
+    HEX_SIZE,
+    font,
+    TEXT_COLOR,
+    map_to_draw: Map,
+):
     # Draw hexagon grid
-    for q in range(-2, 3):
-        for r in range(-2, 3):
-            center = axial_to_pixel(q, r, HEX_SIZE)
-            center = (center[0] + WIDTH // 2, center[1] + HEIGHT // 2)
-            corners = draw_hexagon(screen, HEX_COLOR, center, HEX_SIZE)
+    for hexagon in map_to_draw.hexgrid.hexagons.values():
+        # center = axial_to_pixel(hexagon.q, hexagon.r, HEX_SIZE)
 
-            # Display coordinates at the top part of the hexagon
-            text_position = (
-                (corners[0][0] + corners[1][0]) / 2,
-                (corners[0][1] + corners[1][1]) / 2,
-            )
-            draw_text(screen, f"({q},{r})", text_position, font, TEXT_COLOR)
+        # Use xy coordinates instead of qr for drawing
+        q = hexagon.x
+        r = hexagon.y
+
+        center = axial_to_pixel(q, r, HEX_SIZE)
+        center = (center[0] + HEX_SIZE, center[1] + HEX_SIZE)
+        corners = draw_hexagon(screen, HEX_COLOR, center, HEX_SIZE)
+
+        # Display coordinates at the top part of the hexagon
+        text_position = (
+            (corners[-1][0] + corners[-2][0]) / 2,
+            (corners[-1][1] + corners[-2][1]) / 2 + HEX_SIZE // 5,
+        )
+        draw_text(screen, f"({hexagon.q},{hexagon.r})", text_position, font, TEXT_COLOR)
 
 
 def hex_corner(center, size, i):
@@ -85,7 +128,7 @@ def draw_hexagon(surface, color, center, size):
     return corners
 
 
-def draw_text(surface, text, position, font, color):
+def draw_text(surface, text, position, font, color=(0, 0, 0)):
     text_surface = font.render(text, True, color)
     text_rect = text_surface.get_rect(center=position)
     surface.blit(text_surface, text_rect)
