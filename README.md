@@ -20,15 +20,7 @@ Ask jeanne to help with a quick test of the rules, then start coding it
 
 
 
-
-https://docs.google.com/document/d/1vrVUjxVx164AQoE-YJq3daaHPI8ujWcjZmiVq5VPp7o/edit
-
-
 Rules are in ![hello](./doc/rules.md)
-
-
-
-
 
 
 
