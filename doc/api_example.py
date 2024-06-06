@@ -9,6 +9,10 @@ g = Game()
 
 
 
+
+
+
+
 # ## API is like this :
 # game = warshard.game.create_game(
 #     yaml_file,
@@ -29,3 +33,4 @@ g = Game()
 ##### Furthermore, we also need to expose functinos to give individual orders (ie. start a fight here, etc.) so the simulation can be run with granulatiry in
 ##### a notebook, as if we were playing, and not just entire phase by entire phase. Although for me this is not as critical since all events of an entire phase
 ##### are supposed to execute simultaneously and without input of the opponent (--> in the rules you make all your attacker declarations before the opponent gets an opportunity to make defender support declarations)
+### Howver, make it explicit that there exist funcitons like _debug_force_movement and _debug_force_destruction and _debug_force_spawn

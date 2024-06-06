@@ -1,16 +1,17 @@
-from warshard.map import Map
 import threading
 import time
+from functools import partial
+import logging
+
 
 from warshard import display
-from functools import partial
-
-import logging
+from warshard.map import Map
+from warshard.units import Unit
 
 
 class Game:
 
-    global self # I think it's necessary so the gamestate can be passed to the display thread
+    global self  # I think it's necessary so the gamestate can be passed to the display thread
 
     def __init__(
         self,
@@ -28,6 +29,8 @@ class Game:
         # The gamestate/map for this game
         self.map = Map()
 
+        self.all_units: list[Unit] = []  # List of all Units currently in play
+
         # Display
         if not headless:
             logging.debug("Starting display thread")
@@ -37,11 +40,15 @@ class Game:
             self.display_thread.start()
 
     def run_a_turn(self, pending_orders):
-        pass
+        raise NotImplementedError
         self.logger.debug("This message should go to the log file")
         self.logger.info("So should this")
         self.logger.warning("And this, too")
         self.logger.error("This too.")
+
+        self.switch_active_player()
+        self.first_upkeep_phase()
+        self.movement_phase(pending_orders)
 
     def __del__(self):
         pass

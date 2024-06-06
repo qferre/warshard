@@ -26,9 +26,6 @@ class Displayer:
         font_hex = pygame.font.SysFont(None, FONT_SIZE_HEX)
         font = pygame.font.SysFont(None, FONT_SIZE)
 
-        # while True:
-        #     print(map)
-        #     time.sleep(1)
 
         clock = pygame.time.Clock()
         running = True

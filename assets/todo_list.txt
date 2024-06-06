@@ -7,7 +7,7 @@ At first, it can just be the nato symbol (with the ID number below the symbol) a
 ## Symbols
 infantry
 armored
-mechanized
+mechanised
 artillery
 hq
 air_wing

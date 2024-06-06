@@ -66,8 +66,9 @@ class Map
 
 
 	# Used in replay or in debug
-	def _debug_force_movement(unit_id:int, hex_p:int, hex_q:int)
+	def _debug_force_movement(unit_id:int, destination_hex_x:int, destination_hex_y:int)
 	def _debug_force_destruction(unit_id:int)
+	def _debug_force_spawn(unit_type: str, hex_x:int, hex_y:int, player_side)
 
 
 class Display()
@@ -75,8 +76,9 @@ class Display()
 
 class Unit
 	self.parent_map (we will need map functions that check if a move is valid)
-	self.offensive_strength, self.defensive_strength, self.range, self.mobility =
+	self.power, self.defense, self.mobility, self.range =
 	#self.type = melee or support ; must be support if range is >1 and vice versa
+	self.type = armored, etc.
 	self.position : Hexagon
 	self.mobility_remaining
 	self.unique_id (CRUCIAL FOR SELECTION IN TYPED PROMPTS)
