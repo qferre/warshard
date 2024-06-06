@@ -35,7 +35,7 @@ class Game:
         if not headless:
             logging.debug("Starting display thread")
             self.display_thread = threading.Thread(
-                target=partial(display.Displayer.draw, map_to_draw=self.map)
+                target=partial(display.Displayer.draw, gamestate_to_draw=self)
             )
             self.display_thread.start()
 

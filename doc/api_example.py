@@ -8,7 +8,9 @@ from warshard.map import Map, HexGrid
 g = Game()
 
 
-
+# Ensure map can be updated
+g.map = Map(max_q=5)
+# yes it can :)
 
 
 

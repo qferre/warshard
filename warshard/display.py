@@ -7,7 +7,7 @@ import math
 class Displayer:
 
     @staticmethod
-    def draw(map_to_draw: Map):
+    def draw(gamestate_to_draw: Map):
 
         # Constants
         WIDTH, HEIGHT = 1200, 820
@@ -31,6 +31,9 @@ class Displayer:
         running = True
 
         while running:
+
+            map_to_draw = gamestate_to_draw.map
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
