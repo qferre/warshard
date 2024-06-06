@@ -12,9 +12,11 @@ UNIT_CHARACTERISTICS = {
 
 class Unit:
 
-    def __init__(self, hexagon_position: Hexagon, type: str) -> None:
+    def __init__(self, hexagon_position: Hexagon, type: str, player_side) -> None:
         assert type in UNIT_CHARACTERISTICS.keys()
         self.type = type
+
+        self.player_side = player_side
 
         stats = UNIT_CHARACTERISTICS[self.type]
         self.power, self.defense, self.mobility, self.range = stats

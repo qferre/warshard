@@ -1,14 +1,16 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-setup(name='warshard',
-      version='1.0',
-      description='A simplified modern wargame designed to be compatible with training AIs.',
-      url='http://github.com/qferre/warshard',
-      author='Quentin Ferré',
-      author_email='quentin.q.ferre@gmail.com',
-      license='Apache 2',
-      packages=['warshard'],
-      zip_safe=False)
-
-
-# Remember, to install : in a terminal at the root of the project, run `pip install .`
+setup(
+    name="warshard",
+    version="1.0",
+    description="A simplified modern wargame designed to be compatible with training AIs.",
+    url="http://github.com/qferre/warshard",
+    author="Quentin Ferré",
+    author_email="quentin.q.ferre@gmail.com",
+    # install_requires=[], # list from requirements.txt to be added here
+    license="Apache 2",
+    packages=find_packages(),  # ['warshard'],
+    include_package_data=True,
+    package_data={"warshard": ["assets/*/*.jpg", "assets/*/*.png"]},
+    zip_safe=False,
+)

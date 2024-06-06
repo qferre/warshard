@@ -1,7 +1,19 @@
-from warshard.map import Map
 import time
 import pygame
 import math
+
+from warshard.map import Map
+from warshard.units import Unit
+
+# Constants
+WIDTH, HEIGHT = 1200, 820
+FPS = 5
+HEX_SIZE = 30
+FONT_SIZE_HEX = 12
+FONT_SIZE = 18
+BACKGROUND_COLOR = (255, 255, 255)
+HEX_COLOR = (0, 0, 0)
+TEXT_COLOR = (255, 0, 0)
 
 
 class Displayer:
@@ -9,23 +21,12 @@ class Displayer:
     @staticmethod
     def draw(gamestate_to_draw: Map):
 
-        # Constants
-        WIDTH, HEIGHT = 1200, 820
-        FPS = 5
-        HEX_SIZE = 30
-        FONT_SIZE_HEX = 12
-        FONT_SIZE = 18
-        BACKGROUND_COLOR = (255, 255, 255)
-        HEX_COLOR = (0, 0, 0)
-        TEXT_COLOR = (255, 0, 0)
-
         pygame.init()
 
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("WarShard game")
         font_hex = pygame.font.SysFont(None, FONT_SIZE_HEX)
         font = pygame.font.SysFont(None, FONT_SIZE)
-
 
         clock = pygame.time.Clock()
         running = True
@@ -53,9 +54,8 @@ class Displayer:
             )
 
             # Draw pawns
-            # for pawn in blabla:
-            #     pawn_coordinates = (pawn_x_pixel, pawn_y_pixel)
-            #     screen.blit(pawn1_image, pawn_coordinates)
+            for unit in gamestate_to_draw.map.all_units:
+                draw_unit(unit, screen)
 
             # Draw information
             info_text = f"""
@@ -140,3 +140,24 @@ def axial_to_pixel(q, r, size):
     x = size * 3 / 2 * q
     y = size * math.sqrt(3) * (r + q / 2)
     return (x, y)
+
+
+#####
+
+import pkg_resources
+from PIL import Image
+
+
+def draw_unit(unit: Unit, screen):
+    q, r = unit.hexagon_position.x, unit.hexagon_position.y
+    pixel_x, pixel_y = axial_to_pixel(q, r, size=HEX_SIZE)
+    # Add half hexagon offset
+    pixel_x += HEX_SIZE // 2
+    pixel_y += HEX_SIZE // 2
+
+    image_path = pkg_resources.resource_filename(
+        "warshard", f"assets/units/{unit.type}.png"
+    )
+    pawn_image = pygame.image.load(image_path)  # Image.open(image_path)
+    pawn_image = pygame.transform.scale(pawn_image, (HEX_SIZE, HEX_SIZE * 4 / 6))
+    screen.blit(pawn_image, (pixel_x, pixel_y))
