@@ -23,13 +23,20 @@ class Game:
         # Logging
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(
-            filename=log_file_path, encoding="utf-8", level=logging.DEBUG
+            encoding="utf-8", level=logging.DEBUG,
+            handlers=[
+            logging.FileHandler(log_file_path),
+            logging.StreamHandler()
+        ]
         )
+
+        # Also log to terminal
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.DEBUG)
+        self.logger.addHandler(console_handler)
 
         # The gamestate/map for this game
         self.map = Map()
-
-        self.all_units: list[Unit] = []  # List of all Units currently in play
 
         # Display
         if not headless:
@@ -46,9 +53,18 @@ class Game:
         self.logger.warning("And this, too")
         self.logger.error("This too.")
 
-        self.switch_active_player()
+
+        # by default, always send the same pending_orders and ignore all non applicable
+        # orders when processing
+
+        self.switch_active_player(new_player_id)
         self.first_upkeep_phase()
-        self.movement_phase(pending_orders)
+        self.movement_phase(pending_orders_attacker_movement)
+        self.attacker_combat_allocation_phase(pending_orders_attacker_combat)
+        self.defender_combat_allocation_phase(pending_orders_defender_combat)
+        self.resolve_fights(putative_retreats_both_sides)
+        self.advancing_phase(putative_advance_orders_both_sides)
+        self.second_upkeep_phase()
 
     def __del__(self):
         pass
