@@ -32,14 +32,20 @@ Each side alternates, Blue then Red. Until the turn limit of the scenario is rea
 
 During a turn :
 1) Movement phase
+
 2) Combat Allocation phase
+
 - The attacker specifies which units will attack which hexes. Each attacked hex is called a Fight.
-- Then, in a second time, the attacker also allocates Support units (support units can only be allocated to one Fight per turn)
+- Then, in a second time, the attacker also allocates Support units.
 - Finally, the defender allocates its own Support units, but cannot allocate additional supporting defending units (this will be represented by counterattacks in the defender’s own turn)
-3) Combat Resolution phase
+
+Note that units (including support) can only be allocated to one Fight per turn
+
+1) Combat Resolution phase
 - For each Fight, total the combat strength of the involved Units, then roll 1d6.
 - Outcomes are all applied at the same time (meaning retreating units will not contribute to another fight).
-4) Upkeep phase
+
+1) Upkeep phase
 - For each Fight won (meaning the hex is now vacant) the attacker may pick an unit among the units involved and move it here.
 - Scripted events if applicable.
 
