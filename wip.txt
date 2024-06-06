@@ -3,7 +3,7 @@ https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ ? 
 Idea for map source for initial map : https://www.youtube.com/watch?v=DMJB8YODZaE northern part, in the bulge
 
 
-
+If I use the "pendinng_orders" principle I likely don't need to ask input orders in the terminal typed directly :)
 
 ###### main.py #########
 
@@ -70,7 +70,8 @@ class Map
 	# Used in replay or in debug
 	def _debug_force_movement(unit_id:int, destination_hex_x:int, destination_hex_y:int)
 	def _debug_force_destruction(unit_id:int)
-	def _debug_force_spawn(unit_type: str, hex_x:int, hex_y:int, player_side)
+	def _debug_force_spawn(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
+		remember to check id is not already allocated
 
 
 class Display()
@@ -93,8 +94,20 @@ class Unit
 		used for retreats
 
 
-	self.attempt_attack_on_hex(hex):
-		create a Fight if one does not already exist
+	self.attempt_attack_on_hex(hex, map):
+		check if we are within range of desired hex
+		check if the hex contains an enemy unit
+
+		#create a Fight if one does not already exist
+		if map.all_fights does not have a fight on this hex :
+			create a fight and join it
+		else:
+			join existing fight
+
+
+	self.attempt_join_defense_on_hex(hex, map):
+		check a fight exists at destination
+        check we are within range to join it
 
 class Fight
 	self.attacking_player_id
@@ -106,9 +119,11 @@ class Fight
 	self.defending_support
 
 	def resolveFight():
+		check attacker has at least one melee unit
 		check who is in supply
 		compute total strength
 		compute ratio (remember that support units can be 0 so avoid divide-by-zero)
+		check strength ratio for attacker is at least 0.5x defender
 		determine result
 		force retreats
 

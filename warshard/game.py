@@ -23,11 +23,9 @@ class Game:
         # Logging
         self.logger = logging.getLogger(__name__)
         logging.basicConfig(
-            encoding="utf-8", level=logging.DEBUG,
-            handlers=[
-            logging.FileHandler(log_file_path),
-            logging.StreamHandler()
-        ]
+            encoding="utf-8",
+            level=logging.DEBUG,
+            handlers=[logging.FileHandler(log_file_path), logging.StreamHandler()],
         )
 
         # Also log to terminal
@@ -48,11 +46,6 @@ class Game:
 
     def run_a_turn(self, pending_orders):
         raise NotImplementedError
-        self.logger.debug("This message should go to the log file")
-        self.logger.info("So should this")
-        self.logger.warning("And this, too")
-        self.logger.error("This too.")
-
 
         # by default, always send the same pending_orders and ignore all non applicable
         # orders when processing
@@ -67,5 +60,44 @@ class Game:
         self.second_upkeep_phase()
 
     def __del__(self):
-        pass
+        # Does this do anything currently ? I'm not sure it really works.
         self.display_thread.join()
+
+    #############################
+
+    def switch_active_player(self, new_player_id):
+        self.logger.debug("This message should go to the log file")
+        self.logger.info("So should this")
+        self.logger.warning("And this, too")
+        self.logger.error("This too.")
+        pass
+
+    def movement_phase(orders):
+        for order in orders:
+            unit, destination = unpack_order(order)
+            unit.attempt_move_to(destination)
+
+    def attacker_combat_allocation_phase(orders):
+        for order in orders:
+            unit, destination = unpack_order(order)
+            unit.attempt_attack_on_hex(destination)
+
+    def defender_combat_allocation_phase(orders):
+        for order in orders:
+            unit, destination = unpack_order(order)
+            unit.attempt_join_defense_on_hex(destination)
+
+    def resolve_fights(putative_retreats):
+        # Note : here, we ask the player to pre-specify retreats that would happen
+        # if they lost
+        for fight in self.all_fights:
+            fight.resolve(putative_retreats)
+
+
+"""
+def unpack_order(order, map):
+    assert order is a tuple of (Unit,Hexagon)
+    unit = find unit with same id in map.all_units
+    hexagon = find hexagon with same id in map
+    return references to correct unit and hexagon
+"""

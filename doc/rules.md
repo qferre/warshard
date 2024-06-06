@@ -41,11 +41,11 @@ During a turn :
 
 Note that units (including support) can only be allocated to one Fight per turn
 
-1) Combat Resolution phase
+3) Combat Resolution phase
 - For each Fight, total the combat strength of the involved Units, then roll 1d6.
 - Outcomes are all applied at the same time (meaning retreating units will not contribute to another fight).
 
-1) Upkeep phase
+4) Upkeep phase
 - For each Fight won (meaning the hex is now vacant) the attacker may pick an unit among the units involved and move it here.
 - Scripted events if applicable.
 
@@ -92,6 +92,8 @@ Melee units (meaning, not support elements) can only attack adjacent hexes.
 Outcome depending on 1d6 dice roll and strength ratio (in that order : attacker-defender). Attacking units (and support) contribute their Power. The unit being attack contributes its Defence, not its Power.
 
 Attacks are not allowed below a 1-2 ratio in favour of the defender. Round numbers in favour of defender.
+
+The attacker must commit at least one melee unit to each Fight. Otherwise, automatically get an "S" result (nothing happens).
 
 Meanings:
 - DR: the defending melee unit retreats by one hexagon.

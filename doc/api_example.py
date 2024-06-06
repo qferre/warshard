@@ -46,6 +46,7 @@ g.map.all_units.append(
 
 # # Finally run turn
 # game.run_a_turn/step(pending_orders)
+# TODO : write EXPLICITLY that you may (and indeed should), instead of calling directly run_a_turn, LOOK INTO THE SOURCE CODE OF RUN_A_TURN AND CALL EACH FUNCTION THAT RUNS A PHASE INDIVIDUALLY. Indeed, these functions have been designed to be run like this, separately : run_a_turn does little more than simply call each function in order !
 
 ##### CAPITAL TODO : very likely that the game.run_a_turn will be subdivided into functions that each run a turn phase, and each of these functions will read pending_orders. This means we can run phase and let orders be adjusted by the agent depending on, for example, fights declared.
 ##### Furthermore, we also need to expose functinos to give individual orders (ie. start a fight here, etc.) so the simulation can be run with granulatiry in
