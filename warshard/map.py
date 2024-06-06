@@ -1,3 +1,7 @@
+# from __future__ import annotations
+# from warshard.units import Unit
+
+
 class Map:
     """
     Contains the entire gamestate
@@ -7,6 +11,10 @@ class Map:
         assert max_q <= 21
         assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r)
+
+        # self.all_units: list['Unit'] = []  # List of all Units currently in play
+        # TODO fix typing circular imports
+        self.all_units = []  # List of all Units currently in play
 
 
 class Hexagon:

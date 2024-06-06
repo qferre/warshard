@@ -33,12 +33,14 @@ def execute_turn(self, pending_orders, player):
 
 	# Resolution phase
 	Resolve
-	Prompt for retreats ; in headless mode retreat hexes are chosen at random if multiple are applicable
+	Prompt for retreats ; if no explicit order was given in pending_orders, retreat hexes are chosen at random if multiple are applicable
 	print log of results
 
-	# Upkeep phase
-	Iterate over each fight won and let attacker pick one unit to move there ; in headless mode the unit with strongest defensive power will be moved there and ties are broken at random
+	# Advancing phase
+	Iterate over each fight won and let attacker (or defender, if the attacker lost ) pick one unit to move there.
+		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
+	# Second upkeep phase
 	Then destroy all Fights and set mobility of all units to 0
 
 
