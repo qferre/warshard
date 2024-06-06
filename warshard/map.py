@@ -4,6 +4,8 @@ class Map:
     """
 
     def __init__(self, yaml_file=None, max_q=21, max_r=15) -> None:
+        assert max_q <= 21
+        assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r)
 
 
@@ -27,7 +29,4 @@ class HexGrid:
         self.hexagons = {}
         for q in range(max_q):
             for r in range(max_r):
-                #rtrue = (
-                #    r - q // 2
-                #) 
                 self.hexagons[(q, r)] = Hexagon(q, r)

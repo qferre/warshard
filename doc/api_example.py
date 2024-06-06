@@ -24,3 +24,8 @@ g = Game()
 
 # # Finally run turn
 # game.run_a_turn/step(pending_orders)
+
+##### CAPITAL TODO : very likely that the game.run_a_turn will be subdivided into functions that each run a turn phase, and each of these functions will read pending_orders. This means we can run phase and let orders be adjusted by the agent depending on, for example, fights declared.
+##### Furthermore, we also need to expose functinos to give individual orders (ie. start a fight here, etc.) so the simulation can be run with granulatiry in
+##### a notebook, as if we were playing, and not just entire phase by entire phase. Although for me this is not as critical since all events of an entire phase
+##### are supposed to execute simultaneously and without input of the opponent (--> in the rules you make all your attacker declarations before the opponent gets an opportunity to make defender support declarations)

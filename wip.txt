@@ -29,6 +29,7 @@ def execute_turn(self, pending_orders, player):
 	# Combat allocation phase
 	Iterate over each unit (or ask to type a list of units that will attack) : for each , check if pending order if present and if not request attack order to an adjacent hex or to stay put
 	Same for support, defender, etc.
+		Which means that orders can be given with priority, see below
 
 	# Resolution phase
 	Resolve

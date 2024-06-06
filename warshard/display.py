@@ -10,10 +10,11 @@ class Displayer:
     def draw(map_to_draw: Map):
 
         # Constants
-        WIDTH, HEIGHT = 1920, 1080  # 1024, 768
+        WIDTH, HEIGHT = 1200, 820
         FPS = 5
-        HEX_SIZE = 40  # 30
-        FONT_SIZE = 14
+        HEX_SIZE = 30
+        FONT_SIZE_HEX = 12
+        FONT_SIZE = 18
         BACKGROUND_COLOR = (255, 255, 255)
         HEX_COLOR = (0, 0, 0)
         TEXT_COLOR = (255, 0, 0)
@@ -22,6 +23,7 @@ class Displayer:
 
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption("WarShard game")
+        font_hex = pygame.font.SysFont(None, FONT_SIZE_HEX)
         font = pygame.font.SysFont(None, FONT_SIZE)
 
         # while True:
@@ -45,7 +47,7 @@ class Displayer:
                 HEIGHT,
                 HEX_COLOR,
                 HEX_SIZE,
-                font,
+                font_hex,
                 TEXT_COLOR,
                 map_to_draw,
             )
