@@ -10,21 +10,17 @@ g = Game()
 
 
 # Ensure map can be updated
-g.map.all_units.append(
-    Unit(
-        hexagon_position=g.map.hexgrid.hexagons[(2, 2)],
-        type="armor",
-        player_side="germany",
-    )
+g.map.all_units[666] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(2, 2)],
+    type="armor",
+    player_side="germany",
+    id=666,
 )
 
 
-g.map.all_units.append(
-    Unit(
-        hexagon_position=g.map.hexgrid.hexagons[(0, 0)],
-        type="infantry",
-        player_side="germany",
-    )
+g.map.all_units[42] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(0, 0)],
+    type="infantry",
+    player_side="germany",
+    id=42,
 )
-
-# g.map = Map(max_q=5)

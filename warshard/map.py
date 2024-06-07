@@ -4,7 +4,8 @@
 
 class Map:
     """
-    Contains the entire gamestate
+    Contains all elements on the board (not quite the same thing as the gamestate) : 
+    contains self.hexgrid and self.all_units
     """
 
     def __init__(self, yaml_file=None, max_q=21, max_r=15) -> None:
@@ -14,8 +15,8 @@ class Map:
 
         # self.all_units: list['Unit'] = []  # List of all Units currently in play
         # TODO fix typing circular imports
-        self.all_units = []  # List of all Units currently in play
-
+        self.all_units = {}  # a dictionary {unit_id: unit} containing all units in play
+        # TODO do not work on self.all_units directly, make functions that add unit by force-checking their ID
 
 class Hexagon:
     def __init__(self, q: int, r: int) -> None:

@@ -34,6 +34,7 @@ map:
 units:
   germany:
     - {type: armored, hex: qr, id: 1}
+    - {type: hq, hex: qr, id: 2, name: "Model"}
   usa:
     - {type: infantry, hex: qr, id: 1}
 
@@ -41,3 +42,4 @@ units:
 reinforcements:
   usa:
   - {type: armored, hex: qr, id: 1, arrives_on_turn: 6}
+  - {type: hq, hex: qr, id: 2, name: "Patton"}

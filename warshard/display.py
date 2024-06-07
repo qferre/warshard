@@ -54,7 +54,7 @@ class Displayer:
             )
 
             # Draw pawns
-            for unit in gamestate_to_draw.map.all_units:
+            for unit in gamestate_to_draw.map.all_units.values():
                 draw_unit(unit, screen)
 
             # Draw information
