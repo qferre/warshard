@@ -24,3 +24,11 @@ g.map.all_units[42] = Unit(
     player_side="germany",
     id=42,
 )
+
+
+g.map.all_units[26] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(2, 4)],
+    type="mechanised",
+    player_side="usa",
+    id=26,
+)
