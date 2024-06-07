@@ -74,18 +74,15 @@ class Game:
 
     def movement_phase(orders):
         for order in orders:
-            unit, destination = unpack_order(order)
-            unit.attempt_move_to(destination)
+            order.unit_ref.attempt_move_to(order.hexagon_ref)
 
     def attacker_combat_allocation_phase(orders):
         for order in orders:
-            unit, destination = unpack_order(order)
-            unit.attempt_attack_on_hex(destination)
+            order.unit_ref.attempt_attack_on_hex(order.hexagon_ref)
 
     def defender_combat_allocation_phase(orders):
         for order in orders:
-            unit, destination = unpack_order(order)
-            unit.attempt_join_defense_on_hex(destination)
+            order.unit_ref.attempt_join_defense_on_hex(order.hexagon_ref)
 
     def resolve_fights(putative_retreats):
         # Note : here, we ask the player to pre-specify retreats that would happen
@@ -94,10 +91,16 @@ class Game:
             fight.resolve(putative_retreats)
 
 
-"""
-def unpack_order(order, map):
-    assert order is a tuple of (Unit,Hexagon)
-    unit = find unit with same id in map.all_units
-    hexagon = find hexagon with same id in map
-    return references to correct unit and hexagon
-"""
+
+class Order:
+
+    def __init__(unit_id, hex_coordinates, map):
+        self.map = map
+        self.unit_id = unit_id
+        self.hex_x, self.hex_y = hex_coordinates
+
+        # Find unit with same ID
+        self.unit_ref = self.map.all_units[self.unit_id]
+
+        # Find hexagon with same coordinates
+        self.hexagon_ref = self.map.hexgrid.hexagons[(self.hex_x, self.hex_y)]

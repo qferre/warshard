@@ -52,8 +52,6 @@ def execute_turn(self, pending_orders, player):
 
 
 
-
-
 class Map
 	self.current_turn
 	self.all_units : list<Unit>
