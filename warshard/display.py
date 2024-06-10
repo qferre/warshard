@@ -20,6 +20,7 @@ class Displayer:
 
     @staticmethod
     def draw(gamestate_to_draw: Map):
+        
 
         pygame.init()
 
@@ -33,55 +34,60 @@ class Displayer:
 
         while running:
 
-            map_to_draw = gamestate_to_draw.map
+            try:
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    running = False
+                map_to_draw = gamestate_to_draw.map
 
-            screen.fill(BACKGROUND_COLOR)
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        running = False
 
-            # Draw hexagon grid
-            draw_hex_grid(
-                screen,
-                WIDTH,
-                HEIGHT,
-                HEX_COLOR,
-                HEX_SIZE,
-                font_hex,
-                TEXT_COLOR,
-                map_to_draw,
-            )
+                screen.fill(BACKGROUND_COLOR)
 
-            # Draw pawns
-            for unit in gamestate_to_draw.map.all_units.values():
-                draw_unit(unit, screen)
+                # Draw hexagon grid
+                draw_hex_grid(
+                    screen,
+                    WIDTH,
+                    HEIGHT,
+                    HEX_COLOR,
+                    HEX_SIZE,
+                    font_hex,
+                    TEXT_COLOR,
+                    map_to_draw,
+                )
 
-            # Draw information
-            info_text = f"""
+                # Draw pawns
+                for unit in gamestate_to_draw.map.all_units.values():
+                    draw_unit(unit, screen)
 
-            Current turn number
-            current phase and player au trait
-            
-            Victory points per side
-            Remaining power per side
-            
-            other explanations like 'please input orders in terminal'
+                # Draw information
+                info_text = f"""
 
-
-            """
-
-            draw_text(
-                screen,
-                text=info_text,
-                position=(WIDTH - 200, 50),
-                font=font,
-            )
-
-            pygame.display.flip()  # Update display
-            clock.tick(FPS)
+                Current turn number
+                current phase and player au trait
+                
+                Victory points per side
+                Remaining power per side
+                
+                other explanations like 'please input orders in terminal'
 
 
+                """
+
+                draw_text(
+                    screen,
+                    text=info_text,
+                    position=(WIDTH - 200, 50),
+                    font=font,
+                )
+
+                pygame.display.flip()  # Update display
+                clock.tick(FPS)
+            except RuntimeError: 
+                # If anything changes size during iteration this can cause a RuntimeError: dictionary changed size during iteration
+                # but since we are only a displayer, it does not really matter.
+                # we can never modify anything anyway, so we just skip this iteration and try again
+                print("Gamestate was updated during the rendering. Skipping this rendering frame.")
 # Set up display
 
 
