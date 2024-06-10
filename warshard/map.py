@@ -85,6 +85,10 @@ class Hexagon:
         """ TODO
         self.defender_bonus = config.DEFENDER_BONI[self.hex_type]
 		self.mobility_cost_multiplier = = config.MOBILITY_COSTS[self.hex_type]
+
+        self.victory_point
+        self.controller = whoever last had a unit there
+        self.name = specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
         """
 
         # x and y, are another set of coordinates

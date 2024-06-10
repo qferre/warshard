@@ -37,7 +37,7 @@ class Game:
         self.map = Map(yaml_file=yaml_file_path)
         self.current_active_player = 0
         self.current_turn_phase = None
-        self.current_turn_number
+        self.current_turn_number = 0
 
         # Display
         if not headless:
@@ -121,6 +121,7 @@ class Game:
 
     def second_upkeep_phase()
         Then destroy all Fights and set mobility of all units to 0
+        increment turn number
 
 
     """

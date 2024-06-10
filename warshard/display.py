@@ -112,6 +112,9 @@ def draw_hex_grid(
         center = axial_to_pixel(q, r, HEX_SIZE)
         center = (center[0] + HEX_SIZE, center[1] + HEX_SIZE)
         corners = draw_hexagon(screen, HEX_COLOR, center, HEX_SIZE)
+        # TODO make HEX_COLOR (and later, a cute hex image directly) depend on hexagon.type
+        # TODO if the hexagon is a victory point, draw a little flag of the controller
+        # TODO also add hexagon name (ie. Marseille, Bastogne, etc.) if applicable
 
         # Display coordinates at the top part of the hexagon
         text_position = (
