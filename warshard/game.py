@@ -52,13 +52,13 @@ class Game:
 
         Args:
             pending_orders (_type_): allows my framework to be easily used with AI ! a list containing pairs of (Unit, Hexagon). When requesting orders, we first check if any pending orders are present and try to execute those first. Orders are executed in FIFO, meaning you can queue movement orders for the same unit.
-	        note that we will iterate over pending_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
+                note that we will iterate over pending_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
 
         Raises:
             NotImplementedError: _description_
         """
         raise NotImplementedError
-    
+
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
 
         # by default, always send the same pending_orders and ignore all non applicable
@@ -89,7 +89,7 @@ class Game:
         pass
 
     def movement_phase(orders):
-        # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted 
+        # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted
         for order in orders:
             order.unit_ref.attempt_move_to(order.hexagon_ref)
         # TODO Any stacked units are destroyed starting with the last arrived ones
@@ -125,9 +125,6 @@ class Game:
 
 
     """
-
-
-
 
 
 class Order:

@@ -20,7 +20,6 @@ class Displayer:
 
     @staticmethod
     def draw(gamestate_to_draw: Map):
-        
 
         pygame.init()
 
@@ -65,10 +64,10 @@ class Displayer:
 
                 Current turn number
                 current phase and player au trait
-                
+
                 Victory points per side
                 Remaining power per side
-                
+
                 other explanations like 'please input orders in terminal'
 
 
@@ -83,11 +82,15 @@ class Displayer:
 
                 pygame.display.flip()  # Update display
                 clock.tick(FPS)
-            except RuntimeError: 
+            except RuntimeError:
                 # If anything changes size during iteration this can cause a RuntimeError: dictionary changed size during iteration
                 # but since we are only a displayer, it does not really matter.
                 # we can never modify anything anyway, so we just skip this iteration and try again
-                print("Gamestate was updated during the rendering. Skipping this rendering frame.")
+                print(
+                    "Gamestate was updated during the rendering. Skipping this rendering frame."
+                )
+
+
 # Set up display
 
 

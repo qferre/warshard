@@ -51,7 +51,7 @@ class Map:
         return self.hexgrid.hexagons[(self.hex_x, self.hex_y)]
 
     """ TODO
-    def is_movement_valid(unit: Unit, hex): 
+    def is_movement_valid(unit: Unit, hex):
         # Is another unit there ? Are we exiting an enemy's ZoC ?
         recall the hexagon.is_accessible_to_player_side() function exists :)
 
@@ -59,14 +59,13 @@ class Map:
 		remember to check id is not already allocated
         return a reference to the unit
 
-    
+
 	# Used in replay or in debug ; other functions such as spawn_unit_at_position and unit.force_move_to can also
     # be used in replay or debug
 	def force_destruction(unit_id:int)
 
     # TODO add a replay_function ? Hmm not in v1, write is as NotImplementedError. This function should
     # take a list of Results of shape (unit_id, new_hex_position, destroyed_or_not)
-	
     """
 
     """ TODO
