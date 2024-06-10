@@ -58,6 +58,7 @@ class Displayer:
                 # Draw pawns
                 for unit in gamestate_to_draw.map.all_units.values():
                     draw_unit(unit, screen)
+                    # TODO careful about stacked units
 
                 # Draw information
                 info_text = f"""
@@ -83,9 +84,9 @@ class Displayer:
                 pygame.display.flip()  # Update display
                 clock.tick(FPS)
             except RuntimeError:
-                # If anything changes size during iteration this can cause a RuntimeError: dictionary changed size during iteration
-                # but since we are only a displayer, it does not really matter.
-                # we can never modify anything anyway, so we just skip this iteration and try again
+                # If anything we are trying to plotchanges during iteration, this can cause a RuntimeError
+                # but since we are only a displayer, it does not really matter. We can never modify anything
+                # anyway, so we just skip this iteration and try again.
                 print(
                     "Gamestate was updated during the rendering. Skipping this rendering frame."
                 )
@@ -173,3 +174,5 @@ def draw_unit(unit: Unit, screen):
     pawn_image = pygame.image.load(image_path)  # Image.open(image_path)
     pawn_image = pygame.transform.scale(pawn_image, (HEX_SIZE, HEX_SIZE * 4 / 6))
     screen.blit(pawn_image, (pixel_x, pixel_y))
+
+    # TODO add color (for faction) and ID

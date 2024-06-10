@@ -33,7 +33,7 @@ class Map:
         Returns:
             _type_: _description_
         """
-        return self.all_units[self.unit_id]
+        return self.all_units[unit_id]
 
     def fetch_hex_by_coordinate(self, x, y):
         """
@@ -48,7 +48,7 @@ class Map:
             _type_: _description_
         """
 
-        return self.hexgrid.hexagons[(self.hex_x, self.hex_y)]
+        return self.hexgrid.hexagons[(x, y)]
 
     """ TODO
     def is_movement_valid(unit: Unit, hex):

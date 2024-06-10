@@ -11,30 +11,33 @@ from warshard.units import Unit
 
 class Game:
 
-    global self  # I think it's necessary so the gamestate can be passed to the display thread
+    global self  # Necessary so the Game object can be passed to the display thread
 
     def __init__(
         self,
-        yaml_file_path: str = "",
+        scenario_yaml_file_path: str = "",
         log_file_path: str = "example.log",
         headless=False,
     ) -> None:
 
         # Logging
-        self.logger = logging.getLogger(__name__)
+        log_format = "%(asctime)s - %(name)s:%(levelname)s -- %(message)s"
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.DEBUG)
+        console_handler.setFormatter(logging.Formatter(log_format))
         logging.basicConfig(
             encoding="utf-8",
             level=logging.DEBUG,
-            handlers=[logging.FileHandler(log_file_path), logging.StreamHandler()],
+            handlers=[
+                logging.FileHandler(log_file_path),
+                console_handler,
+            ],  # Also log to terminal
+            format=log_format,
         )
-
-        # Also log to terminal
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
-        self.logger.addHandler(console_handler)
+        self.logger = logging.getLogger(__name__)
 
         # The gamestate/map for this game
-        self.map = Map(yaml_file=yaml_file_path)
+        self.map = Map(yaml_file=scenario_yaml_file_path)
         self.current_active_player = 0
         self.current_turn_phase = None
         self.current_turn_number = 0
@@ -110,7 +113,6 @@ class Game:
         # TODO if no explicit order was given in pending_orders, retreat hexes are chosen at random if multiple are applicable
 
     """ TODO
-    
     def first_upkeep_phase():
         Refresh mobility for all units OF THE CURRENT PLAYER
 
@@ -122,7 +124,6 @@ class Game:
     def second_upkeep_phase()
         Then destroy all Fights and set mobility of all units to 0
         increment turn number
-
 
     """
 

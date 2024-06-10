@@ -29,3 +29,10 @@ class Config:
     # DEFENDER_BONI = {
     #
     # }
+
+    FACTION_COLORS = {
+        "britain": (255,204,153,255), # beige
+        "germany":(102,204,255,255), # pale teal
+        "usa":(255,153,0,255), # green
+        "ussr": (255,153,0,255) # deep orange
+    }
