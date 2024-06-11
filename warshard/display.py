@@ -6,6 +6,7 @@ from warshard.map import Map
 from warshard.units import Unit
 
 # Constants
+# TODO move to config.py into the DisplayConfig
 WIDTH, HEIGHT = 1200, 820
 FPS = 5
 HEX_SIZE = 30

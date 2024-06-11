@@ -12,7 +12,7 @@ class Config:
     }
 
     # Format : FIGHT_RESULT_TABLE[rounded attacker_power_total/defender_strength_total][dice_roll]
-    FIGHT_RESULT_TABLE = table = {
+    FIGHT_RESULT_TABLE = {
         0.5: {1: "dr", 2: "S", 3: "ar", 4: "ar", 5: "ar", 6: "AE"},
         1: {1: "dr", 2: "dr", 3: "S", 4: "ar", 5: "ar", 6: "ar"},
         2: {1: "dr", 2: "dr", 3: "dr", 4: "dr", 5: "ar", 6: "ar"},
@@ -29,6 +29,9 @@ class Config:
     # DEFENDER_BONI = {
     #
     # }
+
+
+class DisplayConfig:
 
     FACTION_COLORS = {
         "britain": (255,204,153,255), # beige

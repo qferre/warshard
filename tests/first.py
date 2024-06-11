@@ -46,7 +46,7 @@ g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4,5))
 
 g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3,3))
 
-## Move units we created
+## Try to move units we created
 
 ## Create units close enough for a fight and test it
 
