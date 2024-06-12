@@ -124,6 +124,7 @@ class Game:
     def second_upkeep_phase()
         Then destroy all Fights and set mobility of all units to 0
         increment turn number
+        Change controllers of victory point hexes depending on who is standing on it (careful about stacked units, even though they should all belong to the same player)
 
     """
 
