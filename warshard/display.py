@@ -6,16 +6,11 @@ import numpy as np
 from warshard.map import Map
 from warshard.units import Unit
 
+
+from warshard.config import DisplayConfig
+
 # Constants
 # TODO move to config.py into the DisplayConfig
-WIDTH, HEIGHT = 1400, 980
-FPS = 5
-HEX_SIZE = 36
-FONT_SIZE_HEX = 12
-FONT_SIZE = 18
-BACKGROUND_COLOR = (255, 255, 255)
-HEX_COLOR = (0, 0, 0)
-TEXT_COLOR = (0, 0, 0)
 
 
 class Displayer:
@@ -25,10 +20,10 @@ class Displayer:
 
         pygame.init()
 
-        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        screen = pygame.display.set_mode((DisplayConfig.WIDTH, DisplayConfig.HEIGHT))
         pygame.display.set_caption("WarShard game")
-        font_hex = pygame.font.SysFont(None, FONT_SIZE_HEX)
-        font = pygame.font.SysFont(None, FONT_SIZE)
+        font_hex = pygame.font.SysFont(None, DisplayConfig.FONT_SIZE_HEX)
+        font = pygame.font.SysFont(None, DisplayConfig.FONT_SIZE)
 
         clock = pygame.time.Clock()
         running = True
@@ -43,17 +38,12 @@ class Displayer:
                     if event.type == pygame.QUIT:
                         running = False
 
-                screen.fill(BACKGROUND_COLOR)
+                screen.fill(DisplayConfig.BACKGROUND_COLOR)
 
                 # Draw hexagon grid
                 draw_hex_grid(
                     screen,
-                    WIDTH,
-                    HEIGHT,
-                    HEX_COLOR,
-                    HEX_SIZE,
                     font_hex,
-                    TEXT_COLOR,
                     map_to_draw,
                 )
 
@@ -81,12 +71,12 @@ class Displayer:
                 draw_text(
                     screen,
                     text=info_text,
-                    position=(WIDTH - 150, 50),
+                    position=(DisplayConfig.WIDTH - 150, 50),
                     font=font,
                 )
 
                 pygame.display.flip()  # Update display
-                clock.tick(FPS)
+                clock.tick(DisplayConfig.FPS)
             except RuntimeError:
                 # If anything we are trying to plotchanges during iteration, this can cause a RuntimeError
                 # but since we are only a displayer, it does not really matter. We can never modify anything
@@ -101,14 +91,11 @@ class Displayer:
 
 def draw_hex_grid(
     screen,
-    WIDTH,
-    HEIGHT,
-    HEX_COLOR,
-    HEX_SIZE,
     font,
-    TEXT_COLOR,
     map_to_draw: Map,
 ):
+    HEX_SIZE = DisplayConfig.HEX_SIZE
+
     # Draw hexagon grid
     for hexagon in map_to_draw.hexgrid.hexagons.values():
 
@@ -122,7 +109,7 @@ def draw_hex_grid(
             top_left_pos[1] + np.sqrt(3) / 2 * HEX_SIZE,
         )
 
-        # TODO make HEX_COLOR (and later, a cute hex image directly) depend on hexagon.type
+        # Hex background and color
         hex_background_path = pkg_resources.resource_filename(
             "warshard", f"assets/hexes/{hexagon.type}.gif"
         )
@@ -132,8 +119,8 @@ def draw_hex_grid(
         )
         screen.blit(hex_background_image, (top_left_pos[0], top_left_pos[1]))
 
-        # Draw grid
-        corners = draw_hexagon(screen, HEX_COLOR, center, HEX_SIZE)
+        # Draw hex borders
+        corners = draw_hexagon(screen, DisplayConfig.HEX_BORDER_COLOR, center, HEX_SIZE)
 
         # TODO if the hexagon is a victory point, draw a little flag of the controller
         if hexagon.victory_points > 0:
@@ -159,7 +146,13 @@ def draw_hex_grid(
             (corners[-1][0] + corners[-2][0]) / 2,
             (corners[-1][1] + corners[-2][1]) / 2 + HEX_SIZE // 5,
         )
-        draw_text(screen, f"{hexagon.q},{hexagon.r}", text_position, font, TEXT_COLOR)
+        draw_text(
+            screen,
+            f"{hexagon.q},{hexagon.r}",
+            text_position,
+            font,
+            DisplayConfig.TEXT_COLOR,
+        )
 
 
 def hex_corner(center, size, i):
@@ -199,10 +192,12 @@ def axial_to_pixel(q, r, size):
 
 import pkg_resources
 from PIL import Image
-from warshard.config import DisplayConfig
 
 
 def draw_unit(unit: Unit, screen, font):
+
+    HEX_SIZE = DisplayConfig.HEX_SIZE
+
     q, r = unit.hexagon_position.x, unit.hexagon_position.y
     pixel_x, pixel_y = axial_to_pixel(q, r, size=HEX_SIZE)
     # Add half hexagon offset

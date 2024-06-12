@@ -54,6 +54,15 @@ class Config:
 
 class DisplayConfig:
 
+    WIDTH, HEIGHT = 1400, 980
+    FPS = 5
+    HEX_SIZE = 36
+    FONT_SIZE_HEX = 12
+    FONT_SIZE = 18
+    BACKGROUND_COLOR = (255, 255, 255)
+    HEX_BORDER_COLOR = (0, 0, 0)
+    TEXT_COLOR = (0, 0, 0)
+
     FACTION_COLORS = {
         "britain": (255, 204, 153, 255),  # beige
         "germany": (102, 204, 255, 255),  # pale teal
