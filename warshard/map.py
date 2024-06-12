@@ -1,5 +1,6 @@
 # from __future__ import annotations
 # from warshard.units import Unit
+from warshard.config import Config
 
 
 class Map:
@@ -76,18 +77,39 @@ class Map:
 
 
 class Hexagon:
-    def __init__(self, q: int, r: int) -> None:
+    def __init__(
+        self,
+        q: int,
+        r: int,
+        type: str = "plains",
+        victory_points: int = 0,
+        name: str = "",
+    ) -> None:
+        """_summary_
+
+        Args:
+            q (int): _description_
+            r (int): _description_
+            type (str, optional): _description_. Defaults to "plains".
+            victory_points (int, optional): _description_. Defaults to 0.
+            name (str, optional): _description_. Defaults to "".
+        """
+
         # q and r are the hex coordinates
         self.q = q
         self.r = r
 
-        """ TODO
-        self.defender_bonus = config.DEFENDER_BONI[self.hex_type]
-		self.mobility_cost_multiplier = = config.MOBILITY_COSTS[self.hex_type]
+        assert type in Config.MOBILITY_COSTS.keys()
+        self.type = type
 
-        self.victory_point
+        self.victory_points = 0
+
+        self.defender_bonus = Config.DEFENDER_BONI[self.type]
+        self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
+
+        """
         self.controller = whoever last had a unit there
-        self.name = specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
+        self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
         """
 
         # x and y, are another set of coordinates
@@ -124,6 +146,9 @@ class HexGrid:
 		return [(q + dq, r + dr) for dq, dr in directions if (q + dq, r + dr) in self.hexagons]
 	todo : change this code to cap to min and max q and r to avoid going offmap
 	WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
+
+    def get_total_victory_points_per_players:
+        iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
 
 
 	# Below : used to trace a route to HQ

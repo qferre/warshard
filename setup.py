@@ -11,6 +11,6 @@ setup(
     license="Apache 2",
     packages=find_packages(),  # ['warshard'],
     include_package_data=True,
-    package_data={"warshard": ["assets/*/*.jpg", "assets/*/*.png"]},
+    package_data={"warshard": ["assets/*/*.jpg", "assets/*/*.png", "assets/*/*.gif"]},
     zip_safe=False,
 )

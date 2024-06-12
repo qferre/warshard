@@ -17,7 +17,7 @@ map:
   biome: winter
 
   special_hexes:
-    cities:
+    city:
       - {hex: a1, name: "Bastogne"}
       - {hex: a1, name: "Malmédy"}
     defensible: b1, b4

@@ -1,3 +1,5 @@
+import numpy as np
+
 
 class Config:
 
@@ -22,20 +24,39 @@ class Config:
         6: {1: "DE", 2: "DE", 3: "DE", 4: "dr", 5: "dr", 6: "EX"},
     }
 
-    # MOBILITY_COSTS = {
-    #     "road":
-    # }
+    # NOTE defensible == trench ; and elevation == hills
+    MOBILITY_COSTS = {
+        "plains": 1,
+        "dry_plains": 1,
+        "snow_plains": 1,
+        "city": 2,
+        "defensible": 2,
+        "forest": 2,
+        "elevation": 2,
+        "road": 0.5,
+        "water": np.inf,
+        "impassable": np.inf,
+    }
 
-    # DEFENDER_BONI = {
-    #
-    # }
+    DEFENDER_BONI = {
+        "plains": 1,
+        "dry_plains": 1,
+        "snow_plains": 1,
+        "city": 2,
+        "defensible": 2,
+        "forest": 2,
+        "elevation": 2,
+        "road": 1,
+        "water": 1,
+        "impassable": 10,
+    }
 
 
 class DisplayConfig:
 
     FACTION_COLORS = {
-        "britain": (255,204,153,255), # beige
-        "germany":(102,204,255,255), # pale teal
-        "usa":(255,153,0,255), # green
-        "ussr": (255,153,0,255) # deep orange
+        "britain": (255, 204, 153, 255),  # beige
+        "germany": (102, 204, 255, 255),  # pale teal
+        "usa": (102, 204, 0, 255),  # green
+        "ussr": (255, 153, 0, 255),  # deep orange
     }

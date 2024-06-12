@@ -47,8 +47,12 @@ g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4,5))
 g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3,3))
 
 ## Try to move units we created
+u_1 = g.map.fetch_unit_by_id(666)
+#u_1.attempt_move_to()
 
 ## Create units close enough for a fight and test it
+
+
 
 
 # Now test individual turn functions

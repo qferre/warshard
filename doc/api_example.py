@@ -19,10 +19,11 @@ game = warshard.game.create_game(
 
 
 game
-game.map # You can use this to read the map/gamestate and even modify it, it is accessible – say so explicitly in documentation
+game.map # You can use this to read the map/gamestate and even modify it, it is accessible - say so explicitly in documentation
 
-# Recommended setup for AI
+# Example of a recommended setup for AI
 custom_gamestate_representation_observation = my_function_that_reads_gamestate_and_produces_output_in_correct_format(game.gamestate)
+def reward_function(game): return game.map.hexgrid.get_total_victory_points_per_players()
 #reward = reward_function(custom_gamestate_representation_observation OR DIRECTLY game)
 pending_orders = my_custom_ai_agent(custom_gamestate_representation_observation)
 
