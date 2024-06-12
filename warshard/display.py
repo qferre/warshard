@@ -8,9 +8,9 @@ from warshard.units import Unit
 
 # Constants
 # TODO move to config.py into the DisplayConfig
-WIDTH, HEIGHT = 1200, 820
+WIDTH, HEIGHT = 1400, 980
 FPS = 5
-HEX_SIZE = 30
+HEX_SIZE = 36
 FONT_SIZE_HEX = 12
 FONT_SIZE = 18
 BACKGROUND_COLOR = (255, 255, 255)
@@ -136,6 +136,21 @@ def draw_hex_grid(
         corners = draw_hexagon(screen, HEX_COLOR, center, HEX_SIZE)
 
         # TODO if the hexagon is a victory point, draw a little flag of the controller
+        if hexagon.victory_points > 0:
+            controller_flag_path = pkg_resources.resource_filename(
+                "warshard", f"assets/flags/{hexagon.controller}.jpg"
+            )
+            controller_flag = pygame.transform.smoothscale(
+                pygame.image.load(controller_flag_path),
+                (0.7 * HEX_SIZE, 0.45 * HEX_SIZE),
+            )
+            screen.blit(
+                controller_flag,
+                (
+                    top_left_pos[0] + (HEX_SIZE / 2) + 0.15 * HEX_SIZE,
+                    top_left_pos[1] + 1.2 * (HEX_SIZE),
+                ),
+            )
 
         # TODO also add hexagon name (ie. Marseille, Bastogne, etc.) if applicable
 
@@ -208,8 +223,8 @@ def draw_unit(unit: Unit, screen, font):
         "warshard", f"assets/units/{unit.type}.png"
     )
     pawn_image = pygame.image.load(image_path)  # Image.open(image_path)
-    pawn_image = pygame.transform.scale(pawn_image, (width, height))
+    pawn_image = pygame.transform.smoothscale(pawn_image, (width, height))
     screen.blit(pawn_image, (pixel_x, pixel_y))
 
-    # TODO add color (for faction) and ID
+    # ID
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))

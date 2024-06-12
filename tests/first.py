@@ -1,4 +1,3 @@
-
 """TODO Dispatch this into individual test files, add asserts (not necessarily use pytest at first, but I do need asserts)
 """
 
@@ -36,23 +35,34 @@ g.map.all_units[26] = Unit(
 )
 
 
+g.map.fetch_hex_by_coordinate(5, 5).victory_points = 10
+g.map.fetch_hex_by_coordinate(5, 5).controller = "germany"
 
+
+g.map.fetch_hex_by_coordinate(4, 5).victory_points = 10
+g.map.fetch_hex_by_coordinate(4, 5).controller = "usa"
+
+
+
+g.map.fetch_hex_by_coordinate(8, 8).victory_points = 10
+g.map.fetch_hex_by_coordinate(8, 8).controller = "britain"
+
+g.map.fetch_hex_by_coordinate(9, 9).victory_points = 10
+g.map.fetch_hex_by_coordinate(9, 9).controller = "ussr"
 
 
 # Now test interactions like movements and fights
 
-g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4,5))
+g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4, 5))
 
 
-g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3,3))
+g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 
 ## Try to move units we created
 u_1 = g.map.fetch_unit_by_id(666)
-#u_1.attempt_move_to()
+# u_1.attempt_move_to()
 
 ## Create units close enough for a fight and test it
-
-
 
 
 # Now test individual turn functions
@@ -66,11 +76,6 @@ g.resolve_fights(putative_retreats_both_sides)
 g.advancing_phase(putative_advance_orders_both_sides)
 g.second_upkeep_phase()
 """
-
-
-
-
-
 
 
 # Now test YAML reading

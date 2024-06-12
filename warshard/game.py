@@ -79,7 +79,7 @@ class Game:
         self.second_upkeep_phase()
 
     def __del__(self):
-        # Does this do anything currently ? I'm not sure it really works.
+        # TODO Does this do anything currently ? I'm not sure it really works.
         self.display_thread.join()
 
     #############################
