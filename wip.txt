@@ -1,4 +1,9 @@
-https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ ? Heh, not at first, but be mindful that this should be possible later -> OFFER THIS IN A DEV WORKSHOP to rayane and benjamin, but I will code the game itself myself. YES ABSOLUTELY DO THAT.
+
+
+Draw units and the rest for all this.
+Ask JCH to help with a quick test of the rules.
+
+https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ ? -> OFFER THIS IN A DEV WORKSHOP to rayane and benjamin, but I will code the game itself myself.
 
 Idea for map source for initial map : https://www.youtube.com/watch?v=DMJB8YODZaE northern part, in the bulge
 

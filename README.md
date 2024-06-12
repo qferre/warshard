@@ -1,26 +1,13 @@
 # WarShard
 A simplified modern wargame designed to be compatible with training AIs, thanks to an API
 
+NOT FUNCTIONAL YET
 
 
+Based on SPI wargames.
 
 
-Remember to make this repository public once done !
-
-Current code on my 17pouces, currently open on my vscode
-
-
-
-
-
-
-Draw units and the rest for all this ;)
-Ask jeanne to help with a quick test of the rules, then start coding it
-
-Say it's based on SPI wargames ?
-
-
-Rules are in ![hello](./doc/rules.md)
+Rules are in ![rules](./doc/rules.md)
 
 
 
