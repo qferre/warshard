@@ -9,9 +9,25 @@ from warshard.units import Unit
 from warshard.config import DisplayConfig
 
 
+
+
+
+
 class Displayer:
 
     # TODO IMPORTANT : I think the scale and smoothscale methods are eating up a lot of CPU power ! So calculate them ONCE AND FOR ALL at the beginning, for all files !
+    """
+    # Load all assets
+
+    # Flags
+    for flags in glob/pkg(all):
+        flags[name] = scale(flag)
+
+    # same for everything that needs scaling and loading
+
+    # TODO also to improve perfs
+    # So instead of pygame.image.load(file) do pygame.image.load(file).convert() or if the image has transparent parts pygame.image.load(file).convert_alpha(). 
+    """
 
     @staticmethod
     def draw(gamestate_to_draw: Map):
@@ -65,6 +81,9 @@ class Displayer:
                 Germany: XX
                 USA : XX
                 """
+
+                # TODO draw fights
+                #draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
 
                 draw_text(
                     screen,
@@ -218,3 +237,12 @@ def draw_unit(unit: Unit, screen, font):
 
     # ID
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))
+
+
+
+
+
+""" TODO
+def draw_arrow:
+    https://www.reddit.com/r/pygame/comments/v3ofs9/draw_arrow_function/
+"""

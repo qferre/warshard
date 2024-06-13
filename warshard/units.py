@@ -29,15 +29,20 @@ class Unit:
 
     """ TODO
 	self.attempt_move_to(hex):
-		check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.side))
-		substract mobility cost of target hex to our remainig_mobility
-		if in enemy zoc, set remaining mobility to 0
+		# check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.side))
+        mobility_cost = Config.MOBILITY_COSTS[hex.type]
+        is_accessible = hex.is_accessible_to_player_side(self.side)
 
-	self.attempt_attack_on_hex(hex, map):
+
+		# substract mobility cost of target hex to our remainig_mobility
+        # move there (using self.force_move_to(hex))
+		# if in enemy zoc, set remaining mobility to 0
+
+	self.attempt_attack_on_hex(hex):
 		check if we are within range of desired hex
 		check if the hex contains an enemy unit
 
-		if map.all_fights does not have a fight on this hex :
+		if self.parent_map.all_fights does not have a fight on this hex :
 			create a fight and join it
 		else:
 			join existing fight
@@ -45,6 +50,6 @@ class Unit:
 
 	self.attempt_join_defense_on_hex(hex, map):
 		check a fight exists at destination
-        check we are within range to join it
-        join the fight
+        check we are within range to join it and that we are not a melee unit
+        join the fight as support
 	"""

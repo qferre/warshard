@@ -79,6 +79,7 @@ class Map:
 class Hexagon:
     def __init__(
         self,
+        #parent_map
         q: int,
         r: int,
         type: str = "plains",
@@ -88,12 +89,15 @@ class Hexagon:
         """_summary_
 
         Args:
+            parent_map
             q (int): _description_
             r (int): _description_
             type (str, optional): _description_. Defaults to "plains".
             victory_points (int, optional): _description_. Defaults to 0.
             name (str, optional): _description_. Defaults to "".
         """
+
+        #self.parent_map = parent_map
 
         # q and r are the hex coordinates
         self.q = q
@@ -122,7 +126,22 @@ class Hexagon:
 
     """ TODO
     def self.is_accessible_to_player_side(side):
-		check if the hex or its neighbors contains any unit NOT belonging to the specified side
+		check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side
+        neighbors =
+        for unit in sellf.parent_map.all_units:
+            if unit.position == self.position:
+                return false
+            if unit.possition in neighbors and unit.side != side: 
+                return false
+            return true
+
+
+
+    def get_neighbors(self, q, r):
+		directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+		return [(q + dq, r + dr) for dq, dr in directions if (q + dq, r + dr) in self.hexagons]
+	todo : change this code to cap to min and max q and r to avoid going offmap
+	WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
     """
 
 
@@ -141,16 +160,15 @@ class HexGrid:
 	def get_hexagon(self, q, r):
     	return self.hexagons.get((q, r))
 
-	def get_neighbors(self, q, r):
-		directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-		return [(q + dq, r + dr) for dq, dr in directions if (q + dq, r + dr) in self.hexagons]
-	todo : change this code to cap to min and max q and r to avoid going offmap
-	WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
-
     def get_total_victory_points_per_players:
         iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
 
 
+        
+
+
+
+        
 	# Below : used to trace a route to HQ
 	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
 	def build_graph(self):
