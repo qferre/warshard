@@ -48,7 +48,7 @@ class Config:
         "elevation": 2,
         "road": 1,
         "water": 1,
-        "impassable": 10,
+        "impassable": 4,
     }
 
 

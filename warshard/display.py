@@ -1,19 +1,17 @@
-import time
 import pygame
 import math
 import numpy as np
+import pkg_resources
 
 from warshard.map import Map
 from warshard.units import Unit
 
-
 from warshard.config import DisplayConfig
-
-# Constants
-# TODO move to config.py into the DisplayConfig
 
 
 class Displayer:
+
+    # TODO IMPORTANT : I think the scale and smoothscale methods are eating up a lot of CPU power ! So calculate them ONCE AND FOR ALL at the beginning, for all files !
 
     @staticmethod
     def draw(gamestate_to_draw: Map):
@@ -189,9 +187,6 @@ def axial_to_pixel(q, r, size):
 
 
 #####
-
-import pkg_resources
-from PIL import Image
 
 
 def draw_unit(unit: Unit, screen, font):
