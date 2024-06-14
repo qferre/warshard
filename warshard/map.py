@@ -79,7 +79,7 @@ class Map:
 class Hexagon:
     def __init__(
         self,
-        #parent_map
+        # parent_map
         q: int,
         r: int,
         type: str = "plains",
@@ -97,7 +97,7 @@ class Hexagon:
             name (str, optional): _description_. Defaults to "".
         """
 
-        #self.parent_map = parent_map
+        # self.parent_map = parent_map
 
         # q and r are the hex coordinates
         self.q = q
@@ -108,7 +108,7 @@ class Hexagon:
 
         self.victory_points = 0
 
-        self.defender_bonus = Config.DEFENDER_BONI[self.type]
+        self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
 
         """
@@ -126,14 +126,21 @@ class Hexagon:
 
     """ TODO
     def self.is_accessible_to_player_side(side):
-		check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side
+		check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side ; return separate flags for that since we may want to check those conditions separately later
         neighbors =
+        
         for unit in sellf.parent_map.all_units:
             if unit.position == self.position:
-                return false
-            if unit.possition in neighbors and unit.side != side: 
-                return false
-            return true
+                hex_is_clear, hex_not_in_enemy_zoc = false, false
+                return hex_is_clear, hex_not_in_enemy_zoc
+            else if unit.position in neighbors and unit.side != side: 
+                hex_is_clear, hex_not_in_enemy_zoc = true, false
+                return hex_is_clear, hex_not_in_enemy_zoc
+            hex_is_clear, hex_not_in_enemy_zoc = true, true
+            return hex_is_clear, hex_not_in_enemy_zoc
+
+        # todo also check if the hex is not inherently impassable (mobility cost of np.inf)
+            
 
 
 
@@ -165,6 +172,10 @@ class HexGrid:
 
 
         
+
+
+        
+
 
 
 

@@ -38,7 +38,7 @@ class Config:
         "impassable": np.inf,
     }
 
-    DEFENDER_BONI = {
+    DEFENDER_MULTIPLIER = {
         "plains": 1,
         "dry_plains": 1,
         "snow_plains": 1,

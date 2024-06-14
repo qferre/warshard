@@ -9,10 +9,10 @@ max_turns: 20
 
 
 map:
-  min_q:
-  max_q:
-  min_r:
-  max_r:
+  min_x:
+  max_x:
+  min_y:
+  max_y:
 
   biome: winter
 
