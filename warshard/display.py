@@ -6,31 +6,60 @@ import pkg_resources
 from warshard.map import Map
 from warshard.units import Unit
 
-from warshard.config import DisplayConfig
-
-
-
-
+from warshard.config import DisplayConfig, Config
 
 
 class Displayer:
 
-    # TODO IMPORTANT : I think the scale and smoothscale methods are eating up a lot of CPU power ! So calculate them ONCE AND FOR ALL at the beginning, for all files !
-    """
-    # Load all assets
+    def __init__(self) -> None:
 
-    # Flags
-    for flags in glob/pkg(all):
-        flags[name] = scale(flag)
+        # IMPORTANT : I think the scale and smoothscale methods are eating up a lot of CPU power !
+        # So calculate them ONCE AND FOR ALL at the beginning, for all files !
 
-    # same for everything that needs scaling and loading
+        HEX_SIZE = DisplayConfig.HEX_SIZE
 
-    # TODO also to improve perfs
-    # So instead of pygame.image.load(file) do pygame.image.load(file).convert() or if the image has transparent parts pygame.image.load(file).convert_alpha(). 
-    """
+        # Load all assets
+        self.assets = {}
 
-    @staticmethod
-    def draw(gamestate_to_draw: Map):
+        # Hexes
+        for hex_type in Config.MOBILITY_COSTS.keys():
+            hex_background_path = pkg_resources.resource_filename(
+                "warshard", f"assets/hexes/{hex_type}.gif"
+            )
+            hex_background_image = pygame.image.load(hex_background_path)
+            self.assets[f"assets/hexes/{hex_type}.gif"] = pygame.transform.scale(
+                hex_background_image, (2 * HEX_SIZE, np.sqrt(3) * HEX_SIZE + 1)
+            )
+
+        # Flags
+        for faction in DisplayConfig.FACTION_COLORS.keys():
+
+            controller_flag_path = pkg_resources.resource_filename(
+                "warshard", f"assets/flags/{faction}.jpg"
+            )
+            controller_flag = pygame.transform.smoothscale(
+                pygame.image.load(controller_flag_path),
+                (0.7 * HEX_SIZE, 0.45 * HEX_SIZE),
+            )
+            self.assets[f"assets/flags/{faction}.jpg"] = controller_flag
+
+        # Unit types
+        for unit_type in Config.UNIT_CHARACTERISTICS.keys():
+            image_path = pkg_resources.resource_filename(
+                "warshard", f"assets/units/{unit_type}.png"
+            )
+            pawn_image = pygame.image.load(image_path)  # Image.open(image_path)
+            pawn_image = pygame.transform.smoothscale(
+                pawn_image, (HEX_SIZE, HEX_SIZE * 4 / 6)
+            )
+            self.assets[f"assets/units/{unit_type}.png"] = pawn_image
+
+        # same for everything that needs scaling and loading
+
+        # TODO also to improve perfs
+        # So instead of pygame.image.load(file) do pygame.image.load(file).convert() or if the image has transparent parts pygame.image.load(file).convert_alpha().
+
+    def draw(self, gamestate_to_draw: Map):
 
         pygame.init()
 
@@ -55,15 +84,11 @@ class Displayer:
                 screen.fill(DisplayConfig.BACKGROUND_COLOR)
 
                 # Draw hexagon grid
-                draw_hex_grid(
-                    screen,
-                    font_hex,
-                    map_to_draw,
-                )
+                draw_hex_grid(screen, font_hex, map_to_draw, self.assets)
 
                 # Draw pawns
                 for unit in gamestate_to_draw.map.all_units.values():
-                    draw_unit(unit, screen, font)
+                    draw_unit(unit, screen, font, self.assets)
                     # TODO careful about stacked units
 
                 # Draw information TODO make it programmatic fetch
@@ -83,7 +108,7 @@ class Displayer:
                 """
 
                 # TODO draw fights
-                #draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
+                # draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
 
                 draw_text(
                     screen,
@@ -106,11 +131,7 @@ class Displayer:
 # Set up display
 
 
-def draw_hex_grid(
-    screen,
-    font,
-    map_to_draw: Map,
-):
+def draw_hex_grid(screen, font, map_to_draw: Map, assets):
     HEX_SIZE = DisplayConfig.HEX_SIZE
 
     # Draw hexagon grid
@@ -127,13 +148,7 @@ def draw_hex_grid(
         )
 
         # Hex background and color
-        hex_background_path = pkg_resources.resource_filename(
-            "warshard", f"assets/hexes/{hexagon.type}.gif"
-        )
-        hex_background_image = pygame.image.load(hex_background_path)
-        hex_background_image = pygame.transform.scale(
-            hex_background_image, (2 * HEX_SIZE, np.sqrt(3) * HEX_SIZE + 1)
-        )
+        hex_background_image = assets[f"assets/hexes/{hexagon.type}.gif"]
         screen.blit(hex_background_image, (top_left_pos[0], top_left_pos[1]))
 
         # Draw hex borders
@@ -141,13 +156,8 @@ def draw_hex_grid(
 
         # TODO if the hexagon is a victory point, draw a little flag of the controller
         if hexagon.victory_points > 0:
-            controller_flag_path = pkg_resources.resource_filename(
-                "warshard", f"assets/flags/{hexagon.controller}.jpg"
-            )
-            controller_flag = pygame.transform.smoothscale(
-                pygame.image.load(controller_flag_path),
-                (0.7 * HEX_SIZE, 0.45 * HEX_SIZE),
-            )
+
+            controller_flag = assets[f"assets/flags/{hexagon.controller}.jpg"]
             screen.blit(
                 controller_flag,
                 (
@@ -208,7 +218,7 @@ def axial_to_pixel(q, r, size):
 #####
 
 
-def draw_unit(unit: Unit, screen, font):
+def draw_unit(unit: Unit, screen, font, assets):
 
     HEX_SIZE = DisplayConfig.HEX_SIZE
 
@@ -228,18 +238,11 @@ def draw_unit(unit: Unit, screen, font):
     )
 
     # Symbol
-    image_path = pkg_resources.resource_filename(
-        "warshard", f"assets/units/{unit.type}.png"
-    )
-    pawn_image = pygame.image.load(image_path)  # Image.open(image_path)
-    pawn_image = pygame.transform.smoothscale(pawn_image, (width, height))
+    pawn_image = assets[f"assets/units/{unit.type}.png"]
     screen.blit(pawn_image, (pixel_x, pixel_y))
 
     # ID
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))
-
-
-
 
 
 """ TODO

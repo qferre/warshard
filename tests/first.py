@@ -51,6 +51,15 @@ g.map.fetch_hex_by_coordinate(9, 9).victory_points = 10
 g.map.fetch_hex_by_coordinate(9, 9).controller = "ussr"
 
 
+
+g.map.fetch_hex_by_coordinate(16, 1).type = "city"
+g.map.fetch_hex_by_coordinate(16, 2).type = "forest"
+g.map.fetch_hex_by_coordinate(16, 3).type = "road"
+g.map.fetch_hex_by_coordinate(16, 4).type = "impassable"
+
+
+
+
 # Now test interactions like movements and fights
 
 g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4, 5))
