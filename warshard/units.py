@@ -30,20 +30,19 @@ class Unit:
     def attempt_move_to(self, hex: Hexagon):
         # check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.player_side))
         mobility_cost = Config.MOBILITY_COSTS[hex.type]
-        hex_is_clear, hex_not_in_enemy_zoc = hex.is_accessible_to_player_side(self.player_side)
-        is_accessible = hex_is_clear and hex_not_in_enemy_zoc
+        hex_is_clear, hex_not_in_enemy_zoc = hex.is_accessible_to_player_side(
+            self.player_side
+        )
+        is_accessible = hex_is_clear
 
-        if (mobility_cost < self.remaining_mobility) and is_accessible:
-            # substract mobility cost of target hex to our remainig_mobility
-            self.remaining_mobility -= mobility_cost
+        if (mobility_cost <= self.mobility_remaining) and is_accessible:
+            # substract mobility cost of target hex to our remaining_mobility
+            self.mobility_remaining -= mobility_cost
             self.force_move_to(hex)  # move there
 
             # if in enemy zoc, set remaining mobility to 0
             if not hex_not_in_enemy_zoc:
-                self.remaining_mobility = 0
-            return
-        else:
-            return
+                self.mobility_remaining = 0
 
     """ TODO
 

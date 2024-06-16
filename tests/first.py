@@ -43,13 +43,11 @@ g.map.fetch_hex_by_coordinate(4, 5).victory_points = 10
 g.map.fetch_hex_by_coordinate(4, 5).controller = "usa"
 
 
-
 g.map.fetch_hex_by_coordinate(8, 8).victory_points = 10
 g.map.fetch_hex_by_coordinate(8, 8).controller = "britain"
 
 g.map.fetch_hex_by_coordinate(9, 9).victory_points = 10
 g.map.fetch_hex_by_coordinate(9, 9).controller = "ussr"
-
 
 
 g.map.fetch_hex_by_coordinate(16, 1).type = "city"
@@ -69,7 +67,9 @@ g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 
 ## Try to move units we created
 u_1 = g.map.fetch_unit_by_id(666)
-u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))
+u_1.mobility_remaining = 1000
+u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))  # Should succeed
+u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(4, 5))  # Should fail
 
 ## Create units close enough for a fight and test it
 
@@ -91,8 +91,3 @@ g.second_upkeep_phase()
 
 
 # Now test the complete run_a_turn
-
-
-
-
-

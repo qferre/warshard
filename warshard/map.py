@@ -12,7 +12,7 @@ class Map:
     def __init__(self, yaml_file=None, max_q=21, max_r=15) -> None:
         assert max_q <= 21
         assert max_r <= 15
-        self.hexgrid = HexGrid(max_q, max_r)
+        self.hexgrid = HexGrid(max_q, max_r, parent_map=self)
 
         # self.all_units: dict[int, Unit] = {} # List of all Units currently in play
         # TODO fix typing circular imports
@@ -77,7 +77,7 @@ class Map:
 class Hexagon:
     def __init__(
         self,
-        # parent_map
+        parent_map: Map,
         q: int,
         r: int,
         type: str = "plains",
@@ -95,7 +95,7 @@ class Hexagon:
             name (str, optional): _description_. Defaults to "".
         """
 
-        # self.parent_map = parent_map
+        self.parent_map = parent_map
 
         # q and r are the hex coordinates
         self.q = q
@@ -129,10 +129,10 @@ class Hexagon:
         # Default assumption is that we can move there
         hex_is_clear, hex_not_in_enemy_zoc = True, True
 
-        for unit in self.parent_map.all_units:
-            if unit.position == self.position:
+        for unit_id, unit in self.parent_map.all_units.items():
+            if unit.hexagon_position == self: # TODO check equality works between hexagons
                 hex_is_clear = False
-            if unit.position in neighbors and unit.player_side != player_side:
+            if unit.hexagon_position in neighbors and unit.player_side != player_side:
                 hex_not_in_enemy_zoc = False
 
         return hex_is_clear, hex_not_in_enemy_zoc
@@ -144,18 +144,19 @@ class Hexagon:
         return [
             (self.q + dq, self.r + dr)
             for dq, dr in directions
-            if (self.q + dq, self.r + dr) in self.hexagons
+            if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
         ]
-        # todo : change this code to cap to min and max q and r to avoid going offmap
+        # todo : change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
 
 class HexGrid:
-    def __init__(self, max_q, max_r) -> None:
+    def __init__(self, max_q, max_r, parent_map) -> None:
         self.hexagons = {}
+        self.parent_map = parent_map
         for q in range(max_q):
             for r in range(max_r):
-                self.hexagons[(q, r)] = Hexagon(q, r)
+                self.hexagons[(q, r)] = Hexagon(parent_map=self.parent_map, q=q, r=r)
 
 
 """ TODO
@@ -169,15 +170,6 @@ class HexGrid:
         iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
 
 
-        
-
-
-        
-
-
-
-
-        
 	# Below : used to trace a route to HQ
 	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
 	def build_graph(self):
