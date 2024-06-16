@@ -52,9 +52,7 @@ class Map:
         return self.hexgrid.hexagons[(x, y)]
 
     """ TODO
-    def is_movement_valid(unit: Unit, hex):
-        # Is another unit there ? Are we exiting an enemy's ZoC ?
-        recall the hexagon.is_accessible_to_player_side() function exists :)
+    
 
     def spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
 		remember to check id is not already allocated
@@ -124,32 +122,32 @@ class Hexagon:
         self.x = self.q
         self.y = self.r - self.q // 2
 
-    """ TODO
-    def self.is_accessible_to_player_side(side):
-		check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side ; return separate flags for that since we may want to check those conditions separately later
-        neighbors =
-        
-        for unit in sellf.parent_map.all_units:
+    def is_accessible_to_player_side(self, player_side):
+        # check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side ; return separate flags for that since we may want to check those conditions separately later
+        neighbors = self.get_neighbors()
+
+        # Default assumption is that we can move there
+        hex_is_clear, hex_not_in_enemy_zoc = True, True
+
+        for unit in self.parent_map.all_units:
             if unit.position == self.position:
-                hex_is_clear, hex_not_in_enemy_zoc = false, false
-                return hex_is_clear, hex_not_in_enemy_zoc
-            else if unit.position in neighbors and unit.side != side: 
-                hex_is_clear, hex_not_in_enemy_zoc = true, false
-                return hex_is_clear, hex_not_in_enemy_zoc
-            hex_is_clear, hex_not_in_enemy_zoc = true, true
-            return hex_is_clear, hex_not_in_enemy_zoc
+                hex_is_clear = False
+            if unit.position in neighbors and unit.player_side != player_side:
+                hex_not_in_enemy_zoc = False
 
-        # todo also check if the hex is not inherently impassable (mobility cost of np.inf)
-            
+        return hex_is_clear, hex_not_in_enemy_zoc
 
+        # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
-
-    def get_neighbors(self, q, r):
-		directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-		return [(q + dq, r + dr) for dq, dr in directions if (q + dq, r + dr) in self.hexagons]
-	todo : change this code to cap to min and max q and r to avoid going offmap
-	WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
-    """
+    def get_neighbors(self):
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+        return [
+            (self.q + dq, self.r + dr)
+            for dq, dr in directions
+            if (self.q + dq, self.r + dr) in self.hexagons
+        ]
+        # todo : change this code to cap to min and max q and r to avoid going offmap
+        # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
 
 class HexGrid:
