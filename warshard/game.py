@@ -12,6 +12,7 @@ from warshard.units import Unit
 class Game:
 
     global self  # Necessary so the Game object can be passed to the display thread
+    
 
     def __init__(
         self,
@@ -45,8 +46,12 @@ class Game:
         # Display
         if not headless:
             logging.debug("Starting display thread")
+
+
+            self.displayer = display.Displayer()
+
             self.display_thread = threading.Thread(
-                target=partial(display.Displayer.draw, gamestate_to_draw=self)
+                target=partial(self.displayer.draw, gamestate_to_draw=self)
             )
             self.display_thread.start()
 
