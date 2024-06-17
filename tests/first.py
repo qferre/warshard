@@ -68,10 +68,35 @@ g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 ## Try to move units we created
 u_1 = g.map.fetch_unit_by_id(666)
 u_1.mobility_remaining = 1000
-u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))  # Should succeed
-u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(4, 5))  # Should fail
+u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))  # assert Should succeed
+u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(4, 5))  # assert Should fail
 
 ## Create units close enough for a fight and test it
+g.map.all_units[67] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(4, 4)],
+    type="armor",
+    player_side="germany",
+    id=67,
+)
+g.map.all_units[27] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(4, 6)],
+    type="artillery",
+    player_side="usa",
+    id=67,
+)
+u_2 = g.map.fetch_unit_by_id(67)
+#u_1.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+#u_2.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+
+u_3 = g.map.fetch_unit_by_id(27)
+#u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+
+"""
+TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
+we try to fetch the hex automatically, this will let us shorten the syntax
+    from u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+    to u_3.attempt_join_defense_on_hex((4, 5))
+"""
 
 
 # Now test individual turn functions

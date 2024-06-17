@@ -181,14 +181,14 @@ class HexGrid:
                 	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
     	return G
 
-	def heuristic(self, a, b):
+	def manhattan_distance_hex_grid(self, a, b):
     	# Manhattan distance for hex grids
     	return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 	def find_path(self, start, goal):
     	G = self.build_graph()
     	try:
-        	path = nx.astar_path(G, start, goal, heuristic=self.heuristic, weight='weight')
+        	path = nx.astar_path(G, start, goal, heuristic=self.manhattan_distance_hex_grid, weight='weight')
         	return path
     	except nx.NetworkXNoPath:
         	return None

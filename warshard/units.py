@@ -47,6 +47,7 @@ class Unit:
     """ TODO
 
     self.attempt_attack_on_hex(hex):
+        check we are not already involved in a fight
         check if we are within range of desired hex
         check if the hex contains an enemy unit
 
@@ -57,6 +58,7 @@ class Unit:
 
 
     self.attempt_join_defense_on_hex(hex, map):
+        check we are not already involved in a fight
         check a fight exists at destination
         check we are within range to join it and that we are not a melee unit
         join the fight as support
