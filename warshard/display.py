@@ -67,6 +67,7 @@ class Displayer:
         pygame.display.set_caption("WarShard game")
         font_hex = pygame.font.SysFont(None, DisplayConfig.FONT_SIZE_HEX)
         font = pygame.font.SysFont(None, DisplayConfig.FONT_SIZE)
+        font_info = pygame.font.SysFont(None, DisplayConfig.FONT_SIZE_INFO)
 
         clock = pygame.time.Clock()
         running = True
@@ -91,31 +92,35 @@ class Displayer:
                     draw_unit(unit, screen, font, self.assets)
                     # TODO careful about stacked units
 
-                # Draw information TODO make it programmatic fetch
+                # Draw information TODO make it programmatic fetch info
                 info_text = f"""
-                Current turn number: 66/10
+                CURRENT TURN NUMBER:
+                66/10
                 \n
-                Current phase : XX Advancing Phase
-                Current player au trait : XX Germany
-                \n\n\n
-                Victory points per side:
+                CURRENT PHASE:
+                XX Advancing Phase
+                \n
+                CURRENT PLAYER AU TRAIT:
+                XX Germany
+                \n\n\n\n\n\n
+                VICTORY POINTS PER SIDE:
                 Germany: XX
                 USA: XX
                 \n\n
-                Remaining power per side:
+                TOTAL POWER PER SIDE:
                 Germany: XX
-                USA : XX
+                USA: XX
                 """
-
-                # TODO draw fights
-                # draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
 
                 draw_text(
                     screen,
                     text=info_text,
-                    position=(DisplayConfig.WIDTH - 150, 50),
-                    font=font,
+                    position=(DisplayConfig.WIDTH - 160, 50),
+                    font=font_info,
                 )
+
+                # TODO draw fights
+                # draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
 
                 pygame.display.flip()  # Update display
                 clock.tick(DisplayConfig.FPS)
@@ -242,6 +247,9 @@ def draw_unit(unit: Unit, screen, font, assets):
     screen.blit(pawn_image, (pixel_x, pixel_y))
 
     # ID
+    pygame.draw.circle(
+        screen, (255, 255, 255), (pixel_x, pixel_y), radius=DisplayConfig.FONT_SIZE // 2
+    )
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))
 
 
