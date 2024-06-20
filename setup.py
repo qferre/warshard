@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="warshard",
     version="1.0",
-    description="A simplified modern wargame designed to be compatible with training AIs.",
+    description="A simplified modern wargame designed to facilitate AI modeling.",
     url="http://github.com/qferre/warshard",
     author="Quentin Ferré",
     author_email="quentin.q.ferre@gmail.com",
