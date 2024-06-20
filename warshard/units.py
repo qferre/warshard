@@ -1,5 +1,5 @@
-from warshard.map import Hexagon
-
+from warshard.map import Hexagon, HexGrid
+from warshard.actions import Fight
 from warshard.config import Config
 
 
@@ -22,6 +22,8 @@ class Unit:
 
         self.id = id  # Unique ID crucial for selection # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.
 
+        self.involved_in_fight = None  # type : <Fight>
+
     def force_move_to(self, hex: Hexagon):
         # TODO used for retreats
         # (and debug in general)
@@ -33,9 +35,8 @@ class Unit:
         hex_is_clear, hex_not_in_enemy_zoc = hex.is_accessible_to_player_side(
             self.player_side
         )
-        is_accessible = hex_is_clear
 
-        if (mobility_cost <= self.mobility_remaining) and is_accessible:
+        if (mobility_cost <= self.mobility_remaining) and hex_is_clear:
             # substract mobility cost of target hex to our remaining_mobility
             self.mobility_remaining -= mobility_cost
             self.force_move_to(hex)  # move there
@@ -44,19 +45,33 @@ class Unit:
             if not hex_not_in_enemy_zoc:
                 self.mobility_remaining = 0
 
+    def attempt_attack_on_hex(self, hex):
+        # Check we are not already involved in a fight
+        if self.involved_in_fight is not None:
+            return
+
+        # Check if we are within range of desired hex
+        distance = HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex)
+        if distance > self.range:
+            return
+
+        # Check if the hex contains an enemy unit
+
+        # if self.parent_map.all_fights does not have a fight on this hex, create it before we attempty to join it :
+        if hex not in self.parent_map.ongoing_fights:
+            # create a fight and add it to the list
+            this_fight = Fight()
+            self.parent_map.ongoing_fights.append(this_fight)
+            # TODO add the enemy unit present on this hex as the melee defender
+            this_fight.defending_melee_unit = hex.current_occupier
+
+        # In any case, either the fight was created or we found an existing one, now join it as attacker!
+        this_fight = self.parent_map.ongoing_fights[hex]
+        this_fight.attacking_units.append(self)
+
+        self.involved_in_fight = this_fight
+
     """ TODO
-
-    self.attempt_attack_on_hex(hex):
-        check we are not already involved in a fight
-        check if we are within range of desired hex
-        check if the hex contains an enemy unit
-
-        if self.parent_map.all_fights does not have a fight on this hex :
-            create a fight and join it
-        else:
-            join existing fight
-
-
     self.attempt_join_defense_on_hex(hex, map):
         check we are not already involved in a fight
         check a fight exists at destination
