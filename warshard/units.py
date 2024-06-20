@@ -21,6 +21,7 @@ class Unit:
         self.mobility_remaining = 0
 
         self.id = id  # Unique ID crucial for selection # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.
+        # TODO also assert that ID is an integer between 1 and 99 included
 
         self.involved_in_fight = None  # type : <Fight>
 
