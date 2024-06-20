@@ -1,15 +1,13 @@
 from warshard.config import Config
 
 
-class Fight:
-    raise NotImplementedError
 
+class Fight:
     """ TODO
     self.attacking_player_id
 	self.defending_player_id
 	self.hexagon
-	self.attacking_melee_units
-	self.attacking_support
+	self.attacking_units
 	self.defending_melee_unit
 	self.defending_support
 
@@ -21,6 +19,7 @@ class Fight:
 		check strength ratio for attacker is at least 0.5x defender
 		determine result
 		force retreats
+        clear the unit.involved_in_fight flags for everyone
 
 	def check_possible_retreats:
 		for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable

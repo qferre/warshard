@@ -104,7 +104,7 @@ class Hexagon:
         assert type in Config.MOBILITY_COSTS.keys()
         self.type = type
 
-        self.victory_points = 0
+        self.victory_points = victory_points
 
         self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
@@ -146,7 +146,7 @@ class Hexagon:
             for dq, dr in directions
             if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
         ]
-        # todo : change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
+        # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
 
@@ -158,6 +158,12 @@ class HexGrid:
             for r in range(max_r):
                 self.hexagons[(q, r)] = Hexagon(parent_map=self.parent_map, q=q, r=r)
 
+
+    @staticmethod
+    def manhattan_distance_hex_grid(h1:Hexagon, h2:Hexagon):
+        # Manhattan distance for hex grids
+        return abs(h1.q - h2.q) + abs(h1.r - h2.r)
+        # TODO qr or xy coords ?
 
 """ TODO
 	def add_hexagon:
@@ -172,6 +178,9 @@ class HexGrid:
 
 	# Below : used to trace a route to HQ
 	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
+    # TODO to shorten the graph, cap it at a distance of 6 (tbd) since HQs cannot supply more than 6 hexes away
+    # TODO This is likely too expensive to run each time for all units. Instead, I think that I can do this : 
+    #   at the beginning of each turn, iterate over all hq and mark all its accessible neighbors. Then for each such neighbor, mark its own accessible neighbors and so on so forth up to 6 times. Remember all hexes thus explored and mark them as "in supply". 
 	def build_graph(self):
     	G = nx.Graph()
     	for (q, r), hexagon in self.hexagons.items():
@@ -181,14 +190,12 @@ class HexGrid:
                 	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
     	return G
 
-	def manhattan_distance_hex_grid(self, a, b):
-    	# Manhattan distance for hex grids
-    	return abs(a[0] - b[0]) + abs(a[1] - b[1])
+    
 
 	def find_path(self, start, goal):
     	G = self.build_graph()
     	try:
-        	path = nx.astar_path(G, start, goal, heuristic=self.manhattan_distance_hex_grid, weight='weight')
+        	path = nx.astar_path(G, start, goal, heuristic= lambda a,b: abs(a[0] - b[0]) + abs(a[1] - b[1]), weight='weight')
         	return path
     	except nx.NetworkXNoPath:
         	return None
