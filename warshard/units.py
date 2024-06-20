@@ -31,6 +31,10 @@ class Unit:
         self.hexagon_position = hex
 
     def attempt_move_to(self, hex: Hexagon):
+        # TODO YOU ABSOLUTE FOOL 
+        # Check that we are trying to move into an ADJACENT HEX
+        # ADD A TEST TO ASSERT THIS !!!!!!!!
+
         # check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.player_side))
         mobility_cost = Config.MOBILITY_COSTS[hex.type]
         hex_is_clear, hex_not_in_enemy_zoc = hex.is_accessible_to_player_side(
