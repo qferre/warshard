@@ -82,7 +82,7 @@ g.map.all_units[27] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(4, 6)],
     type="artillery",
     player_side="usa",
-    id=67,
+    id=27,
 )
 u_2 = g.map.fetch_unit_by_id(67)
 #u_1.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))

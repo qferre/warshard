@@ -20,7 +20,7 @@ class Unit:
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0
 
-        self.id = id  # Unique ID crucial for selection
+        self.id = id  # Unique ID crucial for selection # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.
 
     def force_move_to(self, hex: Hexagon):
         # TODO used for retreats
