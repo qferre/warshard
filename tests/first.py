@@ -11,11 +11,11 @@ g = Game()
 
 
 # Ensure map can be updated
-g.map.all_units[666] = Unit(
+g.map.all_units[16] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(2, 2)],
     type="armor",
     player_side="germany",
-    id=666,
+    id=16,
 )
 
 
@@ -35,12 +35,12 @@ g.map.all_units[26] = Unit(
 )
 
 
-g.map.fetch_hex_by_coordinate(5, 5).victory_points = 10
-g.map.fetch_hex_by_coordinate(5, 5).controller = "germany"
+g.map.fetch_hex_by_coordinate(3, 3).victory_points = 10
+g.map.fetch_hex_by_coordinate(3, 3).controller = "germany"
+g.map.fetch_hex_by_coordinate(4, 3).controller = "germany"
 
-
-g.map.fetch_hex_by_coordinate(4, 5).victory_points = 10
-g.map.fetch_hex_by_coordinate(4, 5).controller = "usa"
+g.map.fetch_hex_by_coordinate(4, 7).victory_points = 10
+g.map.fetch_hex_by_coordinate(4, 7).controller = "usa"
 
 
 g.map.fetch_hex_by_coordinate(8, 8).victory_points = 10
@@ -63,10 +63,10 @@ g.map.fetch_hex_by_coordinate(4, 5).type = "forest"
 # Now test interactions like movements and fights
 
 g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4, 5))
-g.map.fetch_unit_by_id(666).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
+g.map.fetch_unit_by_id(16).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 
 ## Try to move units we created
-u_1 = g.map.fetch_unit_by_id(666)
+u_1 = g.map.fetch_unit_by_id(16)
 u_1.mobility_remaining = 1000
 u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))  # assert Should succeed
 u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(4, 5))  # assert Should fail
@@ -79,17 +79,18 @@ g.map.all_units[67] = Unit(
     id=67,
 )
 g.map.all_units[27] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(4, 6)],
+    hexagon_position=g.map.hexgrid.hexagons[(4, 7)],
     type="artillery",
     player_side="usa",
     id=27,
 )
 u_2 = g.map.fetch_unit_by_id(67)
-#u_1.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
-#u_2.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+# u_1.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+# u_2.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+# assert the fight was created with the proper units
 
 u_3 = g.map.fetch_unit_by_id(27)
-#u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+# u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
 
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
