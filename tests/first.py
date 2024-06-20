@@ -55,6 +55,12 @@ g.map.fetch_hex_by_coordinate(16, 2).type = "forest"
 g.map.fetch_hex_by_coordinate(16, 3).type = "road"
 g.map.fetch_hex_by_coordinate(16, 4).type = "impassable"
 
+g.map.fetch_hex_by_coordinate(16, 5).type = "defensible"
+g.map.fetch_hex_by_coordinate(16, 6).type = "dry_plains"
+g.map.fetch_hex_by_coordinate(16, 7).type = "elevation"
+g.map.fetch_hex_by_coordinate(16, 8).type = "snow_plains"
+g.map.fetch_hex_by_coordinate(16, 9).type = "water"
+
 
 g.map.fetch_hex_by_coordinate(3, 3).type = "city"
 g.map.fetch_hex_by_coordinate(4, 5).type = "forest"
