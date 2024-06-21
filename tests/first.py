@@ -16,6 +16,7 @@ g.map.all_units[16] = Unit(
     type="armor",
     player_side="germany",
     id=16,
+    parent_map=g.map,
 )
 
 
@@ -24,6 +25,7 @@ g.map.all_units[42] = Unit(
     type="infantry",
     player_side="germany",
     id=42,
+    parent_map=g.map,
 )
 
 
@@ -32,6 +34,7 @@ g.map.all_units[26] = Unit(
     type="mechanised",
     player_side="usa",
     id=26,
+    parent_map=g.map,
 )
 
 
@@ -82,17 +85,24 @@ g.map.all_units[67] = Unit(
     type="armor",
     player_side="germany",
     id=67,
+    parent_map=g.map,
 )
 g.map.all_units[27] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(4, 7)],
     type="artillery",
     player_side="usa",
     id=27,
+    parent_map=g.map,
 )
 u_2 = g.map.fetch_unit_by_id(67)
-# u_1.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
-# u_2.attempt_attack_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
-# assert the fight was created with the proper units
+fight_hex = g.map.fetch_hex_by_coordinate(4, 5)
+u_1.attempt_attack_on_hex(fight_hex)
+u_2.attempt_attack_on_hex(fight_hex)
+# TODO assert the fight was created with the proper units
+this_fight = g.map.ongoing_fights[fight_hex]
+print(g.map.ongoing_fights[fight_hex].defending_melee_unit)
+print(g.map.ongoing_fights[fight_hex].attacking_units) 
+
 
 u_3 = g.map.fetch_unit_by_id(27)
 # u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))

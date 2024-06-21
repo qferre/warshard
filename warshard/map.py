@@ -14,13 +14,13 @@ class Map:
         assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r, parent_map=self)
 
-        # self.all_units: dict[int, Unit] = {} # List of all Units currently in play
+        # self.all_units: dict<int : Unit> = {} # List of all Units currently in play
         # TODO fix typing circular imports
         self.all_units = {}  # a dictionary {unit_id: unit} containing all units in play
         # TODO do not work on self.all_units directly, make functions that add unit by force-checking their ID (see right below)
 
-        # self.ongoing_fights : list[Fight]
-        self.ongoing_fights = []
+        # self.ongoing_fights : dictionary<Hexagon : Fight>
+        self.ongoing_fights = {} # dictionary {Hexagon: Fight} 
 
     # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
     # have coded so far (involving directly looking into the dict, which is ugly)
@@ -161,9 +161,11 @@ class HexGrid:
 
     @staticmethod
     def manhattan_distance_hex_grid(h1:Hexagon, h2:Hexagon):
+        raise NotImplementedError, "Currently bugged : a diagonal neighbor will not be seen at range 1 (for example, (3,4) and (4,5))"
         # Manhattan distance for hex grids
         return abs(h1.q - h2.q) + abs(h1.r - h2.r)
         # TODO qr or xy coords ?
+
 
 """ TODO
 	def add_hexagon:

@@ -1,13 +1,15 @@
-from warshard.map import Hexagon, HexGrid
+from warshard.map import Hexagon, HexGrid, Map
 from warshard.actions import Fight
 from warshard.config import Config
 
 
 class Unit:
 
-    def __init__(self, hexagon_position: Hexagon, type: str, player_side, id) -> None:
+    def __init__(
+        self, hexagon_position: Hexagon, type: str, player_side, id, parent_map: Map
+    ) -> None:
 
-        # TODO self.parent_map = map (we will need to read map functions that check if a move is valid)
+        self.parent_map = parent_map
 
         assert type in Config.UNIT_CHARACTERISTICS.keys()
         self.type: str = type  # armor, hq, etc.
@@ -34,7 +36,7 @@ class Unit:
         # Check that we are trying to move into an ADJACENT HEX
         # TODO need to write very explicitly in the doc that, for now, if you want to move
         # more than 1 hex per turn you simply need to QUEUE movement orders
-        if HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex) >1:
+        if HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex) > 1:
             return
 
         # check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.player_side))
@@ -57,20 +59,28 @@ class Unit:
         if self.involved_in_fight is not None:
             return
 
-        # Check if we are within range of desired hex
+        # Check if we are within range of target hex
         distance = HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex)
         if distance > self.range:
+            print("Haaa")
             return
 
-        # Check if the hex contains an enemy unit
+        # Check if the target hex contains an enemy unit
+        target_hex_contains_enemy_unit = False
+        for unit_id, unit in self.parent_map.all_units.items():
+            if unit.player_side != self.player_side and unit.hexagon_position == hex:
+                target_hex_contains_enemy_unit = True
+                current_occupier = unit
+                break
+        if not target_hex_contains_enemy_unit:
+            return
 
-        # if self.parent_map.all_fights does not have a fight on this hex, create it before we attempty to join it :
+        # If self.parent_map.all_fights does not have a fight on this hex, create it before we attempty to join it :
         if hex not in self.parent_map.ongoing_fights:
-            # create a fight and add it to the list
-            this_fight = Fight()
-            self.parent_map.ongoing_fights.append(this_fight)
-            # TODO add the enemy unit present on this hex as the melee defender
-            this_fight.defending_melee_unit = hex.current_occupier
+            # Create a fight and add it to the list
+            # Add the enemy unit present on this hex as the melee defender
+            this_fight = Fight(defending_melee_unit=current_occupier)
+            self.parent_map.ongoing_fights[hex] = this_fight
 
         # In any case, either the fight was created or we found an existing one, now join it as attacker!
         this_fight = self.parent_map.ongoing_fights[hex]
