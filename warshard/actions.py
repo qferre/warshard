@@ -18,9 +18,9 @@ class Fight:
 		compute ratio (remember that support units can be 0 so avoid divide-by-zero ; and round in defender favor ; and cap at what exists in the table)
 		check strength ratio for attacker is at least 0.5x defender
 		determine result
-		force retreats. Retreats are performed regardless of remaining mobility (so use force_move_to())
+		force retreats.
+			for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
+            check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex, or destroy the unit if no hex is appropriate
+        	Retreats are performed regardless of remaining mobility (so use force_move_to())
 		clear the unit.involved_in_fight flags for everyone
-
-	def check_possible_retreats:
-		for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function
 	"""

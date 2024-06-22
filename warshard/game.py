@@ -84,12 +84,17 @@ class Game:
             NotImplementedError: _description_
         """
         raise NotImplementedError
+    
+        # TODO remember all orders given, but write in doc that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :)
+        #self.all_orders_ever_given[self.current_turn_number] += pending_orders
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
         # This will likely necessitate passing the logger object to all functions.
 
         # by default, always send the same pending_orders and ignore all non applicable
         # orders when processing
+
+        # TODO remember to update self.current_turn_phase when necessary
 
         # TODO check that self.current_turn_number < scenario_max_turns
 

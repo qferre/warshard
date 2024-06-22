@@ -52,19 +52,17 @@ class Map:
         return self.hexgrid.hexagons[(x, y)]
 
     """ TODO
-    def spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
+    def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
 		remember to check id is not already allocated
         return a reference to the unit
+        this does NOT check for stacking
 
-
-	# Used in replay or in debug ; other functions such as spawn_unit_at_position and unit.force_move_to can also
-    # be used in replay or debug
 	def force_destruction(unit_id:int)
+        use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
+        also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
 
-    # TODO add a replay_function ? Hmm not in v1, write is as NotImplementedError. This function should
-    # take a list of Results of shape (unit_id, new_hex_position, destroyed_or_not)
 
-    read_status_from_yaml()
+    def read_status_from_yaml()
         the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
         then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
     """
@@ -159,7 +157,7 @@ class HexGrid:
     @staticmethod
     def manhattan_distance_hex_grid(h1: Hexagon, h2: Hexagon):
 
-        # TODO qr or xy coords ?
+        # TODO qr or xy coords ? XY I think as is currently done is the correct way
         # TODO Add a test for this in tests !
 
         x1, y1, x2, y2 = h1.x, h1.y, h2.x, h2.y
