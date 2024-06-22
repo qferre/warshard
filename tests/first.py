@@ -98,10 +98,11 @@ u_2 = g.map.fetch_unit_by_id(67)
 fight_hex = g.map.fetch_hex_by_coordinate(4, 5)
 u_1.attempt_attack_on_hex(fight_hex)
 u_2.attempt_attack_on_hex(fight_hex)
-# TODO assert the fight was created with the proper units
+
+## assert the fight was created with the proper units
 this_fight = g.map.ongoing_fights[fight_hex]
-print(g.map.ongoing_fights[fight_hex].defending_melee_unit)
-print(g.map.ongoing_fights[fight_hex].attacking_units) 
+assert this_fight.attacking_units == [u_1, u_2]
+assert this_fight.defending_melee_unit == g.map.fetch_unit_by_id(26)
 
 
 u_3 = g.map.fetch_unit_by_id(27)

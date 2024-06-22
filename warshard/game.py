@@ -9,6 +9,25 @@ from warshard.map import Map
 from warshard.units import Unit
 
 
+class Order:
+    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
+    # as (unit_hex, hex_x, hex_y) where each is a string
+
+    def __init__(unit_id, hex_coordinates, map):
+        self.map = map
+        self.unit_id = unit_id
+        self.hex_x, self.hex_y = hex_coordinates
+
+        # Find unit with same ID
+        self.unit_ref = map.fetch_unit_by_id(self.unit_id)
+
+        # Find hexagon with same coordinates
+        self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
+
+        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
+        # self.order_type
+
+
 class Game:
 
     global self  # Necessary so the Game object can be passed to the display thread
@@ -53,12 +72,13 @@ class Game:
             )
             self.display_thread.start()
 
-    def run_a_turn(self, pending_orders):
+    def run_a_turn(self, pending_orders: list[Order]):
         """_summary_
 
         Args:
             pending_orders (_type_): allows my framework to be easily used with AI ! a list containing pairs of (Unit, Hexagon). When requesting orders, we first check if any pending orders are present and try to execute those first. Orders are executed in FIFO, meaning you can queue movement orders for the same unit.
                 note that we will iterate over pending_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
+                TODO : add a way to flag the type of orders as they are given inside the pending_orders list. Relevant notably to pre-plan retreats : we don't want the unit to retreat during its movement phase because it thought it was a regular movement order. Also relevant for putative advances, to ensure they are not just seen as a regular attack order. Probably these two "putative" orders are the problematic ones, so the flag could simply be "order.is_putative_order". TBD.
 
         Raises:
             NotImplementedError: _description_
@@ -66,6 +86,7 @@ class Game:
         raise NotImplementedError
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
+        # This will likely necessitate passing the logger object to all functions.
 
         # by default, always send the same pending_orders and ignore all non applicable
         # orders when processing
@@ -98,7 +119,7 @@ class Game:
         # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted
         for order in orders:
             order.unit_ref.attempt_move_to(order.hexagon_ref)
-        # TODO Any stacked units are destroyed starting with the last arrived ones
+        # TODO Once movements have been resolved, units that are still stacked will start being destroyed until only one remains, beginning with the lower Power units and with ties broken randomly
 
     def attacker_combat_allocation_phase(orders):
         for order in orders:
@@ -121,28 +142,12 @@ class Game:
 
     def advancing_phase()
         # We ask player to pre-specify potential advances
-        Iterate over each fight won and let attacker pick one unit to move there.
+        Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
+        Do not allow moving more than one unit per fight obviously. This move is allowed regardless of remaining mobility (so use force_move_to())
 		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def second_upkeep_phase()
-        Then destroy all Fights and set mobility of all units to 0
+        Then destroy all Fights and set mobility of all units to 0 just in case
         increment turn number
         Change controllers of victory point hexes depending on who is standing on it (careful about stacked units, even though they should all belong to the same player)
-
     """
-
-
-class Order:
-    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
-    # as (unit_hex, hex_x, hex_y) where each is a string
-
-    def __init__(unit_id, hex_coordinates, map):
-        self.map = map
-        self.unit_id = unit_id
-        self.hex_x, self.hex_y = hex_coordinates
-
-        # Find unit with same ID
-        self.unit_ref = map.fetch_unit_by_id(self.unit_id)
-
-        # Find hexagon with same coordinates
-        self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
