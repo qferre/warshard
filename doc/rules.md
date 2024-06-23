@@ -37,7 +37,7 @@ During a turn :
 
 - The attacker specifies which units will attack which hexes. Each attacked hex is called a Fight.
 - Then, in a second time, the attacker also allocates Support units.
-- Finally, the defender allocates its own Support units, but cannot allocate additional supporting defending units (this will be represented by counterattacks in the defender’s own turn)
+- Finally, the defender allocates its own Support units, but cannot allocate additional melee units as defenders units (this will be represented by counterattacks in the defender’s own turn)
 
 Note that units (including support) can only be allocated to one Fight per turn
 
@@ -63,7 +63,7 @@ If there are several valid hexes for retreat, the enemy chooses the direction in
 
 One cannot retreat through enemy ZoC or across impassable terrain (like a river). A unit that has to retreat but has no valid hexes to do so is destroyed.
 
-You can stack units during a retreat, but you must correct this during your next movement phase (the unit destroyed if you cannot).
+You can stack units during a retreat, but you must correct this during your next movement phase (if you cannot correct all stackings by the end of the next movement phase, the unit with the lowest power is destroyed with ties broken randomly).
 
 
 ### Terrain

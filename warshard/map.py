@@ -14,13 +14,13 @@ class Map:
         assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r, parent_map=self)
 
-        # self.all_units: dict[int, Unit] = {} # List of all Units currently in play
+        # self.all_units: dict<int : Unit> = {} # List of all Units currently in play
         # TODO fix typing circular imports
         self.all_units = {}  # a dictionary {unit_id: unit} containing all units in play
         # TODO do not work on self.all_units directly, make functions that add unit by force-checking their ID (see right below)
 
-        # self.ongoing_fights : list[Fight]
-        self.ongoing_fights = []
+        # self.ongoing_fights : dictionary<Hexagon : Fight>
+        self.ongoing_fights = {}  # dictionary {Hexagon: Fight}
 
     # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
     # have coded so far (involving directly looking into the dict, which is ugly)
@@ -52,23 +52,17 @@ class Map:
         return self.hexgrid.hexagons[(x, y)]
 
     """ TODO
-    
-
-    def spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
+    def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
 		remember to check id is not already allocated
         return a reference to the unit
+        this does NOT check for stacking
 
-
-	# Used in replay or in debug ; other functions such as spawn_unit_at_position and unit.force_move_to can also
-    # be used in replay or debug
 	def force_destruction(unit_id:int)
+        use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
+        also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
 
-    # TODO add a replay_function ? Hmm not in v1, write is as NotImplementedError. This function should
-    # take a list of Results of shape (unit_id, new_hex_position, destroyed_or_not)
-    """
 
-    """ TODO
-    read_status_from_yaml()
+    def read_status_from_yaml()
         the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
         then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
     """
@@ -104,7 +98,7 @@ class Hexagon:
         assert type in Config.MOBILITY_COSTS.keys()
         self.type = type
 
-        self.victory_points = 0
+        self.victory_points = victory_points
 
         self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
@@ -130,7 +124,9 @@ class Hexagon:
         hex_is_clear, hex_not_in_enemy_zoc = True, True
 
         for unit_id, unit in self.parent_map.all_units.items():
-            if unit.hexagon_position == self: # TODO check equality works between hexagons
+            if (
+                unit.hexagon_position == self
+            ):  # TODO check equality works between hexagons
                 hex_is_clear = False
             if unit.hexagon_position in neighbors and unit.player_side != player_side:
                 hex_not_in_enemy_zoc = False
@@ -146,7 +142,7 @@ class Hexagon:
             for dq, dr in directions
             if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
         ]
-        # todo : change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
+        # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
 
@@ -158,20 +154,37 @@ class HexGrid:
             for r in range(max_r):
                 self.hexagons[(q, r)] = Hexagon(parent_map=self.parent_map, q=q, r=r)
 
+    @staticmethod
+    def manhattan_distance_hex_grid(h1: Hexagon, h2: Hexagon):
+
+        # TODO qr or xy coords ? XY I think as is currently done is the correct way
+        # TODO Add a test for this in tests !
+
+        x1, y1, x2, y2 = h1.x, h1.y, h2.x, h2.y
+
+        x_distance = abs(x1 - x2)
+        y_distance = abs(y1 - y2)
+        diagonal_steps = min(x_distance, y_distance)
+
+        remaining_x_distance = x_distance - diagonal_steps
+        remaining_y_distance = y_distance - diagonal_steps
+
+        if remaining_x_distance > 0:
+            return (remaining_x_distance // 2) + diagonal_steps
+        else:
+            return remaining_y_distance + diagonal_steps
+
 
 """ TODO
-	def add_hexagon:
-    	self.hexagons[(q, r)] = Hexagon(q, r, characteristics)
-
-	def get_hexagon(self, q, r):
-    	return self.hexagons.get((q, r))
-
     def get_total_victory_points_per_players:
         iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
 
 
 	# Below : used to trace a route to HQ
 	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
+    # TODO to shorten the graph, cap it at a distance of 6 (tbd) since HQs cannot supply more than 6 hexes away
+    # TODO This is likely too expensive to run each time for all units. Instead, I think that I can do this : 
+    #   at the beginning of each turn, iterate over all hq and mark all its accessible neighbors. Then for each such neighbor, mark its own accessible neighbors and so on so forth up to 6 times. Remember all hexes thus explored and mark them as "in supply". 
 	def build_graph(self):
     	G = nx.Graph()
     	for (q, r), hexagon in self.hexagons.items():
@@ -180,15 +193,13 @@ class HexGrid:
             	if self.is_accessible(*neighbor):
                 	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
     	return G
+    # TODO perhaps also use this to automatically try to deduce partial movement orders if a movement order is given for a hex that is not neighboring (yes probably do that it will facilitate future usage)
 
-	def manhattan_distance_hex_grid(self, a, b):
-    	# Manhattan distance for hex grids
-    	return abs(a[0] - b[0]) + abs(a[1] - b[1])
 
 	def find_path(self, start, goal):
     	G = self.build_graph()
     	try:
-        	path = nx.astar_path(G, start, goal, heuristic=self.manhattan_distance_hex_grid, weight='weight')
+        	path = nx.astar_path(G, start, goal, heuristic= lambda a,b: abs(a[0] - b[0]) + abs(a[1] - b[1]), weight='weight')
         	return path
     	except nx.NetworkXNoPath:
         	return None

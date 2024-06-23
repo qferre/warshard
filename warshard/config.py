@@ -13,6 +13,9 @@ class Config:
         "hq": (0, 0, 2, 0),
     }
 
+    # Which units are considered melee units ?
+    MELEE_UNITS = ["infantry", "mechanised", "armor"]
+
     # Format : FIGHT_RESULT_TABLE[rounded attacker_power_total/defender_strength_total][dice_roll]
     FIGHT_RESULT_TABLE = {
         0.5: {1: "dr", 2: "S", 3: "ar", 4: "ar", 5: "ar", 6: "AE"},
@@ -57,8 +60,9 @@ class DisplayConfig:
     WIDTH, HEIGHT = 1400, 980
     FPS = 5
     HEX_SIZE = 36
-    FONT_SIZE_HEX = 12
-    FONT_SIZE = 18
+    FONT_SIZE_HEX = 14
+    FONT_SIZE = 16
+    FONT_SIZE_INFO = 20
     BACKGROUND_COLOR = (255, 255, 255)
     HEX_BORDER_COLOR = (0, 0, 0)
     TEXT_COLOR = (0, 0, 0)
