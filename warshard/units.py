@@ -25,7 +25,7 @@ class Unit:
         self.id = id  # Unique ID crucial for selection # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.
         # TODO also assert that ID is an integer between 1 and 99 included
 
-        self.involved_in_fight = None  # type : <Fight>
+        self.involved_in_fight = None  # type : <Fight or None>
 
     def force_move_to(self, hex: Hexagon):
         # TODO used for retreats
@@ -62,7 +62,6 @@ class Unit:
         # Check if we are within range of target hex
         distance = HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex)
         if distance > self.range:
-            print("Haaa")
             return
 
         # Check if the target hex contains an enemy unit
@@ -85,13 +84,25 @@ class Unit:
         # In any case, either the fight was created or we found an existing one, now join it as attacker!
         this_fight = self.parent_map.ongoing_fights[hex]
         this_fight.attacking_units.append(self)
-
         self.involved_in_fight = this_fight
 
-    """ TODO
-    self.attempt_join_defense_on_hex(hex, map):
-        check we are not already involved in a fight
-        check a fight exists at destination
-        check we are within range to join it and that we are not a melee unit
-        join the fight as support
-    """
+    def attempt_join_defense_on_hex(self, hex):
+        # Check we are not already involved in a fight
+        if self.involved_in_fight is not None:
+            return
+
+        # Check we are not a melee unit
+        if self.type in Config.MELEE_UNITS:
+            return
+
+        # Check we are within range to join
+        distance = HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex)
+        if distance > self.range:
+            return
+
+        # Check a fight exists at destination
+        if hex in self.parent_map.ongoing_fights:
+            # Join the fight as support
+            this_fight = self.parent_map.ongoing_fights[hex]
+            this_fight.defending_support_units.append(self)
+            self.involved_in_fight = this_fight

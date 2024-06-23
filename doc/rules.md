@@ -37,7 +37,7 @@ During a turn :
 
 - The attacker specifies which units will attack which hexes. Each attacked hex is called a Fight.
 - Then, in a second time, the attacker also allocates Support units.
-- Finally, the defender allocates its own Support units, but cannot allocate additional supporting defending units (this will be represented by counterattacks in the defender’s own turn)
+- Finally, the defender allocates its own Support units, but cannot allocate additional melee units as defenders units (this will be represented by counterattacks in the defender’s own turn)
 
 Note that units (including support) can only be allocated to one Fight per turn
 

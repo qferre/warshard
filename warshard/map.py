@@ -194,7 +194,7 @@ class HexGrid:
                 	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
     	return G
     # TODO perhaps also use this to automatically try to deduce partial movement orders if a movement order is given for a hex that is not neighboring (yes probably do that it will facilitate future usage)
-    
+
 
 	def find_path(self, start, goal):
     	G = self.build_graph()

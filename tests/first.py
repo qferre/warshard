@@ -76,8 +76,12 @@ g.map.fetch_unit_by_id(16).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 u_1 = g.map.fetch_unit_by_id(16)
 u_1.mobility_remaining = 1000
 u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(3, 4))  # assert Should succeed
-u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(4, 5))  # assert Should fail due to being occupied
-u_1.attempt_move_to(g.map.fetch_hex_by_coordinate(12, 0))  # assert Should fail due to being too far
+u_1.attempt_move_to(
+    g.map.fetch_hex_by_coordinate(4, 5)
+)  # assert Should fail due to being occupied
+u_1.attempt_move_to(
+    g.map.fetch_hex_by_coordinate(12, 0)
+)  # assert Should fail due to being too far
 
 ## Create units close enough for a fight and test it
 g.map.all_units[67] = Unit(
@@ -106,7 +110,8 @@ assert this_fight.defending_melee_unit == g.map.fetch_unit_by_id(26)
 
 
 u_3 = g.map.fetch_unit_by_id(27)
-# u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+assert this_fight.defending_support_units == [u_3]
 
 # attempt to resolve this fight, force the dice roll to a certain value to ensure we are properly testing retreats also
 
