@@ -11,7 +11,7 @@ from warshard.units import Unit
 
 class Order:
     # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
-    # as (unit_hex, hex_x, hex_y) where each is a string
+    # as (unit_id, hex_x, hex_y) where each is a string
 
     def __init__(unit_id, hex_coordinates, map):
         self.map = map
@@ -35,7 +35,7 @@ class Game:
     def __init__(
         self,
         scenario_yaml_file_path: str = "",
-        log_file_path: str = "example.log",
+        log_file_path: str = "./example.log",
         headless=False,
     ) -> None:
 
