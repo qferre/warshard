@@ -11,7 +11,7 @@ class Fight:
         self.defending_support_units = defending_support_units
 
     """ TODO
-	def resolveFight( **args, debug_force_dice_roll_to: int 0 to 6):
+	def resolveFight( **args, putative_retreats, debug_force_dice_roll_to: int 0 to 6):
 		check attacker has at least one melee unit
 		check who is in supply
 		compute total strength

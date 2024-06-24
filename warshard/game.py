@@ -39,6 +39,7 @@ class Game:
         headless=False,
     ) -> None:
 
+
         # Logging
         log_format = "%(asctime)s - %(name)s:%(levelname)s -- %(message)s"
         console_handler = logging.StreamHandler()
@@ -58,10 +59,11 @@ class Game:
         # The gamestate/map for this game
         self.map = Map(yaml_file=scenario_yaml_file_path)
         self.current_active_player = 0
-        self.current_turn_phase = None
+        self.current_turn_phase = None # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
 
         # Display
+        self.display_thread = None
         if not headless:
             logging.debug("Starting display thread")
 
@@ -109,7 +111,8 @@ class Game:
 
     def __del__(self):
         # TODO Does this do anything currently ? I'm not sure it really works.
-        self.display_thread.join()
+        if self.display_thread is not None:
+            self.display_thread.join()
 
     #############################
 
@@ -152,7 +155,8 @@ class Game:
 		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def second_upkeep_phase()
-        Then destroy all Fights and set mobility of all units to 0 just in case
+        Then destroy all Fights (set map.ongoing_fights = {})
+        set mobility of all units to 0 just in case
         increment turn number
         Change controllers of victory point hexes depending on who is standing on it (careful about stacked units, even though they should all belong to the same player)
     """
