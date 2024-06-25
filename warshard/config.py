@@ -3,7 +3,7 @@ import numpy as np
 
 class Config:
 
-    # Power, Defense, Mobility, Range
+    # Power, Defence, Mobility, Range
     UNIT_CHARACTERISTICS = {
         "infantry": (1, 2, 1, 1),
         "mechanised": (3, 3, 4, 1),
