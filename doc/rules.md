@@ -103,7 +103,7 @@ Meanings:
 - AE: all attacking units, including support, are eliminated.
 - S : nothing happens.
 
-Recall that defensible terrain, like town, trenches, forest, etc. gives x2 to combat power for the defender.
+Recall that defensible terrain, like town, trenches, forest, etc. gives x2 to combat power for the melee unit of the defender.
 
 ### Supply
 

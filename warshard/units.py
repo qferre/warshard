@@ -17,7 +17,7 @@ class Unit:
         self.player_side = player_side
 
         stats = Config.UNIT_CHARACTERISTICS[self.type]
-        self.power, self.defense, self.mobility, self.range = stats
+        self.power, self.defence, self.mobility, self.range = stats
 
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0
@@ -77,11 +77,11 @@ class Unit:
         if not target_hex_contains_enemy_unit:
             return
 
-        # If self.parent_map.all_fights does not have a fight on this hex, create it before we attempty to join it :
+        # If self.parent_map.all_fights does not have a Fight on this hex, create it before we attempt to join it :
         if hex not in self.parent_map.ongoing_fights:
-            # Create a fight and add it to the list
+            # Create a Fight and add it to the list
             # Add the enemy unit present on this hex as the melee defender
-            this_fight = Fight(defending_melee_unit=current_occupier)
+            this_fight = Fight(defending_melee_unit=current_occupier, fight_hexagon=hex)
             self.parent_map.ongoing_fights[hex] = this_fight
 
         # In any case, either the fight was created or we found an existing one, now join it as attacker!
@@ -89,7 +89,7 @@ class Unit:
         this_fight.attacking_units.append(self)
         self.involved_in_fight = this_fight
 
-    def attempt_join_defense_on_hex(self, hex):
+    def attempt_join_defence_on_hex(self, hex):
         # Check we are not already involved in a fight
         if self.involved_in_fight is not None:
             return
@@ -103,9 +103,15 @@ class Unit:
         if distance > self.range:
             return
 
-        # Check a fight exists at destination
+        # Check a Fight exists at destination
         if hex in self.parent_map.ongoing_fights:
-            # Join the fight as support
+            # Join the Fight as support
             this_fight = self.parent_map.ongoing_fights[hex]
             this_fight.defending_support_units.append(self)
             self.involved_in_fight = this_fight
+
+    def try_to_retreat(putative_retreat_hex):
+        # for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
+        #     check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex, or destroy the unit if no hex is appropriate
+        # 	Retreats are performed regardless of remaining mobility (so use force_move_to())
+        raise NotImplementedError

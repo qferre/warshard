@@ -5,6 +5,7 @@ import warshard
 from warshard.game import Game
 from warshard.map import Map, HexGrid
 from warshard.units import Unit
+from warshard.actions import Order
 
 
 g = Game()
@@ -110,16 +111,20 @@ assert this_fight.defending_melee_unit == g.map.fetch_unit_by_id(26)
 
 
 u_3 = g.map.fetch_unit_by_id(27)
-u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+u_3.attempt_join_defence_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
 assert this_fight.defending_support_units == [u_3]
 
 # attempt to resolve this fight, force the dice roll to a certain value to ensure we are properly testing retreats also
+putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
+this_fight.resolve(putative_retreats, debug_force_dice_roll_to=6)
+
+# Make two fights so we can test two outcomes : retreats, and destruction of an unit
 
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
 we try to fetch the hex automatically, this will let us shorten the syntax
-    from u_3.attempt_join_defense_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
-    to u_3.attempt_join_defense_on_hex((4, 5))
+    from u_3.attempt_join_defence_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
+    to u_3.attempt_join_defence_on_hex((4, 5))
 """
 
 

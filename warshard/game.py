@@ -7,25 +7,7 @@ import logging
 from warshard import display
 from warshard.map import Map
 from warshard.units import Unit
-
-
-class Order:
-    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
-    # as (unit_id, hex_x, hex_y) where each is a string
-
-    def __init__(unit_id, hex_coordinates, map):
-        self.map = map
-        self.unit_id = unit_id
-        self.hex_x, self.hex_y = hex_coordinates
-
-        # Find unit with same ID
-        self.unit_ref = map.fetch_unit_by_id(self.unit_id)
-
-        # Find hexagon with same coordinates
-        self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
-
-        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
-        # self.order_type
+from warshard.actions import Order
 
 
 class Game:
@@ -38,7 +20,6 @@ class Game:
         log_file_path: str = "./example.log",
         headless=False,
     ) -> None:
-
 
         # Logging
         log_format = "%(asctime)s - %(name)s:%(levelname)s -- %(message)s"
@@ -59,7 +40,7 @@ class Game:
         # The gamestate/map for this game
         self.map = Map(yaml_file=scenario_yaml_file_path)
         self.current_active_player = 0
-        self.current_turn_phase = None # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
+        self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
 
         # Display
@@ -135,10 +116,10 @@ class Game:
 
     def defender_combat_allocation_phase(orders):
         for order in orders:
-            order.unit_ref.attempt_join_defense_on_hex(order.hexagon_ref)
+            order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
     def resolve_fights(putative_retreats):
-        # Note : here, we ask the player to pre-specify retreats that would happen
+        # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
         for fight in self.all_fights:
             fight.resolve(putative_retreats)

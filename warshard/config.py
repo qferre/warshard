@@ -16,6 +16,7 @@ class Config:
     # Which units are considered melee units ?
     MELEE_UNITS = ["infantry", "mechanised", "armor"]
 
+    DICE_VALUES = [1, 2, 3, 4, 5, 6]
     # Format : FIGHT_RESULT_TABLE[rounded attacker_power_total/defender_strength_total][dice_roll]
     FIGHT_RESULT_TABLE = {
         0.5: {1: "dr", 2: "S", 3: "ar", 4: "ar", 5: "ar", 6: "AE"},

@@ -1,26 +1,97 @@
+import numpy as np
+
 from warshard.config import Config
+
+
+class Order:
+    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
+    # as (unit_id, hex_x, hex_y) where each is a string
+
+    def __init__(self, unit_id, hex_x, hex_y, map):
+        self.map = map
+        self.unit_id = unit_id
+        self.hex_x, self.hex_y = hex_x, hex_y
+
+        # Find unit with same ID
+        self.unit_ref = map.fetch_unit_by_id(self.unit_id)
+
+        # Find hexagon with same coordinates
+        self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
+
+        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
+        # self.order_type
 
 
 class Fight:
 
     def __init__(
-        self, defending_melee_unit, attacking_units=[], defending_support_units=[]
+        self,
+        defending_melee_unit,
+        fight_hexagon,
+        attacking_units=[],
+        defending_support_units=[],
     ) -> None:
         self.defending_melee_unit = defending_melee_unit
         self.attacking_units = attacking_units
         self.defending_support_units = defending_support_units
+        self.fight_hexagon = fight_hexagon
 
-    """ TODO
-	def resolveFight( **args, putative_retreats, debug_force_dice_roll_to: int 0 to 6):
-		check attacker has at least one melee unit
-		check who is in supply
-		compute total strength
-		compute ratio (remember that support units can be 0 so avoid divide-by-zero ; and round in defender favor ; and cap at what exists in the table)
-		check strength ratio for attacker is at least 0.5x defender
-		determine result
-		force retreats.
-			for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
-            check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex, or destroy the unit if no hex is appropriate
-        	Retreats are performed regardless of remaining mobility (so use force_move_to())
-		clear the unit.involved_in_fight flags for everyone (set them to None)
-	"""
+    def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
+
+        if debug_force_dice_roll_to is not None:
+            assert 1 <= debug_force_dice_roll_to <= 6
+
+        # Check attacker has at least one melee unit
+        if not any([u.type in Config.MELEE_UNITS for u in self.attacking_units]):
+            return
+
+        # Check who is in supply, and apply penalty if not
+        # TODO NOT IMPLEMENTED FOR NOW, NEEDS TO BE IMPLEMENTED !!!
+        attacker_is_in_supply = True
+        defender_is_in_supply = True
+
+        # Compute total strength
+        # NOTE support units always contribute their power, we only check the defence stat of the defending melee unit
+        total_attacker_strength = sum([u.power for u in self.attacking_units])
+        defender_melee_strength = (
+            self.defending_melee_unit.defence
+            * Config.DEFENDER_MULTIPLIER[self.fight_hexagon.type]
+        )  # Apply defender terrain modifier
+        total_defender_strength = (
+            sum([u.power for u in self.defending_support_units])
+            + defender_melee_strength
+        )
+
+        print(total_attacker_strength, total_defender_strength)
+
+        # Compute ratio (remember that support units can have 0 melee defence so avoid divide-by-zero)
+        strength_ratio = total_attacker_strength / total_defender_strength + 1E-10
+        # Check strength ratio for attacker is at least 0.5x defender
+        if strength_ratio < 0.5:
+            return
+        # Round ratio and round in defender favor ; and cap at what exists in the table)
+        strength_ratio = max(
+            (x for x in Config.FIGHT_RESULT_TABLE.keys() if x <= strength_ratio),
+            default=None,
+        )
+
+        print(strength_ratio)
+
+        # Determine result
+        # Roll dice and fetch result on the table
+        if debug_force_dice_roll_to is not None:
+            dice_roll = debug_force_dice_roll_to
+        else:
+            dice_roll = np.random.choice(Config.DICE_VALUES)
+
+        fight_result = Config.FIGHT_RESULT_TABLE[strength_ratio][dice_roll]
+
+        print(dice_roll, fight_result)
+        raise NotImplementedError
+
+        # If applicable, force retreats for units that need to retreat : call unit.try_to_retreat
+        # for unit_that_must_retreat:
+        #    putative_retreat_order = get the correponding retreat in pending_orders, keeping only first order if multiple
+        #    unit_that_must_retreat.try_to_retreat(putative_retreat_order.hexagon)
+
+        # clear the unit.involved_in_fight flags for everyone (set them to None)
