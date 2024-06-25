@@ -94,4 +94,6 @@ class Fight:
         #    putative_retreat_order = get the correponding retreat in pending_orders, keeping only first order if multiple
         #    unit_that_must_retreat.try_to_retreat(putative_retreat_order.hexagon)
 
+        # Force destructions of units if applicable
+
         # clear the unit.involved_in_fight flags for everyone (set them to None)
