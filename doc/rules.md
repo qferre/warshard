@@ -31,6 +31,7 @@ For support units, Range is the maximum range at which they can support an attac
 Each side alternates, Blue then Red. Until the turn limit of the scenario is reached.
 
 During a turn :
+
 1) Movement phase
 
 2) Combat Allocation phase
