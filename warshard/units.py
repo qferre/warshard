@@ -1,3 +1,5 @@
+import random
+
 from warshard.map import Hexagon, HexGrid, Map
 from warshard.actions import Fight
 from warshard.config import Config
@@ -22,7 +24,8 @@ class Unit:
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0
 
-        self.id = id  # Unique ID crucial for selection # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.
+        self.id = id  # Unique ID crucial for selection
+        # TODO assert that the id always matches the g.map.all_units[27], ie. the key in the dictionary ? Or permit differences ? I think we should assert it.. YES ASSERT IT SOME CODE DEPENDS ON IT !!
         # TODO also assert that ID is an integer between 1 and 99 included
 
         self.involved_in_fight = None  # type : <Fight or None>
@@ -44,8 +47,8 @@ class Unit:
         """
         TODO : implement rivers. These would be on the border of an hex and double movement cost. Full water hexes would represent oceans and impassable rivers only.
         """
-        hex_is_clear, hex_not_in_enemy_zoc = hex.is_accessible_to_player_side(
-            self.player_side
+        hex_is_clear, hex_not_in_enemy_zoc, hex_is_not_clear_but_friendly_occupied = (
+            hex.is_accessible_to_player_side(self.player_side)
         )
 
         if (mobility_cost <= self.mobility_remaining) and hex_is_clear:
@@ -110,8 +113,37 @@ class Unit:
             this_fight.defending_support_units.append(self)
             self.involved_in_fight = this_fight
 
-    def try_to_retreat(putative_retreat_hex):
-        # for all neighbor hexes, check if they are occupied by enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
-        #     check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex, or destroy the unit if no hex is appropriate
-        # 	Retreats are performed regardless of remaining mobility (so use force_move_to())
-        raise NotImplementedError
+    def try_to_retreat(self, putative_retreat_hex):
+        # For all neighbor hexes of my position, check if they are occupied by
+        # enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
+        neighboring_hexes = self.hexagon_position.get_neighbors()
+
+        potential_retreat_hexes = []
+        for n in neighboring_hexes:
+            (
+                hex_is_clear,
+                hex_not_in_enemy_zoc,
+                hex_is_not_clear_but_friendly_occupied,
+            ) = n.is_accessible_to_player_side(self.player_side)
+            valid = (hex_is_clear and hex_not_in_enemy_zoc) or (
+                hex_is_not_clear_but_friendly_occupied and hex_not_in_enemy_zoc
+            )
+            if valid:
+                potential_retreat_hexes.append(n)
+
+        # destroy the unit if no hex is appropriate and do not try to pick hexes (return here)
+        if len(potential_retreat_hexes) == 0:
+            self.destroy_myself()
+            return
+
+        # check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex
+        # Retreats are performed regardless of remaining mobility (so use force_move_to())
+        if putative_retreat_hex in potential_retreat_hexes:
+            final_retreat_hex = putative_retreat_hex
+        else:
+            final_retreat_hex = random.choice(potential_retreat_hexes)
+        self.force_move_to(final_retreat_hex)
+
+    def destroy_myself(self):
+        # TODO write an unit test for this
+        self.parent_map.all_units.pop(self.id)

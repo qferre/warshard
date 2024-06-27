@@ -29,6 +29,7 @@ class Config:
     }
 
     # NOTE defensible == trench ; and elevation == hills
+    # NOTE a mobility cost of np.inf is used to determine that a hex is impassable in the hex.is_accessible_to_player_side function
     MOBILITY_COSTS = {
         "plains": 1,
         "dry_plains": 1,

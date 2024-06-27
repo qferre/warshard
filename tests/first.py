@@ -73,6 +73,11 @@ g.map.fetch_hex_by_coordinate(4, 5).type = "forest"
 g.map.fetch_unit_by_id(26).force_move_to(g.map.fetch_hex_by_coordinate(4, 5))
 g.map.fetch_unit_by_id(16).force_move_to(g.map.fetch_hex_by_coordinate(3, 3))
 
+ur = g.map.fetch_unit_by_id(42)
+r_hex = g.map.fetch_hex_by_coordinate(1, 0)
+ur.try_to_retreat(r_hex)
+assert ur.hexagon_position == r_hex
+
 ## Try to move units we created
 u_1 = g.map.fetch_unit_by_id(16)
 u_1.mobility_remaining = 1000

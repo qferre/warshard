@@ -65,7 +65,7 @@ class Fight:
         print(total_attacker_strength, total_defender_strength)
 
         # Compute ratio (remember that support units can have 0 melee defence so avoid divide-by-zero)
-        strength_ratio = total_attacker_strength / total_defender_strength + 1E-10
+        strength_ratio = total_attacker_strength / total_defender_strength + 1e-10
         # Check strength ratio for attacker is at least 0.5x defender
         if strength_ratio < 0.5:
             return

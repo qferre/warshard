@@ -1,3 +1,5 @@
+import numpy as np
+
 # from __future__ import annotations
 # from warshard.units import Unit
 from warshard.config import Config
@@ -121,27 +123,44 @@ class Hexagon:
         neighbors = self.get_neighbors()
 
         # Default assumption is that we can move there
-        hex_is_clear, hex_not_in_enemy_zoc = True, True
+        hex_is_clear, hex_not_in_enemy_zoc, hex_is_not_clear_but_friendly_occupied = (
+            True,
+            True,
+            False,
+        )
+
+        # If it costs infinity to move there, mark inaccessible
+        if Config.MOBILITY_COSTS[self.type] == np.inf:
+            hex_is_clear = False
 
         for unit_id, unit in self.parent_map.all_units.items():
             if (
                 unit.hexagon_position == self
             ):  # TODO check equality works between hexagons
                 hex_is_clear = False
+                if unit.player_side == player_side:
+                    hex_is_not_clear_but_friendly_occupied = True
+                    # TODO this does not consider alliances
+
             if unit.hexagon_position in neighbors and unit.player_side != player_side:
                 hex_not_in_enemy_zoc = False
 
-        return hex_is_clear, hex_not_in_enemy_zoc
+        return (
+            hex_is_clear,
+            hex_not_in_enemy_zoc,
+            hex_is_not_clear_but_friendly_occupied,
+        )
 
         # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
     def get_neighbors(self):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-        return [
+        coords = [
             (self.q + dq, self.r + dr)
             for dq, dr in directions
             if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
         ]
+        return [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
         # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 

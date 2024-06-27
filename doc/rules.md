@@ -61,7 +61,7 @@ Retreats are forced by certain combat results (see later in combat resolution ta
 
 If there are several valid hexes for retreat, the enemy chooses the direction in which your units retreat.
 
-One cannot retreat through enemy ZoC or across impassable terrain (like a river). A unit that has to retreat but has no valid hexes to do so is destroyed.
+One cannot retreat through enemy ZoC (even if the hex that is in enemy ZoC is already occupied by a friendly ? yes for now ?) or across impassable terrain (like a river). A unit that has to retreat but has no valid hexes to do so is destroyed.
 
 You can stack units during a retreat, but you must correct this during your next movement phase (if you cannot correct all stackings by the end of the next movement phase, the unit with the lowest power is destroyed with ties broken randomly).
 
