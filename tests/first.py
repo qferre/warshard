@@ -121,7 +121,7 @@ assert this_fight.defending_support_units == [u_3]
 
 # attempt to resolve this fight, force the dice roll to a certain value to ensure we are properly testing retreats also
 putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
-this_fight.resolve(putative_retreats, debug_force_dice_roll_to=6)
+this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 
 # Make two fights so we can test two outcomes : retreats, and destruction of an unit
 
@@ -150,3 +150,7 @@ g.second_upkeep_phase()
 
 
 # Now test the complete run_a_turn
+
+
+
+

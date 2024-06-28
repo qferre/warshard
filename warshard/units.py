@@ -113,7 +113,7 @@ class Unit:
             this_fight.defending_support_units.append(self)
             self.involved_in_fight = this_fight
 
-    def try_to_retreat(self, putative_retreat_hex):
+    def try_to_retreat(self, putative_retreat_hex = None):
         # For all neighbor hexes of my position, check if they are occupied by
         # enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
         neighboring_hexes = self.hexagon_position.get_neighbors()
@@ -138,7 +138,7 @@ class Unit:
 
         # check if there are pending retreat orders, otherwise pick randomly an appropriate retreat hex
         # Retreats are performed regardless of remaining mobility (so use force_move_to())
-        if putative_retreat_hex in potential_retreat_hexes:
+        if (putative_retreat_hex is not None) and (putative_retreat_hex in potential_retreat_hexes):
             final_retreat_hex = putative_retreat_hex
         else:
             final_retreat_hex = random.choice(potential_retreat_hexes)
