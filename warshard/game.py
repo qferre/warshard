@@ -7,25 +7,7 @@ import logging
 from warshard import display
 from warshard.map import Map
 from warshard.units import Unit
-
-
-class Order:
-    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
-    # as (unit_hex, hex_x, hex_y) where each is a string
-
-    def __init__(unit_id, hex_coordinates, map):
-        self.map = map
-        self.unit_id = unit_id
-        self.hex_x, self.hex_y = hex_coordinates
-
-        # Find unit with same ID
-        self.unit_ref = map.fetch_unit_by_id(self.unit_id)
-
-        # Find hexagon with same coordinates
-        self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
-
-        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
-        # self.order_type
+from warshard.actions import Order
 
 
 class Game:
@@ -35,7 +17,7 @@ class Game:
     def __init__(
         self,
         scenario_yaml_file_path: str = "",
-        log_file_path: str = "example.log",
+        log_file_path: str = "./example.log",
         headless=False,
     ) -> None:
 
@@ -58,10 +40,11 @@ class Game:
         # The gamestate/map for this game
         self.map = Map(yaml_file=scenario_yaml_file_path)
         self.current_active_player = 0
-        self.current_turn_phase = None
+        self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
 
         # Display
+        self.display_thread = None
         if not headless:
             logging.debug("Starting display thread")
 
@@ -84,9 +67,9 @@ class Game:
             NotImplementedError: _description_
         """
         raise NotImplementedError
-    
+
         # TODO remember all orders given, but write in doc that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :)
-        #self.all_orders_ever_given[self.current_turn_number] += pending_orders
+        # self.all_orders_ever_given[self.current_turn_number] += pending_orders
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
         # This will likely necessitate passing the logger object to all functions.
@@ -109,7 +92,8 @@ class Game:
 
     def __del__(self):
         # TODO Does this do anything currently ? I'm not sure it really works.
-        self.display_thread.join()
+        if self.display_thread is not None:
+            self.display_thread.join()
 
     #############################
 
@@ -132,10 +116,10 @@ class Game:
 
     def defender_combat_allocation_phase(orders):
         for order in orders:
-            order.unit_ref.attempt_join_defense_on_hex(order.hexagon_ref)
+            order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
     def resolve_fights(putative_retreats):
-        # Note : here, we ask the player to pre-specify retreats that would happen
+        # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
         for fight in self.all_fights:
             fight.resolve(putative_retreats)
@@ -152,7 +136,8 @@ class Game:
 		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def second_upkeep_phase()
-        Then destroy all Fights and set mobility of all units to 0 just in case
+        Then destroy all Fights (set map.ongoing_fights = {})
+        set mobility of all units to 0 just in case
         increment turn number
         Change controllers of victory point hexes depending on who is standing on it (careful about stacked units, even though they should all belong to the same player)
     """

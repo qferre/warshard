@@ -10,7 +10,7 @@ armored
 mechanised
 artillery
 hq
-air_wing
+air_wing --> NOTE : current symbol is wrong I think, I use the helicopter symbol, it should be the lemnisctate-like plane symbol
 
 ## Flags (for victory points)
 germany

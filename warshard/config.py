@@ -3,7 +3,8 @@ import numpy as np
 
 class Config:
 
-    # Power, Defense, Mobility, Range
+    # Power, Defence, Mobility, Range
+    # TODO replace with list of dictionaries ?
     UNIT_CHARACTERISTICS = {
         "infantry": (1, 2, 1, 1),
         "mechanised": (3, 3, 4, 1),
@@ -16,6 +17,7 @@ class Config:
     # Which units are considered melee units ?
     MELEE_UNITS = ["infantry", "mechanised", "armor"]
 
+    DICE_VALUES = [1, 2, 3, 4, 5, 6]
     # Format : FIGHT_RESULT_TABLE[rounded attacker_power_total/defender_strength_total][dice_roll]
     FIGHT_RESULT_TABLE = {
         0.5: {1: "dr", 2: "S", 3: "ar", 4: "ar", 5: "ar", 6: "AE"},
@@ -25,9 +27,10 @@ class Config:
         4: {1: "DE", 2: "dr", 3: "dr", 4: "dr", 5: "EX", 6: "EX"},
         5: {1: "DE", 2: "DE", 3: "dr", 4: "dr", 5: "EX", 6: "EX"},
         6: {1: "DE", 2: "DE", 3: "DE", 4: "dr", 5: "dr", 6: "EX"},
-    }
+    } # TODO Explain meaning
 
     # NOTE defensible == trench ; and elevation == hills
+    # NOTE a mobility cost of np.inf is used to determine that a hex is impassable in the hex.is_accessible_to_player_side function
     MOBILITY_COSTS = {
         "plains": 1,
         "dry_plains": 1,
@@ -53,6 +56,9 @@ class Config:
         "water": 1,
         "impassable": 5,
     }
+
+    ALLIANCES = [["britain", "usa", "ussr"], ["germany"]]
+    # TODO : whenever we check for player side, make sure of WHY we do it, and if we should it belongs to an alliance instead (typically : you should be able to retreat through allied ZoC)
 
 
 class DisplayConfig:

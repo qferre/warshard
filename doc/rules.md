@@ -31,6 +31,7 @@ For support units, Range is the maximum range at which they can support an attac
 Each side alternates, Blue then Red. Until the turn limit of the scenario is reached.
 
 During a turn :
+
 1) Movement phase
 
 2) Combat Allocation phase
@@ -61,7 +62,7 @@ Retreats are forced by certain combat results (see later in combat resolution ta
 
 If there are several valid hexes for retreat, the enemy chooses the direction in which your units retreat.
 
-One cannot retreat through enemy ZoC or across impassable terrain (like a river). A unit that has to retreat but has no valid hexes to do so is destroyed.
+One cannot retreat through enemy ZoC (even if the hex that is in enemy ZoC is already occupied by a friendly ? yes for now ?) or across impassable terrain (like a river). A unit that has to retreat but has no valid hexes to do so is destroyed.
 
 You can stack units during a retreat, but you must correct this during your next movement phase (if you cannot correct all stackings by the end of the next movement phase, the unit with the lowest power is destroyed with ties broken randomly).
 
@@ -103,7 +104,7 @@ Meanings:
 - AE: all attacking units, including support, are eliminated.
 - S : nothing happens.
 
-Recall that defensible terrain, like town, trenches, forest, etc. gives x2 to combat power for the defender.
+Recall that defensible terrain, like town, trenches, forest, etc. gives x2 to combat power for the melee unit of the defender.
 
 ### Supply
 

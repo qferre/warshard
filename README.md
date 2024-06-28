@@ -9,6 +9,9 @@ Based on SPI wargames.
 
 Rules are in ![rules](./doc/rules.md)
 
+API example in documentation in docs notebook
+
+ADD A PRETTY SCREENSHOT HERE
 
 
 
