@@ -123,7 +123,7 @@ assert this_fight.defending_support_units == [u_3]
 putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 
-# Make two fights so we can test two outcomes : retreats, and destruction of an unit
+# TODO Make more Fights so we can test all possible Fight outcomes
 
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
