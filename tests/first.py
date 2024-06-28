@@ -122,6 +122,7 @@ assert this_fight.defending_support_units == [u_3]
 # attempt to resolve this fight, force the dice roll to a certain value to ensure we are properly testing retreats also
 putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
+# TODO when the debug_force_dice_roll_to was set to 6, I saw weird attacker retreats ? To double check
 
 # TODO Make more Fights so we can test all possible Fight outcomes
 

@@ -13,11 +13,14 @@ API example in documentation in docs notebook
 
 ADD A PRETTY SCREENSHOT HERE
 
+![alt text](./screenshot.png)
 
 
 ## Installation
 
 to install : in a terminal at the root of the project, run `pip install .`
+
+
 
 
 ## API
