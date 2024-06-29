@@ -129,7 +129,8 @@ class Game:
     def update_supply(self):
         # Now that all movements have been done, update supply
         # Iterate over all HQs of all players, and tag all hexes in supply for this player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
-
+        raise NotImplementedError
+    
     """ TODO
     def first_upkeep_phase():
         Refresh mobility for all units OF THE CURRENT PLAYER
