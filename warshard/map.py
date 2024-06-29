@@ -110,6 +110,8 @@ class Hexagon:
         self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
         """
 
+        self.in_supply_for_player = []
+
         # x and y, are another set of coordinates
         # used to ensure the final hex grid looks
         # more like a rectangle

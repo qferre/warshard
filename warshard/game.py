@@ -84,6 +84,7 @@ class Game:
         self.switch_active_player(new_player_id)
         self.first_upkeep_phase()
         self.movement_phase(pending_orders_attacker_movement)
+        self.update_supply()
         self.attacker_combat_allocation_phase(pending_orders_attacker_combat)
         self.defender_combat_allocation_phase(pending_orders_defender_combat)
         self.resolve_fights(putative_retreats_both_sides)
@@ -124,6 +125,10 @@ class Game:
         for fight in self.all_fights:
             fight.resolve(putative_retreats)
         # TODO if no explicit order was given in pending_orders, retreat hexes are chosen at random if multiple are applicable
+
+    def update_supply(self):
+        # Now that all movements have been done, update supply
+        # Iterate over all HQs of all players, and tag all hexes in supply for this player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
 
     """ TODO
     def first_upkeep_phase():
