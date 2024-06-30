@@ -93,6 +93,7 @@ class Displayer:
                     # TODO careful about stacked units
 
                 # Draw information TODO make it programmatic fetch info
+                # like {gamestate_to_draw.current_turn_number}
                 info_text = f"""
                 CURRENT TURN NUMBER:
                 66/10

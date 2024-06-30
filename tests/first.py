@@ -126,6 +126,20 @@ this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 
 # TODO Make more Fights so we can test all possible Fight outcomes
 
+
+# Test supply system
+r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
+    #player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
+     max_rank=2
+)
+print(r)
+for k,v in r.items():
+    print(k)
+    print([str(vv) for vv in v])
+    # TODO assert something
+# TODO THIS FAILS COMPLETELY BECAUSE OF A MIXUP BETWEEN THE QR AND XY COORDINATE SYSTEMS
+# TODO I have a comment with "found the bug" written which shows where the bug is
+
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
 we try to fetch the hex automatically, this will let us shorten the syntax
@@ -151,7 +165,3 @@ g.second_upkeep_phase()
 
 
 # Now test the complete run_a_turn
-
-
-
-

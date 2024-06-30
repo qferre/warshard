@@ -8,6 +8,7 @@ from warshard import display
 from warshard.map import Map
 from warshard.units import Unit
 from warshard.actions import Order
+from warshard.config import Config
 
 
 class Game:
@@ -130,10 +131,27 @@ class Game:
         # Now that all movements have been done, update supply
         # Iterate over all HQs of all players, and tag all hexes in supply for this player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
         raise NotImplementedError
-    
+
+        self.hexes_currenly_in_supply_per_player = {}
+        for unit in self.map.all_units:
+            if unit.type == "hq":
+                # Get all hexes within SUPPLY_RANGE of this hq
+                dist_dict = (
+                    unit.hexagon_position.recursively_get_distances_continuous_path(
+                        Config.SUPPLY_RANGE
+                    )
+                )
+                hexes_supplied_by_this_hq = itertools.chain(dist_dict.values())
+                hexes_currenly_in_supply_per_player[
+                    unit.player_side
+                ] += hexes_supplied_by_this_hq
+
+        # Now make all unique:
+        for k, v in self.hexes_currenly_in_supply_per_player.items():
+            self.hexes_currenly_in_supply_per_player[k] = set(v)
+
     """ TODO
-    def first_upkeep_phase():
-        Refresh mobility for all units OF THE CURRENT PLAYER
+    
 
     def advancing_phase()
         # We ask player to pre-specify potential advances
@@ -141,9 +159,39 @@ class Game:
         Do not allow moving more than one unit per fight obviously. This move is allowed regardless of remaining mobility (so use force_move_to())
 		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
-    def second_upkeep_phase()
-        Then destroy all Fights (set map.ongoing_fights = {})
-        set mobility of all units to 0 just in case
-        increment turn number
-        Change controllers of victory point hexes depending on who is standing on it (careful about stacked units, even though they should all belong to the same player)
+        ATTACKER_VICTORIES_RESULTS = "EX","dr","DE"
+
+        for fight in self.map.ongoing_fights:
+
+            if fight.fight_result in ATTACKER_VICTORIES_RESULTS
+
+            potential_advancers = attacker for attacker in fight.attacking_units if attacker.type in Config.MELEE_UNITS
+            potential_advancers_id = [u.id for u in potential_advancers]
+
+            for order in putative_advances:
+                if order.unit_id == in potential_advancers_id:
+                    move the unit by force
+                    break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
+
     """
+
+    def first_upkeep_phase(self):
+        # Refresh mobility for all units OF THE CURRENT PLAYER
+        for unit in self.map.all_units:
+            if unit.player_side == self.current_active_player:
+                unit.remaining_mobility = unit.mobility
+
+    def second_upkeep_phase(self):
+        # Then destroy all Fights
+        self.map.ongoing_fights = {}
+
+        for unit in self.map.all_units:
+            # Set mobility of all units to 0 just in case
+            unit.remaining_mobility = 0
+
+            # Change controllers of victory point hexes depending on who is standing on it
+            # TODO (careful about stacked units, even though they should all belong to the same player)
+            unit.hexagon_position.controller = unit.player_side
+
+        # Increment turn number
+        self.current_turn_number += 1

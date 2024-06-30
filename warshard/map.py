@@ -1,4 +1,6 @@
 import numpy as np
+from collections import defaultdict
+
 
 # from __future__ import annotations
 # from warshard.units import Unit
@@ -38,20 +40,23 @@ class Map:
         """
         return self.all_units[unit_id]
 
-    def fetch_hex_by_coordinate(self, x, y):
+    def fetch_hex_by_coordinate(self, q, r):
         """
 
         Returns a reference to the Hexagon object with this ID.
 
+        NOTE : in display, the QR coordinates are what is printed on each hex, not the XY coordinate !
+
         Args:
-            x (_type_): _description_
-            y (_type_): _description_
+            q (_type_): _description_
+            r (_type_): _description_
 
         Returns:
             _type_: _description_
         """
+        # NOTE hexes are stored in QR coordinates, no ??
 
-        return self.hexgrid.hexagons[(x, y)]
+        return self.hexgrid.hexagons[(q, r)]
 
     """ TODO
     def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
@@ -65,8 +70,8 @@ class Map:
 
 
     def read_status_from_yaml()
-        the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
-        then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
+        #the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
+        #then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
     """
 
 
@@ -120,6 +125,10 @@ class Hexagon:
         self.x = self.q
         self.y = self.r - self.q // 2
 
+    def __str__(self):
+        # TODO expand on this
+        return f"({self.q},{self.r})"
+
     def is_accessible_to_player_side(self, player_side):
         # check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side ; return separate flags for that since we may want to check those conditions separately later
         neighbors = self.get_neighbors()
@@ -155,16 +164,72 @@ class Hexagon:
 
         # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
-    def get_neighbors(self):
-        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+    def get_neighbors(self, ensure_accessible_to_player_side=None):
+        # directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+        directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
+        # TODO Found the bug ! these directions are in qr and work only for every other hex
+        # TODO
+
         coords = [
             (self.q + dq, self.r + dr)
             for dq, dr in directions
             if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
         ]
-        return [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
+        result = [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
+        if ensure_accessible_to_player_side is not None:
+            result = [
+                hexagon
+                for hexagon in result
+                if hexagon.is_accessible_to_player_side(
+                    ensure_accessible_to_player_side
+                )
+            ]
+        return result
         # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
+
+    def recursively_get_distances_continuous_path(
+        self,
+        player_side=None,
+        max_rank=9,
+    ):
+
+        results_dict = defaultdict(list)
+        results_dict[0] = [self]
+
+        rank = 1
+        while rank <= max_rank:
+            k_minus_1_rank_neighbors = results_dict[rank - 1]
+            k_rank_neighbors = []
+            for on in k_minus_1_rank_neighbors:
+
+                k_rank_neighbors += on.get_neighbors(player_side)
+                print(on, [str(okn) for okn in on.get_neighbors(player_side)])
+            results_dict[rank] = k_rank_neighbors
+
+            rank += 1
+
+        # keep hex only in the list of smallest value
+        results_dict = ensure_lowest_key(results_dict)
+        return results_dict
+
+
+def ensure_lowest_key(dictionary):
+    # Keep an element only in the list of smallest key
+    # Input : a dictionary like {1:[A],2:[A,B]}
+    # Output : a dictionary like input but where
+    # each element is present only in the list of lowest
+    # key that contained it originally. For the input
+    # example, the output would be {1:[A],2:[B]}
+    seen_objects = set()
+    for key in sorted(dictionary.keys()):
+        unique_objects = []
+        for obj in dictionary[key]:
+            if obj not in seen_objects:
+                unique_objects.append(obj)
+                seen_objects.add(obj)
+        dictionary[key] = unique_objects
+    return dictionary
 
 
 class HexGrid:

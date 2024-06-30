@@ -92,6 +92,8 @@ class Fight:
 
         print(dice_roll, fight_result)
 
+        self.fight_result = fight_result # Remember the result of the fight, we will need it for the advancing phase
+
         # --------------------- Result of the fight
         units_that_must_retreat = []
         units_to_destroy = []

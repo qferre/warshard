@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Config:
 
     # Power, Defence, Mobility, Range
@@ -60,6 +59,7 @@ class Config:
     ALLIANCES = [["britain", "usa", "ussr"], ["germany"]]
     # TODO : whenever we check for player side, make sure of WHY we do it, and if we should it belongs to an alliance instead (typically : you should be able to retreat through allied ZoC)
 
+    SUPPLY_RANGE = 6
 
 class DisplayConfig:
 
