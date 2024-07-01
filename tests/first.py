@@ -158,6 +158,7 @@ we try to fetch the hex automatically, this will let us shorten the syntax
 g.switch_active_player(new_player_id)
 g.first_upkeep_phase()
 g.movement_phase(pending_orders_attacker_movement)
+g.update_supply()
 g.attacker_combat_allocation_phase(pending_orders_attacker_combat)
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
 g.resolve_fights(putative_retreats_both_sides)

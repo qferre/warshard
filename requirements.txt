@@ -1,3 +1,2 @@
-networkx # Unsure if we keep it
 pygame
 numpy

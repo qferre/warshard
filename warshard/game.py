@@ -2,6 +2,7 @@ import threading
 import time
 from functools import partial
 import logging
+from collections import defaultdict
 
 
 from warshard import display
@@ -129,10 +130,11 @@ class Game:
 
     def update_supply(self):
         # Now that all movements have been done, update supply
-        # Iterate over all HQs of all players, and tag all hexes in supply for this player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
+        # Iterate over all HQs of all players, and tag all hexes in supply for this
+        # player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
         raise NotImplementedError
 
-        self.hexes_currenly_in_supply_per_player = {}
+        self.hexes_currenly_in_supply_per_player = defaultdict(list)
         for unit in self.map.all_units:
             if unit.type == "hq":
                 # Get all hexes within SUPPLY_RANGE of this hq
@@ -142,7 +144,7 @@ class Game:
                     )
                 )
                 hexes_supplied_by_this_hq = itertools.chain(dist_dict.values())
-                hexes_currenly_in_supply_per_player[
+                self.hexes_currenly_in_supply_per_player[
                     unit.player_side
                 ] += hexes_supplied_by_this_hq
 
@@ -151,8 +153,6 @@ class Game:
             self.hexes_currenly_in_supply_per_player[k] = set(v)
 
     """ TODO
-    
-
     def advancing_phase()
         # We ask player to pre-specify potential advances
         Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.

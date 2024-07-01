@@ -19,7 +19,9 @@ class Order:
         # Find hexagon with same coordinates
         self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
 
-        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
+        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
+        # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
+        # and abandon the field!
         # self.order_type
 
 

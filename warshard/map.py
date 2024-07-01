@@ -220,7 +220,12 @@ class Hexagon:
             k_rank_neighbors = []
             for on in k_minus_1_rank_neighbors:
 
+                # Sometimes we want to trace a route only through hexes that
+                # could be accessed by a player, to find a route that goes
+                # through accessible hexes only, so we do not propagate from
+                # hexes that are not accessible.
                 k_rank_neighbors += on.get_neighbors(player_side)
+
                 print(on, [str(okn) for okn in on.get_neighbors(player_side)])
             results_dict[rank] = k_rank_neighbors
 
@@ -278,32 +283,7 @@ class HexGrid:
             return remaining_y_distance + diagonal_steps
 
 
-""" TODO
+    """ TODO
     def get_total_victory_points_per_players:
         iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
-
-
-	# Below : used to trace a route to HQ
-	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
-    # TODO to shorten the graph, cap it at a distance of 6 (tbd) since HQs cannot supply more than 6 hexes away
-    # TODO This is likely too expensive to run each time for all units. Instead, I think that I can do this : 
-    #   at the beginning of each turn, iterate over all hq and mark all its accessible neighbors. Then for each such neighbor, mark its own accessible neighbors and so on so forth up to 6 times. Remember all hexes thus explored and mark them as "in supply". 
-	def build_graph(self):
-    	G = nx.Graph()
-    	for (q, r), hexagon in self.hexagons.items():
-        	if not hexagon.accessible: continue
-        	for neighbor in self.get_neighbors(q, r):
-            	if self.is_accessible(*neighbor):
-                	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
-    	return G
-    # TODO perhaps also use this to automatically try to deduce partial movement orders if a movement order is given for a hex that is not neighboring (yes probably do that it will facilitate future usage)
-
-
-	def find_path(self, start, goal):
-    	G = self.build_graph()
-    	try:
-        	path = nx.astar_path(G, start, goal, heuristic= lambda a,b: abs(a[0] - b[0]) + abs(a[1] - b[1]), weight='weight')
-        	return path
-    	except nx.NetworkXNoPath:
-        	return None
 	"""
