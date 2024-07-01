@@ -122,8 +122,21 @@ class Hexagon:
         # more like a rectangle
         # x is the same as q, but y is r shift by one every two columns so the final grid looks square-like
         # TODO in the yaml, decide which to use !
-        self.x = self.q
-        self.y = self.r - self.q // 2
+        self.x, self.y = Hexagon.qr_to_xy(self.q, self.r)
+
+    @staticmethod
+    def qr_to_xy(q, r):
+        x = q
+        y = r - q // 2
+        return (x, y)
+
+    @staticmethod
+    def xy_to_qr(x, y):
+        q = x
+        r = q // 2 + y
+        # TODO check this
+        # TODO use this when xy coords are given to  get the qr that we need since the hexes are stored in all_hexes by their qr coordinates :)
+        return (q, r)
 
     def __str__(self):
         # TODO expand on this
@@ -165,16 +178,20 @@ class Hexagon:
         # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
     def get_neighbors(self, ensure_accessible_to_player_side=None):
-        # directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-        directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+        # directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
         # TODO Found the bug ! these directions are in qr and work only for every other hex
-        # TODO
+        # TODO I think it works now ? Double check
 
         coords = [
-            (self.q + dq, self.r + dr)
-            for dq, dr in directions
-            if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
+            (self.x + dx, self.y + dy)
+            for dx, dy in directions
+            if (self.x + dx, self.y + dy) in self.parent_map.hexgrid.hexagons
         ]
+
+        # Convert to qr coordinates
+        coords = [Hexagon.xy_to_qr(x, y) for x, y in coords]
+
         result = [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
         if ensure_accessible_to_player_side is not None:
             result = [

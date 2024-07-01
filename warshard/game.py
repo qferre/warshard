@@ -169,7 +169,7 @@ class Game:
             potential_advancers_id = [u.id for u in potential_advancers]
 
             for order in putative_advances:
-                if order.unit_id == in potential_advancers_id:
+                if order.unit_id in potential_advancers_id:
                     move the unit by force
                     break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
 

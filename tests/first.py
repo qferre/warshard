@@ -124,6 +124,9 @@ putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 # TODO when the debug_force_dice_roll_to was set to 6, I saw weird attacker retreats ? To double check
 # TODO : I saw a retreat NOT go to 5,5 ???? DEBUG TO DO !!!! Ahh again, likely a confusion between xy and qr coordinates (the bug appeared after I made a modif related to this)
+# TODO I think it works now ? Double check
+
+
 
 # TODO Make more Fights so we can test all possible Fight outcomes
 
@@ -140,6 +143,7 @@ for k,v in r.items():
     # TODO assert something
 # TODO THIS FAILS COMPLETELY BECAUSE OF A MIXUP BETWEEN THE QR AND XY COORDINATE SYSTEMS
 # TODO I have a comment with "found the bug" written which shows where the bug is
+# TODO I think it works now ? Double check
 
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
