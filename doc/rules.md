@@ -1,6 +1,6 @@
 # WarShard rules
 
-Simple wargaming rules for World Wars and later.
+Simple wargaming rules for WW2 and later.
 Designed to be easy to implement in a simulator for AI training.
 
 
@@ -40,7 +40,7 @@ During a turn :
 - Then, in a second time, the attacker also allocates Support units.
 - Finally, the defender allocates its own Support units, but cannot allocate additional melee units as defenders units (this will be represented by counterattacks in the defender’s own turn)
 
-Note that units (including support) can only be allocated to one Fight per turn
+Note that units (including support) can only be allocated to one Fight per turn.
 
 3) Combat Resolution phase
 - For each Fight, total the combat strength of the involved Units, then roll 1d6.
@@ -114,9 +114,9 @@ If the defender melee unit is out of supply, move one column in favour of the at
 
 ## Special rules and events
 
-Some events may happen. Most common one is to bring reinforcements on certain hexes at a certain turn.
+Some events may happen. Most common one is to bring reinforcements on certain hexes at a certain turn. In the code, I think only reinforcements will be implemented ? TODO ensure they are implemented.
 
-Special rules depend on scenario.
+Special rules depend on scenario. Not implemented in code, but could be used in a paper version, or you can enforce them yourself using the debug functions ("force_*")
 
 Victory : some locations give victory score.
 

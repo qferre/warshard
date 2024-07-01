@@ -153,25 +153,25 @@ class Game:
             self.hexes_currenly_in_supply_per_player[k] = set(v)
 
     """ TODO
-    def advancing_phase()
+    def advancing_phase(putative_advance_orders)
         # We ask player to pre-specify potential advances
         Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
         Do not allow moving more than one unit per fight obviously. This move is allowed regardless of remaining mobility (so use force_move_to())
 		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
-        ATTACKER_VICTORIES_RESULTS = "EX","dr","DE"
+        ATTACKER_VICTORIES_RESULTS = ["EX","dr","DE"]
 
         for fight in self.map.ongoing_fights:
 
-            if fight.fight_result in ATTACKER_VICTORIES_RESULTS
+            if fight.fight_result in ATTACKER_VICTORIES_RESULTS:
 
-            potential_advancers = attacker for attacker in fight.attacking_units if attacker.type in Config.MELEE_UNITS
-            potential_advancers_id = [u.id for u in potential_advancers]
+                potential_advancers = [attacker for attacker in fight.attacking_units if attacker.type in Config.MELEE_UNITS]
+                potential_advancers_id = [u.id for u in potential_advancers]
 
-            for order in putative_advances:
-                if order.unit_id in potential_advancers_id:
-                    move the unit by force
-                    break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
+                for order in putative_advance_orders:
+                    if order.unit_id in potential_advancers_id:
+                        move the unit by force
+                        break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
 
     """
 
