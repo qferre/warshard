@@ -27,6 +27,10 @@ class Map:
         # self.ongoing_fights : dictionary<Hexagon : Fight>
         self.ongoing_fights = {}  # dictionary {Hexagon: Fight}
 
+        self.hexes_currently_in_supply_per_player = defaultdict(
+            list
+        )  # dictionary {player_side: [Hexagon]}
+
     # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
     # have coded so far (involving directly looking into the dict, which is ugly)
     def fetch_unit_by_id(self, unit_id):

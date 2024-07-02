@@ -8,7 +8,7 @@ from warshard.units import Unit
 from warshard.actions import Order
 
 
-g = Game()
+g = Game() # TODO set headless to True to run tests once on pytest
 
 
 # Ensure map can be updated
@@ -89,6 +89,32 @@ u_1.attempt_move_to(
     g.map.fetch_hex_by_coordinate(12, 0)
 )  # assert Should fail due to being too far
 
+
+# Test supply system
+r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
+    # player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
+    max_rank=3
+)
+
+g.map.all_units[99] = Unit(
+    hexagon_position=g.map.hexgrid.hexagons[(2, 5)],
+    type="hq",
+    player_side="germany",
+    id=67,
+    parent_map=g.map,
+)
+
+print(r)
+for k, v in r.items():
+    print(k)
+    print([str(vv) for vv in v])
+    # TODO assert something
+
+g.update_supply()
+# TODO assert something
+print(g.map.hexes_currently_in_supply_per_player)
+
+
 ## Create units close enough for a fight and test it
 g.map.all_units[67] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(4, 4)],
@@ -97,6 +123,7 @@ g.map.all_units[67] = Unit(
     id=67,
     parent_map=g.map,
 )
+
 g.map.all_units[27] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(4, 7)],
     type="artillery",
@@ -123,26 +150,10 @@ assert this_fight.defending_support_units == [u_3]
 putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 # TODO when the debug_force_dice_roll_to was set to 6, I saw weird attacker retreats ? To double check
-# TODO : I saw a retreat NOT go to 5,5 ???? DEBUG TO DO !!!! Ahh again, likely a confusion between xy and qr coordinates (the bug appeared after I made a modif related to this)
-# TODO I think it works now ? Double check
 
 
 # TODO Make more Fights so we can test all possible Fight outcomes
 
-
-# Test supply system
-r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
-    # player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
-    max_rank=2
-)
-print(r)
-for k, v in r.items():
-    print(k)
-    print([str(vv) for vv in v])
-    # TODO assert something
-# TODO THIS FAILS COMPLETELY BECAUSE OF A MIXUP BETWEEN THE QR AND XY COORDINATE SYSTEMS
-# TODO I have a comment with "found the bug" written which shows where the bug is
-# TODO I think it works now ? Double check
 
 """
 TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed

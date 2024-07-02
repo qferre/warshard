@@ -2,6 +2,7 @@ import threading
 import time
 from functools import partial
 import logging
+import itertools
 from collections import defaultdict
 
 
@@ -132,25 +133,27 @@ class Game:
         # Now that all movements have been done, update supply
         # Iterate over all HQs of all players, and tag all hexes in supply for this
         # player in the hex.in_supply_for_player list (remember to empty it before so supply does not stay between turns)
-        raise NotImplementedError
-
-        self.hexes_currenly_in_supply_per_player = defaultdict(list)
-        for unit in self.map.all_units:
+        self.map.hexes_currently_in_supply_per_player = defaultdict(list)
+        for unit in self.map.all_units.values():
             if unit.type == "hq":
+
                 # Get all hexes within SUPPLY_RANGE of this hq
                 dist_dict = (
                     unit.hexagon_position.recursively_get_distances_continuous_path(
-                        Config.SUPPLY_RANGE
+                        max_rank=Config.SUPPLY_RANGE
                     )
                 )
-                hexes_supplied_by_this_hq = itertools.chain(dist_dict.values())
-                self.hexes_currenly_in_supply_per_player[
+
+                ldv = list(dist_dict.values())
+                hexes_supplied_by_this_hq = itertools.chain.from_iterable(ldv)
+                self.map.hexes_currently_in_supply_per_player[
                     unit.player_side
                 ] += hexes_supplied_by_this_hq
 
         # Now make all unique:
-        for k, v in self.hexes_currenly_in_supply_per_player.items():
-            self.hexes_currenly_in_supply_per_player[k] = set(v)
+        for k, v in self.map.hexes_currently_in_supply_per_player.items():
+            print(v)
+            self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
     """ TODO
     def advancing_phase(putative_advance_orders)

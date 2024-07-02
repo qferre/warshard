@@ -53,23 +53,30 @@ class Fight:
         if not any([u.type in Config.MELEE_UNITS for u in self.attacking_units]):
             return
 
-        """
         # Check who is in supply, and apply penalty if not
-        # TODO NOT IMPLEMENTED FOR NOW, NEEDS TO BE IMPLEMENTED !!!
-
-        attacker_is_in_supply =  all(
+        attacker_is_in_supply = all(
             [
-            attacking_unit.hexagon_position in self.parent_map.hexes_currenly_in_supply_per_player[attacking_unit.player_side] for attacking_unit in self.attacking_units
+                attacking_unit.hexagon_position
+                in self.parent_map.hexes_currently_in_supply_per_player[
+                    attacking_unit.player_side
+                ]
+                for attacking_unit in self.attacking_units
             ]
         )
-        
-        defender_is_in_supply = self.fight_hexagon in self.parent_map.hexes_currenly_in_supply_per_player[self.defending_melee_unit.player_side]
+        defender_is_in_supply = (
+            self.fight_hexagon
+            in self.parent_map.hexes_currently_in_supply_per_player[
+                self.defending_melee_unit.player_side
+            ]
+        )
+
+        print("supply", attacker_is_in_supply, defender_is_in_supply)
 
         supply_strength_ratio_modifier = 0
-        if not attacking_is_in_supply : supply_strength_ratio_modifier += -1
-        if not defender_is_in_supply : supply_strength_ratio_modifier += 1
-        """
-        supply_strength_ratio_modifier = 0
+        if not attacker_is_in_supply:
+            supply_strength_ratio_modifier += -1
+        if not defender_is_in_supply:
+            supply_strength_ratio_modifier += 1
 
         # Compute total strength
         # NOTE support units always contribute their power, we only check the defence stat of the defending melee unit
