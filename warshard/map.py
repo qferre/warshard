@@ -5,6 +5,7 @@ from collections import defaultdict
 # from __future__ import annotations
 # from warshard.units import Unit
 from warshard.config import Config
+from warshard import utils
 
 
 class Map:
@@ -68,11 +69,7 @@ class Map:
         use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
         also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
 
-
-    def read_status_from_yaml()
-        #the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
-        #then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
-    """
+ """
 
 
 class Hexagon:
@@ -232,26 +229,8 @@ class Hexagon:
             rank += 1
 
         # keep hex only in the list of smallest value
-        results_dict = ensure_lowest_key(results_dict)
+        results_dict = utils.ensure_lowest_key(results_dict)
         return results_dict
-
-
-def ensure_lowest_key(dictionary):
-    # Keep an element only in the list of smallest key
-    # Input : a dictionary like {1:[A],2:[A,B]}
-    # Output : a dictionary like input but where
-    # each element is present only in the list of lowest
-    # key that contained it originally. For the input
-    # example, the output would be {1:[A],2:[B]}
-    seen_objects = set()
-    for key in sorted(dictionary.keys()):
-        unique_objects = []
-        for obj in dictionary[key]:
-            if obj not in seen_objects:
-                unique_objects.append(obj)
-                seen_objects.add(obj)
-        dictionary[key] = unique_objects
-    return dictionary
 
 
 class HexGrid:
@@ -281,7 +260,6 @@ class HexGrid:
             return (remaining_x_distance // 2) + diagonal_steps
         else:
             return remaining_y_distance + diagonal_steps
-
 
     """ TODO
     def get_total_victory_points_per_players:

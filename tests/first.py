@@ -127,17 +127,16 @@ this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 # TODO I think it works now ? Double check
 
 
-
 # TODO Make more Fights so we can test all possible Fight outcomes
 
 
 # Test supply system
 r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
-    #player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
-     max_rank=2
+    # player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
+    max_rank=2
 )
 print(r)
-for k,v in r.items():
+for k, v in r.items():
     print(k)
     print([str(vv) for vv in v])
     # TODO assert something
@@ -171,5 +170,3 @@ g.second_upkeep_phase()
 
 
 # Now test YAML reading
-
-

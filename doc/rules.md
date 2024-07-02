@@ -110,7 +110,7 @@ Recall that defensible terrain, like town, trenches, forest, etc. gives x2 to co
 
 Units are out of supply if more than 6 hexes away from HQ. Supply lines cannot be traced through enemy ZoC.
 
-If the defender melee unit is out of supply, move one column in favour of the attacker during combat resolution. If ANY attacker melee unit is out of supply, move TWO columns in favour of the defender in combat resolution.
+If the defender melee unit is out of supply, add one to the attacker/defender ratio (in effect this moves one column in favour of the attacker) during combat resolution. If ANY attacker melee unit is out of supply, do the same in favor of the defender.
 
 ## Special rules and events
 
