@@ -1,8 +1,11 @@
 import numpy as np
+from collections import defaultdict
+
 
 # from __future__ import annotations
 # from warshard.units import Unit
 from warshard.config import Config
+from warshard import utils
 
 
 class Map:
@@ -24,6 +27,10 @@ class Map:
         # self.ongoing_fights : dictionary<Hexagon : Fight>
         self.ongoing_fights = {}  # dictionary {Hexagon: Fight}
 
+        self.hexes_currently_in_supply_per_player = defaultdict(
+            list
+        )  # dictionary {player_side: [Hexagon]}
+
     # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
     # have coded so far (involving directly looking into the dict, which is ugly)
     def fetch_unit_by_id(self, unit_id):
@@ -38,20 +45,23 @@ class Map:
         """
         return self.all_units[unit_id]
 
-    def fetch_hex_by_coordinate(self, x, y):
+    def fetch_hex_by_coordinate(self, q, r):
         """
 
         Returns a reference to the Hexagon object with this ID.
 
+        NOTE : in display, the QR coordinates are what is printed on each hex, not the XY coordinate !
+
         Args:
-            x (_type_): _description_
-            y (_type_): _description_
+            q (_type_): _description_
+            r (_type_): _description_
 
         Returns:
             _type_: _description_
         """
+        # NOTE hexes are stored in QR coordinates, no ??
 
-        return self.hexgrid.hexagons[(x, y)]
+        return self.hexgrid.hexagons[(q, r)]
 
     """ TODO
     def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
@@ -63,11 +73,7 @@ class Map:
         use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
         also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
 
-
-    def read_status_from_yaml()
-        the yaml contains min and max hex coordinates, the coordinates of hexes with defender bonuses or roads, the list of units at startup, and hexes which will receive reinforcements and at which turns, and which count for victory points
-        then use functions such as spawn_unit, and change hexagon characterisitcs (create empty hexagons first then modify them) to match the scenario
-    """
+ """
 
 
 class Hexagon:
@@ -110,13 +116,32 @@ class Hexagon:
         self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
         """
 
+        self.in_supply_for_player = []
+
         # x and y, are another set of coordinates
         # used to ensure the final hex grid looks
         # more like a rectangle
         # x is the same as q, but y is r shift by one every two columns so the final grid looks square-like
         # TODO in the yaml, decide which to use !
-        self.x = self.q
-        self.y = self.r - self.q // 2
+        self.x, self.y = Hexagon.qr_to_xy(self.q, self.r)
+
+    @staticmethod
+    def qr_to_xy(q, r):
+        x = q
+        y = r - q // 2
+        return (x, y)
+
+    @staticmethod
+    def xy_to_qr(x, y):
+        q = x
+        r = q // 2 + y
+        # TODO check this
+        # TODO use this when xy coords are given to  get the qr that we need since the hexes are stored in all_hexes by their qr coordinates :)
+        return (q, r)
+
+    def __str__(self):
+        # TODO expand on this
+        return f"({self.q},{self.r})"
 
     def is_accessible_to_player_side(self, player_side):
         # check if the hex contains any unit, or if its or its neighbors contains any unit NOT belonging to the specified side ; return separate flags for that since we may want to check those conditions separately later
@@ -153,16 +178,63 @@ class Hexagon:
 
         # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
-    def get_neighbors(self):
+    def get_neighbors(self, ensure_accessible_to_player_side=None):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
+        # directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
+        # TODO Found the bug ! these directions are in qr and work only for every other hex
+        # TODO I think it works now ? Double check
+
         coords = [
-            (self.q + dq, self.r + dr)
-            for dq, dr in directions
-            if (self.q + dq, self.r + dr) in self.parent_map.hexgrid.hexagons
+            (self.x + dx, self.y + dy)
+            for dx, dy in directions
+            if (self.x + dx, self.y + dy) in self.parent_map.hexgrid.hexagons
         ]
-        return [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
+
+        # Convert to qr coordinates
+        coords = [Hexagon.xy_to_qr(x, y) for x, y in coords]
+
+        result = [self.parent_map.fetch_hex_by_coordinate(*coord) for coord in coords]
+        if ensure_accessible_to_player_side is not None:
+            result = [
+                hexagon
+                for hexagon in result
+                if hexagon.is_accessible_to_player_side(
+                    ensure_accessible_to_player_side
+                )
+            ]
+        return result
         # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
         # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
+
+    def recursively_get_distances_continuous_path(
+        self,
+        player_side=None,
+        max_rank=9,
+    ):
+
+        results_dict = defaultdict(list)
+        results_dict[0] = [self]
+
+        rank = 1
+        while rank <= max_rank:
+            k_minus_1_rank_neighbors = results_dict[rank - 1]
+            k_rank_neighbors = []
+            for on in k_minus_1_rank_neighbors:
+
+                # Sometimes we want to trace a route only through hexes that
+                # could be accessed by a player, to find a route that goes
+                # through accessible hexes only, so we do not propagate from
+                # hexes that are not accessible.
+                k_rank_neighbors += on.get_neighbors(player_side)
+
+                #print(on, [str(okn) for okn in on.get_neighbors(player_side)])
+            results_dict[rank] = k_rank_neighbors
+
+            rank += 1
+
+        # keep hex only in the list of smallest value
+        results_dict = utils.ensure_lowest_key(results_dict)
+        return results_dict
 
 
 class HexGrid:
@@ -193,33 +265,7 @@ class HexGrid:
         else:
             return remaining_y_distance + diagonal_steps
 
-
-""" TODO
+    """ TODO
     def get_total_victory_points_per_players:
         iterate over all my hexes. If a hex has a victory point value, give it to its controller. Return the total.
-
-
-	# Below : used to trace a route to HQ
-	# Hexes containing an enemy or which have a neighbor containing an enemy are considered inaccessible (use the hex.is_accessible_to_player_side() function)
-    # TODO to shorten the graph, cap it at a distance of 6 (tbd) since HQs cannot supply more than 6 hexes away
-    # TODO This is likely too expensive to run each time for all units. Instead, I think that I can do this : 
-    #   at the beginning of each turn, iterate over all hq and mark all its accessible neighbors. Then for each such neighbor, mark its own accessible neighbors and so on so forth up to 6 times. Remember all hexes thus explored and mark them as "in supply". 
-	def build_graph(self):
-    	G = nx.Graph()
-    	for (q, r), hexagon in self.hexagons.items():
-        	if not hexagon.accessible: continue
-        	for neighbor in self.get_neighbors(q, r):
-            	if self.is_accessible(*neighbor):
-                	G.add_edge((q, r), neighbor, weight=1)  # Weight can be adjusted if needed
-    	return G
-    # TODO perhaps also use this to automatically try to deduce partial movement orders if a movement order is given for a hex that is not neighboring (yes probably do that it will facilitate future usage)
-
-
-	def find_path(self, start, goal):
-    	G = self.build_graph()
-    	try:
-        	path = nx.astar_path(G, start, goal, heuristic= lambda a,b: abs(a[0] - b[0]) + abs(a[1] - b[1]), weight='weight')
-        	return path
-    	except nx.NetworkXNoPath:
-        	return None
 	"""

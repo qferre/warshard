@@ -93,6 +93,7 @@ class Displayer:
                     # TODO careful about stacked units
 
                 # Draw information TODO make it programmatic fetch info
+                # like {gamestate_to_draw.current_turn_number}
                 info_text = f"""
                 CURRENT TURN NUMBER:
                 66/10
@@ -251,6 +252,8 @@ def draw_unit(unit: Unit, screen, font, assets):
         screen, (255, 255, 255), (pixel_x, pixel_y), radius=DisplayConfig.FONT_SIZE // 2
     )
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))
+
+    # TODO Also add name (both in the display and in the actual code) for special units like naming generals for each HQ
 
 
 """ TODO

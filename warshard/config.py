@@ -27,7 +27,7 @@ class Config:
         4: {1: "DE", 2: "dr", 3: "dr", 4: "dr", 5: "EX", 6: "EX"},
         5: {1: "DE", 2: "DE", 3: "dr", 4: "dr", 5: "EX", 6: "EX"},
         6: {1: "DE", 2: "DE", 3: "DE", 4: "dr", 5: "dr", 6: "EX"},
-    } # TODO Explain meaning
+    }  # TODO Explain meaning
 
     # NOTE defensible == trench ; and elevation == hills
     # NOTE a mobility cost of np.inf is used to determine that a hex is impassable in the hex.is_accessible_to_player_side function
@@ -59,6 +59,8 @@ class Config:
 
     ALLIANCES = [["britain", "usa", "ussr"], ["germany"]]
     # TODO : whenever we check for player side, make sure of WHY we do it, and if we should it belongs to an alliance instead (typically : you should be able to retreat through allied ZoC)
+
+    SUPPLY_RANGE = 4 # TODO Check if this is inclusive or exclusive in practice (ie. is a hex 4 tiles away supply or is this where it ends ?)
 
 
 class DisplayConfig:

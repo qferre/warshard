@@ -19,7 +19,9 @@ class Order:
         # Find hexagon with same coordinates
         self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
 
-        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements
+        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
+        # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
+        # and abandon the field!
         # self.order_type
 
 
@@ -37,6 +39,10 @@ class Fight:
         self.defending_support_units = defending_support_units
         self.fight_hexagon = fight_hexagon
 
+        self.parent_map = (
+            self.fight_hexagon.parent_map
+        )  # Deduce parent map from hexagon
+
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
         # Specify in typing : putative_retreats should be a list of Orders
 
@@ -47,12 +53,30 @@ class Fight:
         if not any([u.type in Config.MELEE_UNITS for u in self.attacking_units]):
             return
 
-        """
         # Check who is in supply, and apply penalty if not
-        # TODO NOT IMPLEMENTED FOR NOW, NEEDS TO BE IMPLEMENTED !!!
-        attacker_is_in_supply = True
-        defender_is_in_supply = True
-        """
+        attacker_is_in_supply = all(
+            [
+                attacking_unit.hexagon_position
+                in self.parent_map.hexes_currently_in_supply_per_player[
+                    attacking_unit.player_side
+                ]
+                for attacking_unit in self.attacking_units
+            ]
+        )
+        defender_is_in_supply = (
+            self.fight_hexagon
+            in self.parent_map.hexes_currently_in_supply_per_player[
+                self.defending_melee_unit.player_side
+            ]
+        )
+
+        print("supply", attacker_is_in_supply, defender_is_in_supply)
+
+        supply_strength_ratio_modifier = 0
+        if not attacker_is_in_supply:
+            supply_strength_ratio_modifier += -1
+        if not defender_is_in_supply:
+            supply_strength_ratio_modifier += 1
 
         # Compute total strength
         # NOTE support units always contribute their power, we only check the defence stat of the defending melee unit
@@ -70,6 +94,10 @@ class Fight:
 
         # Compute ratio (remember that support units can have 0 melee defence so avoid divide-by-zero)
         strength_ratio = total_attacker_strength / total_defender_strength + 1e-10
+
+        # Add supply modifier to the strength_ratio
+        strength_ratio += supply_strength_ratio_modifier
+
         # Check strength ratio for attacker is at least 0.5x defender
         if strength_ratio < 0.5:
             return
@@ -91,6 +119,8 @@ class Fight:
         fight_result = Config.FIGHT_RESULT_TABLE[strength_ratio][dice_roll]
 
         print(dice_roll, fight_result)
+
+        self.fight_result = fight_result  # Remember the result of the fight, we will need it for the advancing phase
 
         # --------------------- Result of the fight
         units_that_must_retreat = []

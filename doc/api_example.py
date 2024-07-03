@@ -37,3 +37,11 @@ game.run_a_turn/step(pending_orders)
 
 # There are also functions that give individual orders (ie. start a fight here, etc.) so the simulation can be run with granulatiry in  a notebook, as if we were playing, and not just entire phase by entire phase. Although for me this is not as critical since all events of an entire phase are supposed to execute simultaneously and without input of the opponent (--> in the rules you make all your attacker declarations before the opponent gets an opportunity to make defender support declarations)
 # Look at the python file of the tests for examples of this
+
+
+# TODO :also explain that you can and should give multiple orders fo the same units to be executed in sequence for the movement
+# Foe example : if you want to move unit 6 from hex 1,2 to hex 1,5, you need to write three move orders IN THE CORRECT ORDER FOR THE SAME UNIT :
+# "6 move to 1,3" then "6 move to 1,4" then "6 move to 1,5" and those must be IN THE CORRECT ORDER in the pending_orders list, since we execute orders
+# in a FIFO fashion
+
+# TODO : I also have planned to have an order_type so retreat orders are not executed in the movement phase. IMPLEMENT THIS AND ENSURE THE FUNCTIONS THAT PARSE THE pending_orders LIST CHECK FOR THAT !!!
