@@ -1,6 +1,8 @@
 """TODO Dispatch this into individual test files, add asserts (not necessarily use pytest at first, but I do need asserts)
 """
 
+import time
+
 import warshard
 from warshard.game import Game
 from warshard.map import Map, HexGrid
@@ -8,7 +10,9 @@ from warshard.units import Unit
 from warshard.actions import Order
 
 
-g = Game() # TODO set headless to True to run tests once on pytest
+TEST_START_TIME = time.time()
+
+g = Game()  # TODO set headless to True to run tests once on pytest
 
 
 # Ensure map can be updated
@@ -100,7 +104,7 @@ g.map.all_units[99] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(2, 5)],
     type="hq",
     player_side="germany",
-    id=67,
+    id=99,
     parent_map=g.map,
 )
 
@@ -112,7 +116,7 @@ for k, v in r.items():
 
 g.update_supply()
 # TODO assert something
-print(g.map.hexes_currently_in_supply_per_player)
+#print(g.map.hexes_currently_in_supply_per_player)
 
 
 ## Create units close enough for a fight and test it
@@ -181,3 +185,7 @@ g.second_upkeep_phase()
 
 
 # Now test YAML reading
+
+
+TEST_END_TIME = time.time()
+print(f"Test completed in {TEST_END_TIME - TEST_START_TIME} s.")

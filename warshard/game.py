@@ -152,7 +152,7 @@ class Game:
 
         # Now make all unique:
         for k, v in self.map.hexes_currently_in_supply_per_player.items():
-            print(v)
+            #print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
     """ TODO
