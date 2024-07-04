@@ -227,7 +227,7 @@ class Hexagon:
                 # hexes that are not accessible.
                 k_rank_neighbors += on.get_neighbors(player_side)
 
-                #print(on, [str(okn) for okn in on.get_neighbors(player_side)])
+                # print(on, [str(okn) for okn in on.get_neighbors(player_side)])
             results_dict[rank] = k_rank_neighbors
 
             rank += 1

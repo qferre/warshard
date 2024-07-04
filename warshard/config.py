@@ -60,7 +60,7 @@ class Config:
     ALLIANCES = [["britain", "usa", "ussr"], ["germany"]]
     # TODO : whenever we check for player side, make sure of WHY we do it, and if we should it belongs to an alliance instead (typically : you should be able to retreat through allied ZoC)
 
-    SUPPLY_RANGE = 4 # TODO Check if this is inclusive or exclusive in practice (ie. is a hex 4 tiles away supply or is this where it ends ?)
+    SUPPLY_RANGE = 4  # TODO Check if this is inclusive or exclusive in practice (ie. is a hex 4 tiles away supply or is this where it ends ?)
 
 
 class DisplayConfig:
