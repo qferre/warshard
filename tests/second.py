@@ -1,5 +1,3 @@
-
-
 import warshard
 from warshard.game import Game
 from warshard.map import Map, HexGrid
@@ -10,21 +8,15 @@ from warshard.actions import Order
 # TODO recreate a game and place units for that
 g = Game()  # TODO set headless to True to run tests once on pytest
 
-g.map.all_units[16] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(2, 2)],
-    type="armor",
-    player_side="germany",
-    id=16,
-    parent_map=g.map,
+
+g.map.force_spawn_unit_at_position(
+    unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=16
 )
 
 
-g.map.all_units[26] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(2, 4)],
-    type="mechanised",
-    player_side="usa",
-    id=26,
-    parent_map=g.map,
+
+g.map.force_spawn_unit_at_position(
+    unit_type="mechanised", hex_q=2, hex_r=4, player_side="usa", id=26
 )
 
 

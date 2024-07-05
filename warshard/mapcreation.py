@@ -5,7 +5,8 @@ from warshard.map import Map
 
 
 def read_status_from_yaml(yaml_path, game_to_update: Game):
-    # raise NotImplementedError
+    raise NotImplementedError
+
     yaml_path = "C:/Users/Quentin/Documents/Git/warshard/scenarios/boot_camp.yaml"
 
     with open(yaml_path, "r", encoding="utf-8") as file:
@@ -39,7 +40,9 @@ def read_status_from_yaml(yaml_path, game_to_update: Game):
     # Unit
     for faction, list_of_units_for_this_faction in yd.units.items():
         for unit_definition in list_of_units_for_this_faction:
-            map.create_unit(...)
+            game_to_update.force_spawn_unit_at_position(
+                unit_type=i, hex_q=i, hex_r=i, player_side=i, id=i
+            )
 
     # Record reinforcements # TODO
 

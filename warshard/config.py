@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Config:
 
     # Power, Defence, Mobility, Range

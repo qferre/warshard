@@ -63,17 +63,35 @@ class Map:
 
         return self.hexgrid.hexagons[(q, r)]
 
+    def force_spawn_unit_at_position(
+        self, unit_type: str, hex_q: int, hex_r: int, player_side: str, id: int
+    ):
+
+        from warshard.units import (
+            Unit,
+        )  # TODO Find a way to move it back up so circular import is not a problem
+
+        # TODO remember to check id is not already allocated
+        # return a reference to the unit
+        # this does NOT check for stacking
+
+        hexagon_position = self.fetch_hex_by_coordinate(q=hex_q, r=hex_r)
+
+        self.all_units[id] = Unit(
+            hexagon_position=hexagon_position,
+            type=unit_type,
+            player_side=player_side,
+            id=id,
+            parent_map=self,
+        )
+
+        return self.all_units[id]
+
     """ TODO
-    def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
-		remember to check id is not already allocated
-        return a reference to the unit
-        this does NOT check for stacking
 
-	def force_destruction(unit_id:int)
-        use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
-        also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
+    need to write this in doc somewhere, that all "force" functions can be used in debug)
 
- """
+    """
 
 
 class Hexagon:
