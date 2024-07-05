@@ -10,9 +10,10 @@ from warshard.units import Unit
 from warshard.actions import Order
 
 
-TEST_START_TIME = time.time()
-
 g = Game()  # TODO set headless to True to run tests once on pytest
+
+
+TEST_START_TIME = time.time()
 
 
 # Ensure map can be updated
@@ -82,6 +83,7 @@ r_hex = g.map.fetch_hex_by_coordinate(1, 0)
 ur.try_to_retreat(r_hex)
 assert ur.hexagon_position == r_hex
 
+
 ## Try to move units we created
 u_1 = g.map.fetch_unit_by_id(16)
 u_1.mobility_remaining = 1000
@@ -114,9 +116,10 @@ for k, v in r.items():
     print([str(vv) for vv in v])
     # TODO assert something
 
+
 g.update_supply()
 # TODO assert something
-#print(g.map.hexes_currently_in_supply_per_player)
+# print(g.map.hexes_currently_in_supply_per_player)
 
 
 ## Create units close enough for a fight and test it
@@ -139,6 +142,7 @@ u_2 = g.map.fetch_unit_by_id(67)
 fight_hex = g.map.fetch_hex_by_coordinate(4, 5)
 u_1.attempt_attack_on_hex(fight_hex)
 u_2.attempt_attack_on_hex(fight_hex)
+
 
 ## assert the fight was created with the proper units
 this_fight = g.map.ongoing_fights[fight_hex]
@@ -167,24 +171,11 @@ we try to fetch the hex automatically, this will let us shorten the syntax
 """
 
 
-# Now test individual turn functions
-"""
-g.switch_active_player(new_player_id)
-g.first_upkeep_phase()
-g.movement_phase(pending_orders_attacker_movement)
-g.update_supply()
-g.attacker_combat_allocation_phase(pending_orders_attacker_combat)
-g.defender_combat_allocation_phase(pending_orders_defender_combat)
-g.resolve_fights(putative_retreats_both_sides)
-g.advancing_phase(putative_advance_orders_both_sides)
-g.second_upkeep_phase()
-"""
 
 
 # Now test the complete run_a_turn
 
 
-# Now test YAML reading
 
 
 TEST_END_TIME = time.time()

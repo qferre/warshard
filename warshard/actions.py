@@ -44,7 +44,8 @@ class Fight:
         )  # Deduce parent map from hexagon
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
-        # Specify in typing : putative_retreats should be a list of Orders
+        # TODO Specify in typing : putative_retreats should be a list of Orders
+        # TODO Specify this whenever we pass lists of Orders
 
         if debug_force_dice_roll_to is not None:
             assert 1 <= debug_force_dice_roll_to <= 6

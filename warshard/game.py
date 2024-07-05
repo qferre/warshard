@@ -127,7 +127,6 @@ class Game:
         # if they lost
         for fight in self.all_fights:
             fight.resolve(putative_retreats)
-        # TODO if no explicit order was given in pending_orders, retreat hexes are chosen at random if multiple are applicable
 
     def update_supply(self):
         # Now that all movements have been done, update supply
@@ -152,7 +151,7 @@ class Game:
 
         # Now make all unique:
         for k, v in self.map.hexes_currently_in_supply_per_player.items():
-            #print(v)
+            # print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
     """ TODO
