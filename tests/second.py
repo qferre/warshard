@@ -19,15 +19,6 @@ g.map.all_units[16] = Unit(
 )
 
 
-g.map.all_units[42] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(0, 0)],
-    type="infantry",
-    player_side="germany",
-    id=42,
-    parent_map=g.map,
-)
-
-
 g.map.all_units[26] = Unit(
     hexagon_position=g.map.hexgrid.hexagons[(2, 4)],
     type="mechanised",
@@ -38,15 +29,23 @@ g.map.all_units[26] = Unit(
 
 
 # Now test individual turn functions
+
+# TODO : in the turn functions, check player side ! Make sure that only the active player can send movement orders (should already be ok thanks to the mobility points)
+# but also need to check that only active player can send attack orders and advance orders, and only the inactive player can send defend orders
+
 """
 
 
 g.switch_active_player(new_player_id)
 
+
+
 g.first_upkeep_phase()
+
 
 pending_orders_attacker_movement = [Order(), Order()]
 g.movement_phase(pending_orders_attacker_movement)
+
 
 g.update_supply()
 
