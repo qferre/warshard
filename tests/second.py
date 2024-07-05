@@ -10,12 +10,12 @@ g = Game()  # TODO set headless to True to run tests once on pytest
 
 
 g.map.force_spawn_unit_at_position(
-    unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=16
+    unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=1
 )
 
 
 g.map.force_spawn_unit_at_position(
-    unit_type="mechanised", hex_q=2, hex_r=4, player_side="usa", id=26
+    unit_type="mechanised", hex_q=2, hex_r=4, player_side="usa", id=2
 )
 
 

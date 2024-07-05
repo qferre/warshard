@@ -72,6 +72,8 @@ class Map:
         # return a reference to the unit
         # this does NOT check for stacking
 
+        # TODO if id is none, simply use the next available integer number
+
         hexagon_position = self.fetch_hex_by_coordinate(q=hex_q, r=hex_r)
 
         self.all_units[id] = Unit(
