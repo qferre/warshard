@@ -108,21 +108,21 @@ class Game:
         self.logger.error("This too.")
         pass
 
-    def movement_phase(orders):
+    def movement_phase(self, orders):
         # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted
         for order in orders:
             order.unit_ref.attempt_move_to(order.hexagon_ref)
         # TODO Once movements have been resolved, units that are still stacked will start being destroyed until only one remains, beginning with the lower Power units and with ties broken randomly
 
-    def attacker_combat_allocation_phase(orders):
+    def attacker_combat_allocation_phase(self, orders):
         for order in orders:
             order.unit_ref.attempt_attack_on_hex(order.hexagon_ref)
 
-    def defender_combat_allocation_phase(orders):
+    def defender_combat_allocation_phase(self, orders):
         for order in orders:
             order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
-    def resolve_fights(putative_retreats):
+    def resolve_fights(self, putative_retreats):
         # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
         for fight in self.all_fights:
@@ -154,7 +154,7 @@ class Game:
             # print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
-    def advancing_phase(putative_advance_orders):
+    def advancing_phase(self, putative_advance_orders):
         # We ask player to pre-specify potential advances
         # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
