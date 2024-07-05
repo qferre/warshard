@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Config:
 
     # Power, Defence, Mobility, Range
@@ -27,6 +28,9 @@ class Config:
         5: {1: "DE", 2: "DE", 3: "dr", 4: "dr", 5: "EX", 6: "EX"},
         6: {1: "DE", 2: "DE", 3: "DE", 4: "dr", 5: "dr", 6: "EX"},
     }  # TODO Explain meaning
+
+    # Which results are considered an attacker victory, and allow advancing after a Fight ?
+    ATTACKER_VICTORIES_RESULTS = ["EX", "dr", "DE"]
 
     # NOTE defensible == trench ; and elevation == hills
     # NOTE a mobility cost of np.inf is used to determine that a hex is impassable in the hex.is_accessible_to_player_side function

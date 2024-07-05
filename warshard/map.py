@@ -22,7 +22,6 @@ class Map:
         # self.all_units: dict<int : Unit> = {} # List of all Units currently in play
         # TODO fix typing circular imports
         self.all_units = {}  # a dictionary {unit_id: unit} containing all units in play
-        # TODO do not work on self.all_units directly, make functions that add unit by force-checking their ID (see right below)
 
         # self.ongoing_fights : dictionary<Hexagon : Fight>
         self.ongoing_fights = {}  # dictionary {Hexagon: Fight}
@@ -31,8 +30,6 @@ class Map:
             list
         )  # dictionary {player_side: [Hexagon]}
 
-    # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
-    # have coded so far (involving directly looking into the dict, which is ugly)
     def fetch_unit_by_id(self, unit_id):
         """
         Returns a reference to the Unit object with this ID.
@@ -158,7 +155,6 @@ class Hexagon:
         return (q, r)
 
     def __str__(self):
-        # TODO expand on this
         return f"({self.q},{self.r})"
 
     def is_accessible_to_player_side(self, player_side):
@@ -219,7 +215,7 @@ class Hexagon:
 
         return result
 
-    def recursively_get_distances_continuous_path(
+    def get_all_hexes_within_continuous_path(
         self,
         player_side=None,
         max_rank=9,

@@ -5,14 +5,13 @@ from warshard.units import Unit
 from warshard.actions import Order
 
 
-# TODO recreate a game and place units for that
+# Recreate a game and place units for that
 g = Game()  # TODO set headless to True to run tests once on pytest
 
 
 g.map.force_spawn_unit_at_position(
     unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=16
 )
-
 
 
 g.map.force_spawn_unit_at_position(

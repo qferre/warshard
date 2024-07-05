@@ -85,7 +85,7 @@ u_1.attempt_move_to(
 
 
 # Test supply system
-r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
+r = g.map.fetch_hex_by_coordinate(4, 5).get_all_hexes_within_continuous_path(
     # player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
     max_rank=3
 )

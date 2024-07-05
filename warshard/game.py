@@ -137,10 +137,8 @@ class Game:
             if unit.type == "hq":
 
                 # Get all hexes within SUPPLY_RANGE of this hq
-                dist_dict = (
-                    unit.hexagon_position.recursively_get_distances_continuous_path(
-                        max_rank=Config.SUPPLY_RANGE
-                    )
+                dist_dict = unit.hexagon_position.get_all_hexes_within_continuous_path(
+                    max_rank=Config.SUPPLY_RANGE
                 )
 
                 ldv = list(dist_dict.values())
@@ -158,24 +156,21 @@ class Game:
         # We ask player to pre-specify potential advances
         # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
-        ATTACKER_VICTORIES_RESULTS = ["EX", "dr", "DE"]  # TODO move to Config
-
         for fight in self.map.ongoing_fights:
 
             fight.an_advance_was_made = False
 
-            if not fight.an_advance_was_made:
+            if fight.fight_result in Config.ATTACKER_VICTORIES_RESULTS:
 
-                if fight.fight_result in ATTACKER_VICTORIES_RESULTS:
+                potential_advancers = [
+                    attacker
+                    for attacker in fight.attacking_units
+                    if attacker.type in Config.MELEE_UNITS
+                ]
+                potential_advancers_id = [u.id for u in potential_advancers]
 
-                    potential_advancers = [
-                        attacker
-                        for attacker in fight.attacking_units
-                        if attacker.type in Config.MELEE_UNITS
-                    ]
-                    potential_advancers_id = [u.id for u in potential_advancers]
-
-                    for order in putative_advance_orders:
+                for order in putative_advance_orders:
+                    if not fight.an_advance_was_made:
                         if order.unit_id in potential_advancers_id:
                             unit = self.map.fetch_unit_by_id(order.unit_id)
                             unit.force_move_to(
@@ -183,7 +178,8 @@ class Game:
                             )  # This move is allowed regardless of remaining mobility (so use force_move_to())
                             fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
-                    # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
+                if not fight.an_advance_was_made:
+                    pass  # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def first_upkeep_phase(self):
         # Refresh mobility for all units OF THE CURRENT PLAYER
@@ -203,7 +199,17 @@ class Game:
             # TODO (careful about stacked units, even though they should all belong to the same player)
             unit.hexagon_position.controller = unit.player_side
 
-        # TODO Deploy reinforcements if applicable
+        # Deploy reinforcements if applicable
+        # NOTE those appear even if it implies stacking
+        for planned_reinforcement in self.planned_reinforcements:
+            if planned_reinforcement.turn == self.current_turn_number:
+                self.map.force_spawn_unit_at_position(
+                    unit_type=planned_reinforcement.type,
+                    hex_q=planned_reinforcement.q,
+                    hex_r=planned_reinforcement.r,
+                    player_side=planned_reinforcement.player_side,
+                    id=planned_reinforcement.id,
+                )
 
         # Increment turn number
         self.current_turn_number += 1
