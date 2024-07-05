@@ -126,7 +126,7 @@ class Displayer:
                 pygame.display.flip()  # Update display
                 clock.tick(DisplayConfig.FPS)
             except RuntimeError:
-                # If anything we are trying to plotchanges during iteration, this can cause a RuntimeError
+                # If anything we are trying to plot changes during iteration, this can cause a RuntimeError
                 # but since we are only a displayer, it does not really matter. We can never modify anything
                 # anyway, so we just skip this iteration and try again.
                 print(
@@ -204,8 +204,6 @@ def draw_hexagon(surface, color, center, size):
 
 
 def draw_text(surface, text, position, font, color=(0, 0, 0)):
-
-    # TODO Use this to render multiline text
     lines = text.splitlines()
     for i, l in enumerate(lines):
         line_surface = font.render(l, True, color)

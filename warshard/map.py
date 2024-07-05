@@ -180,10 +180,6 @@ class Hexagon:
 
     def get_neighbors(self, ensure_accessible_to_player_side=None):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-        # directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
-        # TODO Found the bug ! these directions are in qr and work only for every other hex
-        # TODO I think it works now ? Double check
-
         coords = [
             (self.x + dx, self.y + dy)
             for dx, dy in directions
@@ -202,9 +198,8 @@ class Hexagon:
                     ensure_accessible_to_player_side
                 )
             ]
+
         return result
-        # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
-        # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
     def recursively_get_distances_continuous_path(
         self,
@@ -226,6 +221,9 @@ class Hexagon:
                 # through accessible hexes only, so we do not propagate from
                 # hexes that are not accessible.
                 k_rank_neighbors += on.get_neighbors(player_side)
+
+                # TODO permit passing a lambda function that will filter neighbors based on a certain
+                # criteria instead of player_side. Could be useful for some LoS implementations (ie. not over mountains)
 
                 # print(on, [str(okn) for okn in on.get_neighbors(player_side)])
             results_dict[rank] = k_rank_neighbors

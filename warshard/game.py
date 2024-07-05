@@ -154,28 +154,36 @@ class Game:
             # print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
-    """ TODO
-    def advancing_phase(putative_advance_orders)
+    def advancing_phase(putative_advance_orders):
         # We ask player to pre-specify potential advances
-        Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
-        Do not allow moving more than one unit per fight obviously. This move is allowed regardless of remaining mobility (so use force_move_to())
-		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
+        # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
-        ATTACKER_VICTORIES_RESULTS = ["EX","dr","DE"]
+        ATTACKER_VICTORIES_RESULTS = ["EX", "dr", "DE"]  # TODO move to Config
 
         for fight in self.map.ongoing_fights:
 
-            if fight.fight_result in ATTACKER_VICTORIES_RESULTS:
+            fight.an_advance_was_made = False
 
-                potential_advancers = [attacker for attacker in fight.attacking_units if attacker.type in Config.MELEE_UNITS]
-                potential_advancers_id = [u.id for u in potential_advancers]
+            if not fight.an_advance_was_made:
 
-                for order in putative_advance_orders:
-                    if order.unit_id in potential_advancers_id:
-                        move the unit by force
-                        break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
+                if fight.fight_result in ATTACKER_VICTORIES_RESULTS:
 
-    """
+                    potential_advancers = [
+                        attacker
+                        for attacker in fight.attacking_units
+                        if attacker.type in Config.MELEE_UNITS
+                    ]
+                    potential_advancers_id = [u.id for u in potential_advancers]
+
+                    for order in putative_advance_orders:
+                        if order.unit_id in potential_advancers_id:
+                            unit = self.map.fetch_unit_by_id(order.unit_id)
+                            unit.force_move_to(
+                                order.hex
+                            )  # This move is allowed regardless of remaining mobility (so use force_move_to())
+                            fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
+
+                    # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def first_upkeep_phase(self):
         # Refresh mobility for all units OF THE CURRENT PLAYER
@@ -194,6 +202,8 @@ class Game:
             # Change controllers of victory point hexes depending on who is standing on it
             # TODO (careful about stacked units, even though they should all belong to the same player)
             unit.hexagon_position.controller = unit.player_side
+
+        # TODO Deploy reinforcements if applicable
 
         # Increment turn number
         self.current_turn_number += 1

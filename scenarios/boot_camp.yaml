@@ -1,1 +1,53 @@
-# Simple debug scenario. Create it once YAML format is finalized.
+Title: Boot camp.
+description: A simple scenario, to practice and debug.
+
+players: [germany, usa]
+first_player_turn: germany
+
+max_turns: 20
+
+map:
+  max_q: 21
+  max_r: 15
+  biome: temperate # temperate, winter, desert ; determines plains color
+
+  special_hexes:
+    city:
+      - {q: 2, r: 5 , name: "Bastogne"}
+      - {q: 2, r: 6 , name: "Malmédy"}
+    defensible:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    forest:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    elevation:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    road:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    water:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    impassable:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    victory:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+    victory_major:
+      - {q: 2, r: 6}
+      - {q: 2, r: 6}
+
+units:
+  germany:
+    - {type: armored, q: 3, r: 4, id: 1}
+    - {type: hq, q: 3, r: 4, id: 2, name: "Model"}
+  usa:
+    - {type: infantry, q: 3, r: 4, id: 1}
+
+reinforcements:
+  usa:
+  - {type: armored, q: 3, r: 4, id: 1, arrives_on_turn: 6}
+  - {type: hq, q: 3, r: 4, id: 2, arrives_on_turn: 6, name: "Patton"}

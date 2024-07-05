@@ -4,7 +4,7 @@ import numpy as np
 class Config:
 
     # Power, Defence, Mobility, Range
-    # TODO replace with list of dictionaries ?
+    # TODO replace with list of dictionaries
     UNIT_CHARACTERISTICS = {
         "infantry": (1, 2, 1, 1),
         "mechanised": (3, 3, 4, 1),
