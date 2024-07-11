@@ -19,7 +19,6 @@ class Game:
 
     def __init__(
         self,
-        scenario_yaml_file_path: str = "",
         log_file_path: str = "./example.log",
         headless=False,
     ) -> None:
@@ -41,7 +40,7 @@ class Game:
         self.logger = logging.getLogger(__name__)
 
         # The gamestate/map for this game
-        self.map = Map(yaml_file=scenario_yaml_file_path)
+        self.map = Map()
         self.current_active_player = 0
         self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0

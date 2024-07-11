@@ -14,7 +14,7 @@ class Map:
     contains self.hexgrid and self.all_units
     """
 
-    def __init__(self, yaml_file=None, max_q=21, max_r=15) -> None:
+    def __init__(self, max_q=21, max_r=15) -> None:
         assert max_q <= 21
         assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r, parent_map=self)
@@ -128,10 +128,11 @@ class Hexagon:
         self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
 
-        """
-        self.controller = whoever last had a unit there
+        
+        self.controller = None  # whoever last had a unit there, updated dynamically during the game
+
         self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
-        """
+
 
         self.in_supply_for_player = []
 
