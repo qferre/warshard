@@ -33,6 +33,8 @@ def read_status_from_yaml(
     game_to_update.current_turn_phase = "TBD"  # TODO
     game_to_update.max_turns = yd.max_turns  # TODO
 
+    # TODO read yd.first_player_turn and set it
+
     game_to_update.map = Map(yd.map.max_q, yd.map.max_r)
 
     # TODO read the biome, and set the default plains to the appropriate color !
