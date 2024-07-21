@@ -37,7 +37,7 @@ def read_status_from_yaml(
 
     game_to_update.map = Map(yd.map.max_q, yd.map.max_r)
 
-    # TODO read the biome, and set the default plains to the appropriate color !
+    # TODO read the biome (temperate, winter, desert), and set the default plains to the appropriate color !
 
     # Hexes
     for hex_type, hex_list_of_this_type in yd.map.special_hexes.items():
