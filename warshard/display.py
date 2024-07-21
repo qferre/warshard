@@ -32,7 +32,8 @@ class Displayer:
             )
 
         # Flags
-        for faction in DisplayConfig.FACTION_COLORS.keys():
+        ALL_FACTIONS = list(DisplayConfig.FACTION_COLORS.keys()) + ["none"] # remember the white flag :)
+        for faction in ALL_FACTIONS:
 
             controller_flag_path = pkg_resources.resource_filename(
                 "warshard", f"assets/flags/{faction}.jpg"
@@ -55,9 +56,6 @@ class Displayer:
             self.assets[f"assets/units/{unit_type}.png"] = pawn_image
 
         # same for everything that needs scaling and loading
-
-        # TODO also to improve perfs
-        # So instead of pygame.image.load(file) do pygame.image.load(file).convert() or if the image has transparent parts pygame.image.load(file).convert_alpha().
 
     def draw(self, gamestate_to_draw: Map):
 
@@ -126,7 +124,7 @@ class Displayer:
                 pygame.display.flip()  # Update display
                 clock.tick(DisplayConfig.FPS)
             except RuntimeError:
-                # If anything we are trying to plotchanges during iteration, this can cause a RuntimeError
+                # If anything we are trying to plot changes during iteration, this can cause a RuntimeError
                 # but since we are only a displayer, it does not really matter. We can never modify anything
                 # anyway, so we just skip this iteration and try again.
                 print(
@@ -160,17 +158,24 @@ def draw_hex_grid(screen, font, map_to_draw: Map, assets):
         # Draw hex borders
         corners = draw_hexagon(screen, DisplayConfig.HEX_BORDER_COLOR, center, HEX_SIZE)
 
-        # TODO if the hexagon is a victory point, draw a little flag of the controller
+        # If the hexagon is a victory point, draw a little flag of the controller
         if hexagon.victory_points > 0:
 
-            controller_flag = assets[f"assets/flags/{hexagon.controller}.jpg"]
+
+            try:
+                controller_flag = assets[f"assets/flags/{hexagon.controller}.jpg"]
+                
+            except:
+                # If controller is not recognised (usually because it's None), default to a white flag.
+                controller_flag = assets["assets/flags/none.jpg"]
+
             screen.blit(
-                controller_flag,
-                (
-                    top_left_pos[0] + (HEX_SIZE / 2) + 0.15 * HEX_SIZE,
-                    top_left_pos[1] + 1.2 * (HEX_SIZE),
-                ),
-            )
+                                controller_flag,
+                                (
+                                    top_left_pos[0] + (HEX_SIZE / 2) + 0.15 * HEX_SIZE,
+                                    top_left_pos[1] + 1.2 * (HEX_SIZE),
+                                ),
+                            )
 
         # TODO also add hexagon name (ie. Marseille, Bastogne, etc.) if applicable
 
@@ -204,8 +209,6 @@ def draw_hexagon(surface, color, center, size):
 
 
 def draw_text(surface, text, position, font, color=(0, 0, 0)):
-
-    # TODO Use this to render multiline text
     lines = text.splitlines()
     for i, l in enumerate(lines):
         line_surface = font.render(l, True, color)
@@ -256,7 +259,99 @@ def draw_unit(unit: Unit, screen, font, assets):
     # TODO Also add name (both in the display and in the actual code) for special units like naming generals for each HQ
 
 
-""" TODO
-def draw_arrow:
-    https://www.reddit.com/r/pygame/comments/v3ofs9/draw_arrow_function/
-"""
+# """ TODO
+# https://www.reddit.com/r/pygame/comments/v3ofs9/draw_arrow_function/
+
+
+# import pygame
+
+# def draw_arrow(
+#         surface: pygame.Surface,
+#         start: pygame.Vector2,
+#         end: pygame.Vector2,
+#         color: pygame.Color,
+#         body_width: int = 2,
+#         head_width: int = 4,
+#         head_height: int = 2,
+#     ):
+#     """Draw an arrow between start and end with the arrow head at the end.
+
+#     Args:
+#         surface (pygame.Surface): The surface to draw on
+#         start (pygame.Vector2): Start position
+#         end (pygame.Vector2): End position
+#         color (pygame.Color): Color of the arrow
+#         body_width (int, optional): Defaults to 2.
+#         head_width (int, optional): Defaults to 4.
+#         head_height (float, optional): Defaults to 2.
+#     """
+#     arrow = start - end
+#     angle = arrow.angle_to(pygame.Vector2(0, -1))
+#     body_length = arrow.length() - head_height
+
+#     # Create the triangle head around the origin
+#     head_verts = [
+#         pygame.Vector2(0, head_height / 2),  # Center
+#         pygame.Vector2(head_width / 2, -head_height / 2),  # Bottomright
+#         pygame.Vector2(-head_width / 2, -head_height / 2),  # Bottomleft
+#     ]
+#     # Rotate and translate the head into place
+#     translation = pygame.Vector2(0, arrow.length() - (head_height / 2)).rotate(-angle)
+#     for i in range(len(head_verts)):
+#         head_verts[i].rotate_ip(-angle)
+#         head_verts[i] += translation
+#         head_verts[i] += start
+
+#     pygame.draw.polygon(surface, color, head_verts)
+
+#     # Stop weird shapes when the arrow is shorter than arrow head
+#     if arrow.length() >= head_height:
+#         # Calculate the body rect, rotate and translate into place
+#         body_verts = [
+#             pygame.Vector2(-body_width / 2, body_length / 2),  # Topleft
+#             pygame.Vector2(body_width / 2, body_length / 2),  # Topright
+#             pygame.Vector2(body_width / 2, -body_length / 2),  # Bottomright
+#             pygame.Vector2(-body_width / 2, -body_length / 2),  # Bottomleft
+#         ]
+#         translation = pygame.Vector2(0, body_length / 2).rotate(-angle)
+#         for i in range(len(body_verts)):
+#             body_verts[i].rotate_ip(-angle)
+#             body_verts[i] += translation
+#             body_verts[i] += start
+
+#         pygame.draw.polygon(surface, color, body_verts)
+
+
+# ----------------- EXAMPLE
+
+
+# import pygame
+
+# from arrow import draw_arrow
+
+# pygame.init()
+
+# CLOCK = pygame.time.Clock()
+# FPS = 60
+
+# WIDTH = 1280
+# HEIGHT = 720
+# RESOLUTION = (WIDTH, HEIGHT)
+# SCREEN = pygame.display.set_mode(RESOLUTION)
+
+# while True:
+#     CLOCK.tick(FPS)
+
+#     for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 exit()
+
+#     SCREEN.fill(pygame.Color("black"))
+
+#     center = pygame.Vector2(WIDTH / 2, HEIGHT / 2)
+#     end = pygame.Vector2(pygame.mouse.get_pos())
+#     draw_arrow(SCREEN, center, end, pygame.Color("dodgerblue"), 10, 20, 12)
+
+#     pygame.display.flip()
+# """

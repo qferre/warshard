@@ -14,7 +14,7 @@ class Map:
     contains self.hexgrid and self.all_units
     """
 
-    def __init__(self, yaml_file=None, max_q=21, max_r=15) -> None:
+    def __init__(self, max_q=21, max_r=15) -> None:
         assert max_q <= 21
         assert max_r <= 15
         self.hexgrid = HexGrid(max_q, max_r, parent_map=self)
@@ -22,7 +22,6 @@ class Map:
         # self.all_units: dict<int : Unit> = {} # List of all Units currently in play
         # TODO fix typing circular imports
         self.all_units = {}  # a dictionary {unit_id: unit} containing all units in play
-        # TODO do not work on self.all_units directly, make functions that add unit by force-checking their ID (see right below)
 
         # self.ongoing_fights : dictionary<Hexagon : Fight>
         self.ongoing_fights = {}  # dictionary {Hexagon: Fight}
@@ -31,8 +30,6 @@ class Map:
             list
         )  # dictionary {player_side: [Hexagon]}
 
-    # TODO use this in the code when relevant, several funtions will necessitate it to replace the dirty workarounds I
-    # have coded so far (involving directly looking into the dict, which is ugly)
     def fetch_unit_by_id(self, unit_id):
         """
         Returns a reference to the Unit object with this ID.
@@ -63,17 +60,37 @@ class Map:
 
         return self.hexgrid.hexagons[(q, r)]
 
+    def force_spawn_unit_at_position(
+        self, unit_type: str, hex_q: int, hex_r: int, player_side: str, id: int
+    ):
+
+        from warshard.units import (
+            Unit,
+        )  # TODO Find a way to move it back up so circular import is not a problem
+
+        # TODO remember to check id is not already allocated
+        # return a reference to the unit
+        # this does NOT check for stacking
+
+        # TODO if id is none, simply use the next available integer number
+
+        hexagon_position = self.fetch_hex_by_coordinate(q=hex_q, r=hex_r)
+
+        self.all_units[id] = Unit(
+            hexagon_position=hexagon_position,
+            type=unit_type,
+            player_side=player_side,
+            id=id,
+            parent_map=self,
+        )
+
+        return self.all_units[id]
+
     """ TODO
-    def force_spawn_unit_at_position(unit_type: str, hex_x:int, hex_y:int, player_side, unit_id)
-		remember to check id is not already allocated
-        return a reference to the unit
-        this does NOT check for stacking
 
-	def force_destruction(unit_id:int)
-        use this whenever a unit needs to be destroyed, usually as a consequence of a fight or improper stacking
-        also usable in debug, like all "force" functions (need to write this in doc somewhere, that all "force" functions can be used in debug)
+    need to write this in doc somewhere, that all "force" functions can be used in debug)
 
- """
+    """
 
 
 class Hexagon:
@@ -111,10 +128,11 @@ class Hexagon:
         self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
 
-        """
-        self.controller = whoever last had a unit there
+        
+        self.controller = None  # whoever last had a unit there, updated dynamically during the game
+
         self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
-        """
+
 
         self.in_supply_for_player = []
 
@@ -140,7 +158,6 @@ class Hexagon:
         return (q, r)
 
     def __str__(self):
-        # TODO expand on this
         return f"({self.q},{self.r})"
 
     def is_accessible_to_player_side(self, player_side):
@@ -180,10 +197,6 @@ class Hexagon:
 
     def get_neighbors(self, ensure_accessible_to_player_side=None):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]
-        # directions = [(0, -1), (+1, -1), (+1, 0), (0, +1), (-1, 0), (-1, -1)]
-        # TODO Found the bug ! these directions are in qr and work only for every other hex
-        # TODO I think it works now ? Double check
-
         coords = [
             (self.x + dx, self.y + dy)
             for dx, dy in directions
@@ -202,11 +215,10 @@ class Hexagon:
                     ensure_accessible_to_player_side
                 )
             ]
-        return result
-        # TODO change this code to cap to min and max q and r to avoid going offmap (I think it already does with the "in" check)
-        # WARNING : use qr, or xy system ?? BE CAREFUL NOT TO MIX THE TWO !!
 
-    def recursively_get_distances_continuous_path(
+        return result
+
+    def get_all_hexes_within_continuous_path(
         self,
         player_side=None,
         max_rank=9,
@@ -226,6 +238,9 @@ class Hexagon:
                 # through accessible hexes only, so we do not propagate from
                 # hexes that are not accessible.
                 k_rank_neighbors += on.get_neighbors(player_side)
+
+                # TODO permit passing a lambda function that will filter neighbors based on a certain
+                # criteria instead of player_side. Could be useful for some LoS implementations (ie. not over mountains)
 
                 # print(on, [str(okn) for okn in on.get_neighbors(player_side)])
             results_dict[rank] = k_rank_neighbors

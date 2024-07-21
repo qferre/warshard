@@ -17,30 +17,18 @@ TEST_START_TIME = time.time()
 
 
 # Ensure map can be updated
-g.map.all_units[16] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(2, 2)],
-    type="armor",
-    player_side="germany",
-    id=16,
-    parent_map=g.map,
+g.map.force_spawn_unit_at_position(
+    unit_type="armor", hex_q=2, hex_r=2, player_side="germany", id=16
 )
 
 
-g.map.all_units[42] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(0, 0)],
-    type="infantry",
-    player_side="germany",
-    id=42,
-    parent_map=g.map,
+g.map.force_spawn_unit_at_position(
+    unit_type="infantry", hex_q=0, hex_r=0, player_side="germany", id=42
 )
 
 
-g.map.all_units[26] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(2, 4)],
-    type="mechanised",
-    player_side="usa",
-    id=26,
-    parent_map=g.map,
+g.map.force_spawn_unit_at_position(
+    unit_type="mechanised", hex_q=2, hex_r=4, player_side="usa", id=26
 )
 
 
@@ -97,17 +85,14 @@ u_1.attempt_move_to(
 
 
 # Test supply system
-r = g.map.fetch_hex_by_coordinate(4, 5).recursively_get_distances_continuous_path(
+r = g.map.fetch_hex_by_coordinate(4, 5).get_all_hexes_within_continuous_path(
     # player_side="germany", # TODO test this so far this seems to be failing and returning all hexes
     max_rank=3
 )
 
-g.map.all_units[99] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(2, 5)],
-    type="hq",
-    player_side="germany",
-    id=99,
-    parent_map=g.map,
+
+g.map.force_spawn_unit_at_position(
+    unit_type="hq", hex_q=2, hex_r=5, player_side="germany", id=99
 )
 
 print(r)
@@ -123,21 +108,15 @@ g.update_supply()
 
 
 ## Create units close enough for a fight and test it
-g.map.all_units[67] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(4, 4)],
-    type="armor",
-    player_side="germany",
-    id=67,
-    parent_map=g.map,
+g.map.force_spawn_unit_at_position(
+    unit_type="armor", hex_q=4, hex_r=4, player_side="germany", id=67
 )
 
-g.map.all_units[27] = Unit(
-    hexagon_position=g.map.hexgrid.hexagons[(4, 7)],
-    type="artillery",
-    player_side="usa",
-    id=27,
-    parent_map=g.map,
+g.map.force_spawn_unit_at_position(
+    unit_type="artillery", hex_q=4, hex_r=7, player_side="usa", id=27
 )
+
+
 u_2 = g.map.fetch_unit_by_id(67)
 fight_hex = g.map.fetch_hex_by_coordinate(4, 5)
 u_1.attempt_attack_on_hex(fight_hex)
@@ -171,11 +150,7 @@ we try to fetch the hex automatically, this will let us shorten the syntax
 """
 
 
-
-
 # Now test the complete run_a_turn
-
-
 
 
 TEST_END_TIME = time.time()

@@ -19,7 +19,6 @@ class Game:
 
     def __init__(
         self,
-        scenario_yaml_file_path: str = "",
         log_file_path: str = "./example.log",
         headless=False,
     ) -> None:
@@ -41,7 +40,7 @@ class Game:
         self.logger = logging.getLogger(__name__)
 
         # The gamestate/map for this game
-        self.map = Map(yaml_file=scenario_yaml_file_path)
+        self.map = Map()
         self.current_active_player = 0
         self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
@@ -108,21 +107,21 @@ class Game:
         self.logger.error("This too.")
         pass
 
-    def movement_phase(orders):
+    def movement_phase(self, orders):
         # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted
         for order in orders:
             order.unit_ref.attempt_move_to(order.hexagon_ref)
         # TODO Once movements have been resolved, units that are still stacked will start being destroyed until only one remains, beginning with the lower Power units and with ties broken randomly
 
-    def attacker_combat_allocation_phase(orders):
+    def attacker_combat_allocation_phase(self, orders):
         for order in orders:
             order.unit_ref.attempt_attack_on_hex(order.hexagon_ref)
 
-    def defender_combat_allocation_phase(orders):
+    def defender_combat_allocation_phase(self, orders):
         for order in orders:
             order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
-    def resolve_fights(putative_retreats):
+    def resolve_fights(self, putative_retreats):
         # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
         for fight in self.all_fights:
@@ -137,10 +136,8 @@ class Game:
             if unit.type == "hq":
 
                 # Get all hexes within SUPPLY_RANGE of this hq
-                dist_dict = (
-                    unit.hexagon_position.recursively_get_distances_continuous_path(
-                        max_rank=Config.SUPPLY_RANGE
-                    )
+                dist_dict = unit.hexagon_position.get_all_hexes_within_continuous_path(
+                    max_rank=Config.SUPPLY_RANGE
                 )
 
                 ldv = list(dist_dict.values())
@@ -154,28 +151,34 @@ class Game:
             # print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
-    """ TODO
-    def advancing_phase(putative_advance_orders)
+    def advancing_phase(self, putative_advance_orders):
         # We ask player to pre-specify potential advances
-        Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
-        Do not allow moving more than one unit per fight obviously. This move is allowed regardless of remaining mobility (so use force_move_to())
-		if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
-
-        ATTACKER_VICTORIES_RESULTS = ["EX","dr","DE"]
+        # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
         for fight in self.map.ongoing_fights:
 
-            if fight.fight_result in ATTACKER_VICTORIES_RESULTS:
+            fight.an_advance_was_made = False
 
-                potential_advancers = [attacker for attacker in fight.attacking_units if attacker.type in Config.MELEE_UNITS]
+            if fight.fight_result in Config.ATTACKER_VICTORIES_RESULTS:
+
+                potential_advancers = [
+                    attacker
+                    for attacker in fight.attacking_units
+                    if attacker.type in Config.MELEE_UNITS
+                ]
                 potential_advancers_id = [u.id for u in potential_advancers]
 
                 for order in putative_advance_orders:
-                    if order.unit_id in potential_advancers_id:
-                        move the unit by force
-                        break the FIGHT LOOP HERE (so two breaks ?) to ensure we cannot move more than one unit per won fight
+                    if not fight.an_advance_was_made:
+                        if order.unit_id in potential_advancers_id:
+                            unit = self.map.fetch_unit_by_id(order.unit_id)
+                            unit.force_move_to(
+                                order.hex
+                            )  # This move is allowed regardless of remaining mobility (so use force_move_to())
+                            fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
-    """
+                if not fight.an_advance_was_made:
+                    pass  # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
 
     def first_upkeep_phase(self):
         # Refresh mobility for all units OF THE CURRENT PLAYER
@@ -194,6 +197,18 @@ class Game:
             # Change controllers of victory point hexes depending on who is standing on it
             # TODO (careful about stacked units, even though they should all belong to the same player)
             unit.hexagon_position.controller = unit.player_side
+
+        # Deploy reinforcements if applicable
+        # NOTE those appear even if it implies stacking
+        for planned_reinforcement in self.planned_reinforcements:
+            if planned_reinforcement.turn == self.current_turn_number:
+                self.map.force_spawn_unit_at_position(
+                    unit_type=planned_reinforcement.type,
+                    hex_q=planned_reinforcement.q,
+                    hex_r=planned_reinforcement.r,
+                    player_side=planned_reinforcement.player_side,
+                    id=planned_reinforcement.id,
+                )
 
         # Increment turn number
         self.current_turn_number += 1
