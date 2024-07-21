@@ -41,7 +41,10 @@ class Game:
 
         # The gamestate/map for this game
         self.map = Map()
-        self.current_active_player = 0
+        self.players = [None, None]  # Players, in order
+        self.current_active_player_id = (
+            0  # The ID corresponds to a position in the self.players list
+        )
         self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
 
@@ -100,7 +103,13 @@ class Game:
 
     #############################
 
-    def switch_active_player(self, new_player_id):
+    def switch_active_player(self):
+        self.current_active_player_id = (self.current_active_player_id + 1) % len(
+            self.players
+        )
+        self.current_active_player = self.players[self.current_active_player_id]
+
+        # TODO USE LOGS EVERYWHERE
         self.logger.debug("This message should go to the log file")
         self.logger.info("So should this")
         self.logger.warning("And this, too")
@@ -182,9 +191,9 @@ class Game:
 
     def first_upkeep_phase(self):
         # Refresh mobility for all units OF THE CURRENT PLAYER
-        for unit in self.map.all_units:
+        for unit_id, unit in self.map.all_units.items():
             if unit.player_side == self.current_active_player:
-                unit.remaining_mobility = unit.mobility
+                unit.mobility_remaining = unit.mobility
 
     def second_upkeep_phase(self):
         # Then destroy all Fights
@@ -192,7 +201,7 @@ class Game:
 
         for unit in self.map.all_units:
             # Set mobility of all units to 0 just in case
-            unit.remaining_mobility = 0
+            unit.mobility_remaining = 0
 
             # Change controllers of victory point hexes depending on who is standing on it
             # TODO (careful about stacked units, even though they should all belong to the same player)

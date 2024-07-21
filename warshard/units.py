@@ -52,7 +52,7 @@ class Unit:
         )
 
         if (mobility_cost <= self.mobility_remaining) and hex_is_clear:
-            # substract mobility cost of target hex to our remaining_mobility
+            # substract mobility cost of target hex to our mobility_remaining
             self.mobility_remaining -= mobility_cost
             self.force_move_to(hex)  # move there
 

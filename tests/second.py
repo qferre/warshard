@@ -8,6 +8,7 @@ from warshard.actions import Order
 # Recreate a game and place units for that
 g = Game()  # TODO set headless to True to run tests once on pytest
 
+g.players = ["germany", "usa"]
 
 g.map.force_spawn_unit_at_position(
     unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=1
@@ -24,14 +25,17 @@ g.map.force_spawn_unit_at_position(
 # TODO : in the turn functions, check player side ! Make sure that only the active player can send movement orders (should already be ok thanks to the mobility points)
 # but also need to check that only active player can send attack orders and advance orders, and only the inactive player can send defend orders
 
-"""
 
-
-g.switch_active_player(new_player_id)
-
+g.switch_active_player()
+assert g.current_active_player_id == 1
+assert g.current_active_player == "usa"
 
 
 g.first_upkeep_phase()
+assert g.map.all_units[1].mobility_remaining == 0
+assert g.map.all_units[2].mobility_remaining > 0
+
+raise NotImplementedError
 
 
 pending_orders_attacker_movement = [Order(), Order()]
@@ -54,4 +58,3 @@ g.advancing_phase(putative_advance_orders_both_sides)
 
 
 g.second_upkeep_phase()
-"""
