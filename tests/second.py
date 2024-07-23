@@ -38,7 +38,8 @@ assert g.map.all_units[2].mobility_remaining > 0
 raise NotImplementedError
 
 
-pending_orders_attacker_movement = [Order(), Order()]
+# TODO remember to add invalid orders and test that they are not executed
+pending_orders_attacker_movement = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map), Order()]
 g.movement_phase(pending_orders_attacker_movement)
 
 
@@ -50,7 +51,7 @@ g.attacker_combat_allocation_phase(pending_orders_attacker_combat)
 pending_orders_defender_combat = []
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
 
-putative_retreats_both_sides = []
+putative_retreats_both_sides = [Order(..., type="putative")]
 g.resolve_fights(putative_retreats_both_sides)
 
 putative_advance_orders_both_sides = []

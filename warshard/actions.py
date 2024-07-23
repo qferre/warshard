@@ -8,7 +8,7 @@ class Order:
     # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
     # as (unit_id, hex_x, hex_y) where each is a string
 
-    def __init__(self, unit_id, hex_x, hex_y, map):
+    def __init__(self, unit_id, hex_x, hex_y, map, order_type="regular"):
         self.map = map
         self.unit_id = unit_id
         self.hex_x, self.hex_y = hex_x, hex_y
@@ -22,7 +22,10 @@ class Order:
         # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
         # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
         # and abandon the field!
-        # self.order_type
+        assert order_type in ["regular", "putative"]
+        self.order_type = order_type
+        self.is_putative = self.order_type == "putative"
+
 
 
 class Fight:
