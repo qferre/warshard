@@ -68,7 +68,7 @@ class Game:
                 note that we will iterate over this_turn_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
 
                 TODO : add a way to flag the type of orders as they are given inside the this_turn_orders list. Relevant notably to pre-plan retreats : we don't want the unit to retreat during its movement phase because it thought it was a regular movement order. Also relevant for putative advances, to ensure they are not just seen as a regular attack order. Probably these two "putative" orders are the problematic ones, so the flag could simply be "order.is_putative_order". YES THAT IS THE CASE
-            
+
 
         Raises:
             NotImplementedError: _description_
@@ -85,8 +85,12 @@ class Game:
         # orders when processing
 
         # Split orders into regular and putative
-        regular_orders_this_turn = [order for order in this_turn_orders if not order.is_putative]
-        putative_orders_this_turn = [order for order in this_turn_orders if order.is_putative]
+        regular_orders_this_turn = [
+            order for order in this_turn_orders if not order.is_putative
+        ]
+        putative_orders_this_turn = [
+            order for order in this_turn_orders if order.is_putative
+        ]
 
         # TODO remember to update self.current_turn_phase when necessary
 
@@ -96,12 +100,18 @@ class Game:
         # TODO test this rigorously in unitary tests
         self.switch_active_player(new_player_id)
         self.first_upkeep_phase()
-        self.movement_phase(pending_orders_attacker_movement = regular_orders_this_turn)
+        self.movement_phase(pending_orders_attacker_movement=regular_orders_this_turn)
         self.update_supply()
-        self.attacker_combat_allocation_phase(pending_orders_attacker_combat = regular_orders_this_turn)
-        self.defender_combat_allocation_phase(pending_orders_defender_combat = regular_orders_this_turn)
-        self.resolve_fights(putative_retreats_both_sides = putative_orders_this_turn)
-        self.advancing_phase(putative_advance_orders_both_sides = putative_orders_this_turn)
+        self.attacker_combat_allocation_phase(
+            pending_orders_attacker_combat=regular_orders_this_turn
+        )
+        self.defender_combat_allocation_phase(
+            pending_orders_defender_combat=regular_orders_this_turn
+        )
+        self.resolve_fights(putative_retreats_both_sides=putative_orders_this_turn)
+        self.advancing_phase(
+            putative_advance_orders_both_sides=putative_orders_this_turn
+        )
         self.second_upkeep_phase()
 
     def __del__(self):

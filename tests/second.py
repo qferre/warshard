@@ -38,7 +38,7 @@ assert g.map.all_units[2].mobility_remaining > 0
 raise NotImplementedError
 
 
-# TODO remember to add invalid orders and test that they are not executed
+# TODO remember to add invalid orders and test here that they are not executed
 pending_orders_attacker_movement = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map), Order()]
 g.movement_phase(pending_orders_attacker_movement)
 
