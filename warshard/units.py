@@ -20,6 +20,10 @@ class Unit:
 
         stats = Config.UNIT_CHARACTERISTICS[self.type]
         self.power, self.defence, self.mobility, self.range = stats
+        # TODO : probably won't do it right now, but I should note that this code
+        # is setup specifically so that units have their own power, defence, etc. values and
+        # do not simply check based on their type later in the code. This means that it's already
+        # possible to give unit custom power, defence, etc. and I just have not done it yet
 
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0

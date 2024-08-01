@@ -5,6 +5,7 @@ NOT FUNCTIONAL YET
 
 
 Based on SPI wargames.
+Inspired by rules found at [spigames](https://www.spigames.net/rules_downloads.htm)
 
 
 Rules are in ![rules](./doc/rules.md)

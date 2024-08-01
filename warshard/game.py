@@ -237,5 +237,12 @@ class Game:
                     id=planned_reinforcement.id,
                 )
 
+        # TODO Related to reinforcements, implement remplacements : units that were destroyed may be reconstituted depending on dice roll.
+        """
+        When destroying an unit with unit.destroy_myself(), change the funciton so that it is placed in a pile
+        of destroyed units that may be reconstituted
+        """
+
+
         # Increment turn number
         self.current_turn_number += 1

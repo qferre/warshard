@@ -35,7 +35,7 @@ assert g.map.all_units[1].mobility_remaining == 0
 assert g.map.all_units[2].mobility_remaining > 0
 
 # Movement phase
-# NOTE there are invalid orders in here, we also test  that they are not executed
+# NOTE there are invalid orders in this list, we also assert that they are not executed!
 pending_orders_attacker_movement = [
     Order(unit_id=1, hex_x=3, hex_y=2, map=g.map),
     Order(unit_id=2, hex_x=3, hex_y=4, map=g.map),

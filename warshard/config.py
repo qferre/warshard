@@ -65,6 +65,16 @@ class Config:
 
     SUPPLY_RANGE = 4  # TODO Check if this is inclusive or exclusive in practice (ie. is a hex 4 tiles away supply or is this where it ends ?)
 
+    # TODO Not used yet
+    REPLACEMENT_DICE_ROLL = {
+        1: "destroyed",
+        2: "destroyed",
+        3: "destroyed",
+        4: None,
+        5: "replaced",
+        6: "replaced",
+    }
+
 
 class DisplayConfig:
 

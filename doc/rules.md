@@ -121,3 +121,10 @@ Special rules depend on scenario. Not implemented in code, but could be used in 
 Victory : some locations give victory score.
 
 Scenario lasts a predefined number of turns.
+
+### Replacements
+
+TODO Related to reinforcements, implement remplacements : units that were destroyed may be reconstituted depending on dice roll.
+
+Based on a reading of SPI rules, here is an idea : everytime a unit is destroyed, place it in a "shattered units" list.
+During the second upkeep phase and after reinforcements, roll a dice for each shattered unit (of the side of the active player). On a 1-3, unit is permanently destroyed ; on a 4 nothing happens ; on a 5-6 unit is recovered as reinforcement and can be placed on a reinforcement point, if and only if the reinforcement point is in supply for the player* (those reinforcement points should be designated at beginning of a scenario ; and as usual you cannot stack so if you have already put a replacement on each reinforcement point, you stop rolling the dice)
