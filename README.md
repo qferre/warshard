@@ -26,7 +26,7 @@ to install : in a terminal at the root of the project, run `pip install .`
 
 ## API
 
-See api_example
+See api_example.ipynb notebook in the doc directory
 
 General principle is that you should ask you AI agent to produce putative orders, then pass the list of those orders to the simulation
 to see the results of those orders

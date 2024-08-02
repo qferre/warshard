@@ -134,25 +134,17 @@ class Game:
         self.logger.error("This too.")
         pass
 
+    def first_upkeep_phase(self):
+        # Refresh mobility for all units OF THE CURRENT PLAYER
+        for unit_id, unit in self.map.all_units.items():
+            if unit.player_side == self.current_active_player:
+                unit.mobility_remaining = unit.mobility
+
     def movement_phase(self, orders):
         # Iterate over each unit : for each, check in pending orders to a nearby hex from user (which can be the same hex as current to make them “stay” even though it's useless) until MP are exhausted
         for order in orders:
             order.unit_ref.attempt_move_to(order.hexagon_ref)
         # TODO Once movements have been resolved, units that are still stacked will start being destroyed until only one remains, beginning with the lower Power units and with ties broken randomly
-
-    def attacker_combat_allocation_phase(self, orders):
-        for order in orders:
-            order.unit_ref.attempt_attack_on_hex(order.hexagon_ref)
-
-    def defender_combat_allocation_phase(self, orders):
-        for order in orders:
-            order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
-
-    def resolve_fights(self, putative_retreats):
-        # NOTE Here, we ask the player to pre-specify retreats that would happen
-        # if they lost
-        for fight in self.all_fights:
-            fight.resolve(putative_retreats)
 
     def update_supply(self):
         # Now that all movements have been done, update supply
@@ -178,6 +170,20 @@ class Game:
             # print(v)
             self.map.hexes_currently_in_supply_per_player[k] = set(v)
 
+    def attacker_combat_allocation_phase(self, orders):
+        for order in orders:
+            order.unit_ref.attempt_attack_on_hex(order.hexagon_ref)
+
+    def defender_combat_allocation_phase(self, orders):
+        for order in orders:
+            order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
+
+    def resolve_fights(self, putative_retreats):
+        # NOTE Here, we ask the player to pre-specify retreats that would happen
+        # if they lost
+        for fight in self.all_fights:
+            fight.resolve(putative_retreats)
+
     def advancing_phase(self, putative_advance_orders):
         # We ask player to pre-specify potential advances
         # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
@@ -188,6 +194,7 @@ class Game:
 
             if fight.fight_result in Config.ATTACKER_VICTORIES_RESULTS:
 
+                # Only melee units can advance
                 potential_advancers = [
                     attacker
                     for attacker in fight.attacking_units
@@ -205,13 +212,10 @@ class Game:
                             fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
                 if not fight.an_advance_was_made:
-                    pass  # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
-
-    def first_upkeep_phase(self):
-        # Refresh mobility for all units OF THE CURRENT PLAYER
-        for unit_id, unit in self.map.all_units.items():
-            if unit.player_side == self.current_active_player:
-                unit.mobility_remaining = unit.mobility
+                    pass
+                    # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
+                    # Hmm, for simplicity, perhaps I can just assume that if no putative advance orders are given, well too bad for you, you should have specified some.
+                    # yes, do this. Units won't budge without specific orders.
 
     def second_upkeep_phase(self):
         # Then destroy all Fights
@@ -242,7 +246,6 @@ class Game:
         When destroying an unit with unit.destroy_myself(), change the funciton so that it is placed in a pile
         of destroyed units that may be reconstituted
         """
-
 
         # Increment turn number
         self.current_turn_number += 1
