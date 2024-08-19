@@ -8,6 +8,14 @@ class Order:
     # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
     # as (unit_id, hex_x, hex_y) where each is a string
 
+    # TODO consider changing API so that the map is not passed when creating and order,
+    # but is automatically fetched when interpreting it ?
+
+    # TODO also simplify the naming so it's quicker to type :
+    # unit_id -> id
+    # hex_x -> x
+    # hex_y -> y
+
     def __init__(self, unit_id, hex_x, hex_y, map, order_type="regular"):
         self.map = map
         self.unit_id = unit_id
@@ -25,6 +33,9 @@ class Order:
         assert order_type in ["regular", "putative"]
         self.order_type = order_type
         self.is_putative = self.order_type == "putative"
+        # TODO for now I think this is only used when separating lists that contain both types,
+        # but is never checked. I think I should add checks during the turn phases to ensure
+        # one does not pass regualar orders when putative are expected and vice versa
 
 
 

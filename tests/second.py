@@ -52,18 +52,46 @@ assert g.map.fetch_unit_by_id(2).hexagon_position == g.map.fetch_hex_by_coordina
 g.update_supply()
 
 
-raise NotImplementedError
+# Combat units preparation
+g.map.force_spawn_unit_at_position(
+    unit_type="infantry", hex_q=3, hex_r=4, player_side="germany", id=3
+)
+g.map.force_spawn_unit_at_position(
+    unit_type="artillery", hex_q=3, hex_r=2, player_side="germany", id=4
+)
+g.map.force_spawn_unit_at_position(
+    unit_type="artillery", hex_q=5, hex_r=6, player_side="usa", id=5
+)
 
-pending_orders_attacker_combat = []
+
+# Attacker combat allocation phase
+# NOTE attack with melee and support
+pending_orders_attacker_combat = [
+    Order(
+        unit_id=2, hex_x=4, hex_y=4, map=g.map
+    ),  # invalid order, should not be executed
+    Order(unit_id=2, hex_x=3, hex_y=4, map=g.map),
+    Order(unit_id=5, hex_x=3, hex_y=4, map=g.map),
+]
 g.attacker_combat_allocation_phase(pending_orders_attacker_combat)
 
-pending_orders_defender_combat = []
+
+# Defender combat allocation phase
+# NOTE assigning support
+pending_orders_defender_combat = [
+    Order(unit_id=5, hex_x=3, hex_y=4, map=g.map),
+]
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
+
+
+print(g.map.ongoing_fights) # TODO assert the fight is correct
+
+raise NotImplementedError
 
 putative_retreats_both_sides = [Order(..., type="putative")]
 g.resolve_fights(putative_retreats_both_sides)
 
-putative_advance_orders_both_sides = []
+putative_advance_orders_both_sides = [Order(..., type="putative")]
 g.advancing_phase(putative_advance_orders_both_sides)
 
 

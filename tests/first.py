@@ -134,7 +134,7 @@ u_3.attempt_join_defence_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
 assert this_fight.defending_support_units == [u_3]
 
 # attempt to resolve this fight, force the dice roll to a certain value to ensure we are properly testing retreats also
-putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map)]
+putative_retreats = [Order(unit_id=26, hex_x=5, hex_y=5, map=g.map, order_type="putative")]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
 # TODO when the debug_force_dice_roll_to was set to 6, I saw weird attacker retreats ? To double check
 

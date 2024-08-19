@@ -70,7 +70,7 @@ class Map:
 
         # TODO remember to check id is not already allocated
         # return a reference to the unit
-        # this does NOT check for stacking
+        # NOTE this does NOT check for stacking! say so!
 
         # TODO if id is none, simply use the next available integer number
 
