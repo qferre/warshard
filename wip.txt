@@ -8,3 +8,9 @@ https://gymnasium.farama.org/tutorials/gymnasium_basics/environment_creation/ ? 
 Idea for map source for initial map : https://www.youtube.com/watch?v=DMJB8YODZaE northern part, in the bulge
 
 
+
+
+
+
+
+TODO MAJOR Docstrings for all functions !!!

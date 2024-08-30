@@ -20,6 +20,10 @@ class Unit:
 
         stats = Config.UNIT_CHARACTERISTICS[self.type]
         self.power, self.defence, self.mobility, self.range = stats
+        # TODO : probably won't do it right now, but I should note that this code
+        # is setup specifically so that units have their own power, defence, etc. values and
+        # do not simply check based on their type later in the code. This means that it's already
+        # possible to give unit custom power, defence, etc. and I just have not done it yet
 
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0
@@ -52,7 +56,7 @@ class Unit:
         )
 
         if (mobility_cost <= self.mobility_remaining) and hex_is_clear:
-            # substract mobility cost of target hex to our remaining_mobility
+            # substract mobility cost of target hex to our mobility_remaining
             self.mobility_remaining -= mobility_cost
             self.force_move_to(hex)  # move there
 
@@ -80,7 +84,7 @@ class Unit:
         if not target_hex_contains_enemy_unit:
             return
 
-        # If self.parent_map.all_fights does not have a Fight on this hex, create it before we attempt to join it :
+        # If self.parent_map.ongoing_fights does not have a Fight on this hex, create it before we attempt to join it :
         if hex not in self.parent_map.ongoing_fights:
             # Create a Fight and add it to the list
             # Add the enemy unit present on this hex as the melee defender

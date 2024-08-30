@@ -8,7 +8,15 @@ class Order:
     # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
     # as (unit_id, hex_x, hex_y) where each is a string
 
-    def __init__(self, unit_id, hex_x, hex_y, map):
+    # TODO consider changing API so that the map is not passed when creating and order,
+    # but is automatically fetched when interpreting it ?
+
+    # TODO also simplify the naming so it's quicker to type :
+    # unit_id -> id
+    # hex_x -> x
+    # hex_y -> y
+
+    def __init__(self, unit_id, hex_x, hex_y, map, order_type="regular"):
         self.map = map
         self.unit_id = unit_id
         self.hex_x, self.hex_y = hex_x, hex_y
@@ -22,7 +30,13 @@ class Order:
         # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
         # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
         # and abandon the field!
-        # self.order_type
+        assert order_type in ["regular", "putative"]
+        self.order_type = order_type
+        self.is_putative = self.order_type == "putative"
+        # TODO for now I think this is only used when separating lists that contain both types,
+        # but is never checked. I think I should add checks during the turn phases to ensure
+        # one does not pass regualar orders when putative are expected and vice versa
+
 
 
 class Fight:
@@ -188,4 +202,4 @@ class Fight:
 
         # Force destructions of units if applicable
         for ud in units_to_destroy:
-            ud.destroy_self()
+            ud.destroy_myself()
