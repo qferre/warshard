@@ -202,4 +202,4 @@ class Fight:
 
         # Force destructions of units if applicable
         for ud in units_to_destroy:
-            ud.destroy_self()
+            ud.destroy_myself()

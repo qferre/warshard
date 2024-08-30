@@ -84,14 +84,26 @@ pending_orders_defender_combat = [
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
 
 
-print(g.map.ongoing_fights) # TODO assert the fight is correct
+print(g.map.ongoing_fights)  # TODO assert the fight is correct
 
-raise NotImplementedError
 
-putative_retreats_both_sides = [Order(..., type="putative")]
-g.resolve_fights(putative_retreats_both_sides)
+putative_retreats_both_sides = [
+    Order(
+        unit_id=3, hex_x=2, hex_y=4, map=g.map, order_type="putative"
+    ),  # This Order will not be executed
+    Order(unit_id=2, hex_x=5, hex_y=5, map=g.map, order_type="putative"),
+]
+g.resolve_fights(
+    putative_retreats_both_sides, debug_force_rolls=[2]  # Force defender to retreat
+)
 
-putative_advance_orders_both_sides = [Order(..., type="putative")]
+
+putative_advance_orders_both_sides = [
+    Order(unit_id=2, hex_x=3, hex_y=4, map=g.map, order_type="putative"),
+    Order(
+        unit_id=2, hex_x=4, hex_y=4, map=g.map, order_type="putative"
+    ),  # This Order will not be executed
+]
 g.advancing_phase(putative_advance_orders_both_sides)
 
 

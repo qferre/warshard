@@ -178,17 +178,22 @@ class Game:
         for order in orders:
             order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
-    def resolve_fights(self, putative_retreats):
+    def resolve_fights(self, putative_retreats, debug_force_rolls=None):
         # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
-        for fight in self.all_fights:
-            fight.resolve(putative_retreats)
+        for i, fight in enumerate(self.map.ongoing_fights.values()):
+
+            if debug_force_rolls is not None:
+                force_roll = debug_force_rolls[i]
+            else:
+                force_roll = None  # If None, let the roll be random
+            fight.resolve(putative_retreats, debug_force_dice_roll_to=force_roll)
 
     def advancing_phase(self, putative_advance_orders):
         # We ask player to pre-specify potential advances
         # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
-        for fight in self.map.ongoing_fights:
+        for fight in self.map.ongoing_fights.values():
 
             fight.an_advance_was_made = False
 
@@ -207,7 +212,7 @@ class Game:
                         if order.unit_id in potential_advancers_id:
                             unit = self.map.fetch_unit_by_id(order.unit_id)
                             unit.force_move_to(
-                                order.hex
+                                order.hexagon_ref
                             )  # This move is allowed regardless of remaining mobility (so use force_move_to())
                             fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
@@ -221,7 +226,7 @@ class Game:
         # Then destroy all Fights
         self.map.ongoing_fights = {}
 
-        for unit in self.map.all_units:
+        for unit in self.map.all_units.values():
             # Set mobility of all units to 0 just in case
             unit.mobility_remaining = 0
 
@@ -230,7 +235,9 @@ class Game:
             unit.hexagon_position.controller = unit.player_side
 
         # Deploy reinforcements if applicable
+        # TODO finish implementing it !
         # NOTE those appear even if it implies stacking
+        """
         for planned_reinforcement in self.planned_reinforcements:
             if planned_reinforcement.turn == self.current_turn_number:
                 self.map.force_spawn_unit_at_position(
@@ -240,7 +247,7 @@ class Game:
                     player_side=planned_reinforcement.player_side,
                     id=planned_reinforcement.id,
                 )
-
+        """
         # TODO Related to reinforcements, implement remplacements : units that were destroyed may be reconstituted depending on dice roll.
         """
         When destroying an unit with unit.destroy_myself(), change the funciton so that it is placed in a pile

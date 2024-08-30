@@ -64,6 +64,6 @@ def read_status_from_yaml(
                 id=unitdef.id,
             )  # TODO implement unit name reading (not just ID) from the YAML
 
-    # Record reinforcements # TODO
+    # Record reinforcements that are planned # TODO
 
     return game_to_update

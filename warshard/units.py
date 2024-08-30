@@ -84,7 +84,7 @@ class Unit:
         if not target_hex_contains_enemy_unit:
             return
 
-        # If self.parent_map.all_fights does not have a Fight on this hex, create it before we attempt to join it :
+        # If self.parent_map.ongoing_fights does not have a Fight on this hex, create it before we attempt to join it :
         if hex not in self.parent_map.ongoing_fights:
             # Create a Fight and add it to the list
             # Add the enemy unit present on this hex as the melee defender
