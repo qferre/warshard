@@ -32,7 +32,9 @@ class Displayer:
             )
 
         # Flags
-        ALL_FACTIONS = list(DisplayConfig.FACTION_COLORS.keys()) + ["none"] # remember the white flag :)
+        ALL_FACTIONS = list(DisplayConfig.FACTION_COLORS.keys()) + [
+            "none"
+        ]  # remember the white flag :)
         for faction in ALL_FACTIONS:
 
             controller_flag_path = pkg_resources.resource_filename(
@@ -161,21 +163,20 @@ def draw_hex_grid(screen, font, map_to_draw: Map, assets):
         # If the hexagon is a victory point, draw a little flag of the controller
         if hexagon.victory_points > 0:
 
-
             try:
                 controller_flag = assets[f"assets/flags/{hexagon.controller}.jpg"]
-                
+
             except:
                 # If controller is not recognised (usually because it's None), default to a white flag.
                 controller_flag = assets["assets/flags/none.jpg"]
 
             screen.blit(
-                                controller_flag,
-                                (
-                                    top_left_pos[0] + (HEX_SIZE / 2) + 0.15 * HEX_SIZE,
-                                    top_left_pos[1] + 1.2 * (HEX_SIZE),
-                                ),
-                            )
+                controller_flag,
+                (
+                    top_left_pos[0] + (HEX_SIZE / 2) + 0.15 * HEX_SIZE,
+                    top_left_pos[1] + 1.2 * (HEX_SIZE),
+                ),
+            )
 
         # TODO also add hexagon name (ie. Marseille, Bastogne, etc.) if applicable
 

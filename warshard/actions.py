@@ -38,7 +38,6 @@ class Order:
         # one does not pass regualar orders when putative are expected and vice versa
 
 
-
 class Fight:
 
     def __init__(

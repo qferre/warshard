@@ -73,7 +73,7 @@ class Game:
         Raises:
             NotImplementedError: _description_
         """
-        raise NotImplementedError
+        raise NotImplementedError  # TODO Finish and test this function !!
 
         # TODO remember all orders given, but write in doc that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :)
         # self.all_orders_ever_given[self.current_turn_number] += this_turn_orders

@@ -128,11 +128,11 @@ class Hexagon:
         self.defender_multiplier = Config.DEFENDER_MULTIPLIER[self.type]
         self.mobility_cost_multiplier = Config.MOBILITY_COSTS[self.type]
 
-        
-        self.controller = None  # whoever last had a unit there, updated dynamically during the game
+        self.controller = (
+            None  # whoever last had a unit there, updated dynamically during the game
+        )
 
-        self.name = name # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
-
+        self.name = name  # specified in YAML, something like "Marseille", "Bastogne", etc. ; for display purposes only
 
         self.in_supply_for_player = []
 
