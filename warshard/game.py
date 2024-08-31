@@ -96,7 +96,7 @@ class Game:
 
         # TODO check that self.current_turn_number < scenario_max_turns
 
-        # All regular or putative orders are passed at once, since invalid orders should simply be ignores
+        # All regular or putative orders are passed at once, since invalid orders should simply be ignored
         # TODO test this rigorously in unitary tests
         self.switch_active_player(new_player_id)
         self.first_upkeep_phase()
@@ -191,6 +191,7 @@ class Game:
 
     def advancing_phase(self, putative_advance_orders):
         # We ask player to pre-specify potential advances
+        # TODO add an assert that all orders in putative_advance_orders must have order.is_putative == True ?
         # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
 
         for fight in self.map.ongoing_fights.values():

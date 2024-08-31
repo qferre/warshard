@@ -58,6 +58,7 @@ class Fight:
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
         # TODO Specify in typing : putative_retreats should be a list of Orders
+        # TODO add an assert that all such orders must have order.is_putative == True ?
         # TODO Specify this whenever we pass lists of Orders
 
         if debug_force_dice_roll_to is not None:
@@ -174,7 +175,7 @@ class Fight:
             for attacking_unit in self.attacking_units:
                 units_to_destroy.append(attacking_unit)
 
-        # Defending melee unit and least powerful attacking unit eleminated (ties broken randomly)
+        # Defending melee unit and least powerful attacking unit eliminated (ties broken randomly)
         elif fight_result == "EX":
             units_to_destroy.append(self.defending_melee_unit)
 
