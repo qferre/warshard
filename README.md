@@ -1,7 +1,7 @@
 # WarShard
 A simplified modern wargame designed to be compatible with training AIs, thanks to an API
 
-NOT FUNCTIONAL YET
+**CURRENT STATUS : BETA -- THE MAIN LOOP AND INTERFACE ARE FUNCTIONAL, AS EVIDENCED BY THE UNIT TESTS, BUT MANY TODOs AND BUGS REMAIN**
 
 
 Based on SPI wargames.

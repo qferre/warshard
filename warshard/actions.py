@@ -57,6 +57,18 @@ class Fight:
         )  # Deduce parent map from hexagon
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
+
+        import logging
+        # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. It works well enough, but consider passing debuggers later to make this more custom
+
+        logging.debug(
+            "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"
+        )
+
+        logging.info(
+            f"Resolving Fight in ({self.fight_hexagon.q},{self.fight_hexagon.r})"
+        )
+
         # TODO Specify in typing : putative_retreats should be a list of Orders
         # TODO add an assert that all such orders must have order.is_putative == True ?
         # TODO Specify this whenever we pass lists of Orders
@@ -181,10 +193,14 @@ class Fight:
 
             min_power_attacker = min(unit.power for unit in self.attacking_units)
             min_power_units = [
-                unit for unit in self.attacking_unit if unit.power == min_power_attacker
+                unit
+                for unit in self.attacking_units
+                if unit.power == min_power_attacker
             ]
             least_powerful_attacker = random.choice(min_power_units)
-            units_to_destroy.append(least_powerful_attacker)
+            units_to_destroy.append(
+                least_powerful_attacker
+            )  # TODO this includes potentially support units. Is that desired behavior ? I think it is, yes, but to be determined by a careful re-reading of the ORIGINAL rules I drew inspiration from.
 
         ##### Application of results
 
