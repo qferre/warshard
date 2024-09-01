@@ -57,6 +57,13 @@ class Fight:
         )  # Deduce parent map from hexagon
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
+
+        import logging
+
+        logging.debug(
+            "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"
+        )
+
         # TODO Specify in typing : putative_retreats should be a list of Orders
         # TODO add an assert that all such orders must have order.is_putative == True ?
         # TODO Specify this whenever we pass lists of Orders
@@ -181,10 +188,14 @@ class Fight:
 
             min_power_attacker = min(unit.power for unit in self.attacking_units)
             min_power_units = [
-                unit for unit in self.attacking_unit if unit.power == min_power_attacker
+                unit
+                for unit in self.attacking_units
+                if unit.power == min_power_attacker
             ]
             least_powerful_attacker = random.choice(min_power_units)
-            units_to_destroy.append(least_powerful_attacker)
+            units_to_destroy.append(
+                least_powerful_attacker
+            )  # TODO this includes potentially support units. Is that desired behavior ? I think it is, yes, but to be determined by a careful re-reading of the ORIGINAL rules I drew inspiration from.
 
         ##### Application of results
 

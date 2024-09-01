@@ -4,7 +4,8 @@ from functools import partial
 import logging
 import itertools
 from collections import defaultdict
-
+import random
+import numpy as np
 
 from warshard import display
 from warshard.map import Map
@@ -21,6 +22,7 @@ class Game:
         self,
         log_file_path: str = "./example.log",
         headless=False,
+        random_seed=42
     ) -> None:
 
         # Logging
@@ -60,6 +62,13 @@ class Game:
             )
             self.display_thread.start()
 
+
+        # Random seeding to ensure that the game is reproducible if we retrieve all the logged
+        # orders and pass them again
+        self.random_seed = random_seed
+        random.seed(random_seed)
+        np.random.seed(random_seed)
+
     def run_a_turn(self, this_turn_orders: list[Order]):
         """_summary_
 
@@ -73,10 +82,12 @@ class Game:
         Raises:
             NotImplementedError: _description_
         """
-        raise NotImplementedError  # TODO Finish and test this function !!
+        # raise NotImplementedError  # TODO Finish and test this function !! Currently in progress in the test called second_complete.py
 
-        # TODO remember all orders given, but write in doc that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :)
+        # TODO remember all orders given, but write in documentation that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :) YEP INDEED, ALSO SET A RANDOM SEED AND RECORD IT AT GAME CREATION okay we have a random seed now great. # So I can write in the documentation that the randm seed combined with the self.all_orders_ever_given can let you replay a game
         # self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
+
+
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
         # This will likely necessitate passing the logger object to all functions.
@@ -97,21 +108,16 @@ class Game:
         # TODO check that self.current_turn_number < scenario_max_turns
 
         # All regular or putative orders are passed at once, since invalid orders should simply be ignored
+        # for example, a combat order should be ignored in the movemnt phase since it would be meaningless
         # TODO test this rigorously in unitary tests
-        self.switch_active_player(new_player_id)
+        self.switch_active_player()
         self.first_upkeep_phase()
-        self.movement_phase(pending_orders_attacker_movement=regular_orders_this_turn)
+        self.movement_phase(regular_orders_this_turn)
         self.update_supply()
-        self.attacker_combat_allocation_phase(
-            pending_orders_attacker_combat=regular_orders_this_turn
-        )
-        self.defender_combat_allocation_phase(
-            pending_orders_defender_combat=regular_orders_this_turn
-        )
-        self.resolve_fights(putative_retreats_both_sides=putative_orders_this_turn)
-        self.advancing_phase(
-            putative_advance_orders_both_sides=putative_orders_this_turn
-        )
+        self.attacker_combat_allocation_phase(regular_orders_this_turn)
+        self.defender_combat_allocation_phase(regular_orders_this_turn)
+        self.resolve_fights(putative_orders_this_turn)
+        self.advancing_phase(putative_orders_this_turn)
         self.second_upkeep_phase()
 
     def __del__(self):
@@ -208,20 +214,28 @@ class Game:
                 ]
                 potential_advancers_id = [u.id for u in potential_advancers]
 
+                # Try to execute each proposed advance. An invalid order will be ignored.
                 for order in putative_advance_orders:
                     if not fight.an_advance_was_made:
                         if order.unit_id in potential_advancers_id:
-                            unit = self.map.fetch_unit_by_id(order.unit_id)
-                            unit.force_move_to(
-                                order.hexagon_ref
-                            )  # This move is allowed regardless of remaining mobility (so use force_move_to())
-                            fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
+                            try:
+                                unit = self.map.fetch_unit_by_id(order.unit_id)
+                                unit.force_move_to(
+                                    order.hexagon_ref
+                                )  # This move is allowed regardless of remaining mobility (so use force_move_to())
+                                fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
+                            except KeyError:
+                                # If the unit could not be fetched, it's likely because it was destroyed.
+                                # In that case, we just ignore the order.
+                                pass
+
+                # If we tried all proposed orders, and still have not made a valid advance...
                 if not fight.an_advance_was_made:
                     pass
                     # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
                     # Hmm, for simplicity, perhaps I can just assume that if no putative advance orders are given, well too bad for you, you should have specified some.
-                    # yes, do this. Units won't budge without specific orders.
+                    # YES, DO THIS. Units won't budge without specific orders.
 
     def second_upkeep_phase(self):
         # Then destroy all Fights
