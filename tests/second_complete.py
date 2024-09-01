@@ -57,6 +57,7 @@ all_orders = [
 """TODO BUG : the attacking US mechanised division managed to engage in combat even though it was not adjacent ??
 Ah no okay, it's because it advanced backwards after the fight because the putative retreat was interpreted as a putative advance. 
 TODO I likely need to differentiate putative retreats from putative advances to prevent this !!
+Alternatively, just explain this should be handled by the priority system, meaning the advance orders should be ahead in the list of orders if they are more desirable. Indeed, one may wish to reorganise and withdraw even if they win an attack : just needs to be higher priority.
 """
 
 

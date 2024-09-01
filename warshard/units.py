@@ -49,7 +49,7 @@ class Unit:
         # check if enough mobility remaining to move there, and if not occupied (using parent_map.is_accessible_to_player_side(self.player_side))
         mobility_cost = Config.MOBILITY_COSTS[hex.type]
         """
-        TODO : implement rivers. These would be on the border of an hex and double movement cost. Full water hexes would represent oceans and impassable rivers only.
+        TODO : implement rivers. These would be on the border of an hex and double movement cost + give defender an advantage.  Full water hexes would represent oceans and impassable rivers only.
         """
         hex_is_clear, hex_not_in_enemy_zoc, hex_is_not_clear_but_friendly_occupied = (
             hex.is_accessible_to_player_side(self.player_side)

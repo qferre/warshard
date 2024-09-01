@@ -3,6 +3,8 @@ A simplified modern wargame designed to be compatible with training AIs, thanks 
 
 **CURRENT STATUS : BETA -- THE MAIN LOOP AND INTERFACE ARE FUNCTIONAL, AS EVIDENCED BY THE UNIT TESTS, BUT MANY TODOs AND BUGS REMAIN**
 
+**A FIRST RELEASE IS PLANNED ONCE ALL CURRENT TODOs HAVE BEEN SOLVED, SEE THE ISSUES TREE**
+
 
 Based on SPI wargames.
 Inspired by rules found at [spigames](https://www.spigames.net/rules_downloads.htm)
