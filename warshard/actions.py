@@ -59,6 +59,7 @@ class Fight:
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
 
         import logging
+        # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. It works well enough, but consider passing debuggers later to make this more custom
 
         logging.debug(
             "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"

@@ -55,11 +55,25 @@ all_orders = [
 ]
 
 """TODO BUG : the attacking US mechanised division managed to engage in combat even though it was not adjacent ??
-Ah no okay, it's because it advanced backwards after the fight because the putative retreat was interpreted as a putative advance. I likely need to differentiate putative retreats from
-putative advances !!
+Ah no okay, it's because it advanced backwards after the fight because the putative retreat was interpreted as a putative advance. 
+TODO I likely need to differentiate putative retreats from putative advances to prevent this !!
 """
-
 
 
 # Run a full turn
 g.run_a_turn(this_turn_orders=all_orders)
+
+
+### Try running a second turn, this time it's Germany's turn and not the USA
+
+
+all_orders_2 = [
+    Order(unit_id=1, hex_x=3, hex_y=4, map=g.map),
+    Order(unit_id=1, hex_x=4, hex_y=4, map=g.map),
+    Order(unit_id=1, hex_x=5, hex_y=4, map=g.map),
+    Order(unit_id=1, hex_x=5, hex_y=5, map=g.map),
+    Order(unit_id=4, hex_x=5, hex_y=5, map=g.map),
+    Order(unit_id=3, hex_x=2, hex_y=5, map=g.map),
+]
+
+g.run_a_turn(this_turn_orders=all_orders_2)
