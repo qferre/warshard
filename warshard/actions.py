@@ -27,15 +27,13 @@ class Order:
         # Find hexagon with same coordinates
         self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
 
-        # TODO Optional : specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
+        # Specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
         # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
         # and abandon the field!
         assert order_type in ["regular", "putative"]
         self.order_type = order_type
         self.is_putative = self.order_type == "putative"
-        # TODO for now I think this is only used when separating lists that contain both types,
-        # but is never checked. I think I should add checks during the turn phases to ensure
-        # one does not pass regualar orders when putative are expected and vice versa
+        # NOTE individual turn functions will assert whether orders were putative when they expected them
 
 
 class Fight:
@@ -69,9 +67,7 @@ class Fight:
             f"Resolving Fight in ({self.fight_hexagon.q},{self.fight_hexagon.r})"
         )
 
-        # TODO Specify in typing : putative_retreats should be a list of Orders
-        # TODO add an assert that all such orders must have order.is_putative == True ?
-        # TODO Specify this whenever we pass lists of Orders
+
 
         if debug_force_dice_roll_to is not None:
             assert 1 <= debug_force_dice_roll_to <= 6
@@ -200,7 +196,7 @@ class Fight:
             least_powerful_attacker = random.choice(min_power_units)
             units_to_destroy.append(
                 least_powerful_attacker
-            )  # TODO this includes potentially support units. Is that desired behavior ? I think it is, yes, but to be determined by a careful re-reading of the ORIGINAL rules I drew inspiration from.
+            )  # NOTE this includes potentially support units.
 
         ##### Application of results
 

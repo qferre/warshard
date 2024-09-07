@@ -154,7 +154,7 @@ class Hexagon:
         q = x
         r = q // 2 + y
         # TODO check this
-        # TODO use this when xy coords are given to  get the qr that we need since the hexes are stored in all_hexes by their qr coordinates :)
+        # TODO use this when xy coords are given to get the qr that we need since the hexes are stored in all_hexes by their qr coordinates :)
         return (q, r)
 
     def __str__(self):
@@ -176,9 +176,7 @@ class Hexagon:
             hex_is_clear = False
 
         for unit_id, unit in self.parent_map.all_units.items():
-            if (
-                unit.hexagon_position == self
-            ):  # TODO check equality works between hexagons
+            if unit.hexagon_position == self:
                 hex_is_clear = False
                 if unit.player_side == player_side:
                     hex_is_not_clear_but_friendly_occupied = True

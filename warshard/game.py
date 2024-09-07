@@ -19,11 +19,19 @@ class Game:
     global self  # Necessary so the Game object can be passed to the display thread
 
     def __init__(
-        self,
-        log_file_path: str = "./example.log",
-        headless=False,
-        random_seed=42
+        self, log_file_path: str = "./example.log", headless=False, random_seed=42
     ) -> None:
+        """_summary_
+
+
+        Attributes:
+            map : stores the gamestate. You can use this to read the map/gamestate and even modify it, it is accessible
+
+        Args:
+            log_file_path (str, optional): _description_. Defaults to "./example.log".
+            headless (bool, optional): _description_. Defaults to False.
+            random_seed (int, optional): _description_. Defaults to 42.
+        """
 
         # Logging
         log_format = "%(asctime)s - %(name)s:%(levelname)s -- %(message)s"
@@ -52,16 +60,19 @@ class Game:
 
         # Display
         self.display_thread = None
+        self.display_stopping_event = threading.Event()
         if not headless:
             logging.debug("Starting display thread")
 
             self.displayer = display.Displayer()
 
             self.display_thread = threading.Thread(
-                target=partial(self.displayer.draw, gamestate_to_draw=self)
+                target=partial(
+                    self.displayer.draw,
+                    gamestate_to_draw=self,
+                ),
             )
             self.display_thread.start()
-
 
         # Random seeding to ensure that the game is reproducible if we retrieve all the logged
         # orders and pass them again
@@ -75,19 +86,10 @@ class Game:
         Args:
             this_turn_orders (_type_): allows my framework to be easily used with AI ! a list containing pairs of (Unit, Hexagon). When requesting orders, we first check if any pending orders are present and try to execute those first. Orders are executed in FIFO, meaning you can queue movement orders for the same unit.
                 note that we will iterate over this_turn_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
-
-                TODO : add a way to flag the type of orders as they are given inside the this_turn_orders list. Relevant notably to pre-plan retreats : we don't want the unit to retreat during its movement phase because it thought it was a regular movement order. Also relevant for putative advances, to ensure they are not just seen as a regular attack order. Probably these two "putative" orders are the problematic ones, so the flag could simply be "order.is_putative_order". YES THAT IS THE CASE
-
-
-        Raises:
-            NotImplementedError: _description_
+                We will also separat them if they are putative or not
         """
-        # raise NotImplementedError  # TODO Finish and test this function !! Currently in progress in the test called second_complete.py
-
         # TODO remember all orders given, but write in documentation that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :) YEP INDEED, ALSO SET A RANDOM SEED AND RECORD IT AT GAME CREATION okay we have a random seed now great. # So I can write in the documentation that the randm seed combined with the self.all_orders_ever_given can let you replay a game
         # self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
-
-
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
         # This will likely necessitate passing the logger object to all functions.
@@ -109,8 +111,7 @@ class Game:
 
         # All regular or putative orders are passed at once, since invalid orders should simply be ignored
         # for example, a combat order should be ignored in the movemnt phase since it would be meaningless
-        # TODO test this rigorously in unitary tests
-        self.switch_active_player()
+        self.switch_active_player()  # TODO Do not call this on the first turn
         self.first_upkeep_phase()
         self.movement_phase(regular_orders_this_turn)
         self.update_supply()
@@ -120,10 +121,10 @@ class Game:
         self.advancing_phase(putative_orders_this_turn)
         self.second_upkeep_phase()
 
-    def __del__(self):
-        # TODO Does this do anything currently ? I'm not sure it really works.
-        if self.display_thread is not None:
-            self.display_thread.join()
+    def stop(self):
+        self.display_stopping_event.set()
+
+        self.logger.info("Game has ended.")
 
     #############################
 
@@ -185,6 +186,10 @@ class Game:
             order.unit_ref.attempt_join_defence_on_hex(order.hexagon_ref)
 
     def resolve_fights(self, putative_retreats, debug_force_rolls=None):
+
+        for order in putative_retreats:
+            assert order.is_putative
+
         # NOTE Here, we ask the player to pre-specify retreats that would happen
         # if they lost
         for i, fight in enumerate(self.map.ongoing_fights.values()):
@@ -196,9 +201,20 @@ class Game:
             fight.resolve(putative_retreats, debug_force_dice_roll_to=force_roll)
 
     def advancing_phase(self, putative_advance_orders):
-        # We ask player to pre-specify potential advances
-        # TODO add an assert that all orders in putative_advance_orders must have order.is_putative == True ?
-        # Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
+        """
+        Iterate over each fight won try to see if there is an advance specified for the attacker, meaning an unit that wants to occupy the fight hex.
+
+        We ask player to pre-specify potential advances.
+
+        NOTE if no explicit advance orders were given, attacking units won't budge even if the fight is won
+
+
+        Args:
+            putative_advance_orders (_type_): _description_
+        """
+
+        for order in putative_advance_orders:
+            assert order.is_putative
 
         for fight in self.map.ongoing_fights.values():
 
@@ -218,24 +234,20 @@ class Game:
                 for order in putative_advance_orders:
                     if not fight.an_advance_was_made:
                         if order.unit_id in potential_advancers_id:
-                            try:
-                                unit = self.map.fetch_unit_by_id(order.unit_id)
-                                unit.force_move_to(
-                                    order.hexagon_ref
-                                )  # This move is allowed regardless of remaining mobility (so use force_move_to())
-                                fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
+                            # Can only advance into the hexagon of a Fight:
+                            if order.hexagon_ref == fight.fight_hexagon:
+                                try:
+                                    unit = self.map.fetch_unit_by_id(order.unit_id)
+                                    unit.force_move_to(
+                                        order.hexagon_ref
+                                    )  # This move is allowed regardless of remaining mobility (so use force_move_to())
+                                    fight.an_advance_was_made = True  # ensure we cannot move more than one unit per won fight
 
-                            except KeyError:
-                                # If the unit could not be fetched, it's likely because it was destroyed.
-                                # In that case, we just ignore the order.
-                                pass
+                                except KeyError:
+                                    # If the unit could not be fetched, it's likely because it was destroyed.
+                                    # In that case, we just ignore the order.
+                                    pass
 
-                # If we tried all proposed orders, and still have not made a valid advance...
-                if not fight.an_advance_was_made:
-                    pass
-                    # TODO if no explicit orders were given : if the attacker won, the attacker unit with strongest defensive power will be moved there and ties are broken at random. If the defender won, defending units don't budge without explicit orders
-                    # Hmm, for simplicity, perhaps I can just assume that if no putative advance orders are given, well too bad for you, you should have specified some.
-                    # YES, DO THIS. Units won't budge without specific orders.
 
     def second_upkeep_phase(self):
         # Then destroy all Fights

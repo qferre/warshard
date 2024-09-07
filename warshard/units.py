@@ -35,8 +35,12 @@ class Unit:
         self.involved_in_fight = None  # type : <Fight or None>
 
     def force_move_to(self, hex: Hexagon):
-        # TODO used for retreats
-        # (and debug in general)
+        """Forces an unit to be moved to the given Hexagon, bypassing all checks and restrictions.
+        Useful to force retreats.
+
+        Args:
+            hex (Hexagon): Hexagon to which the Unit should be moved.
+        """
         self.hexagon_position = hex
 
     def attempt_move_to(self, hex: Hexagon):

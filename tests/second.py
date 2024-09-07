@@ -84,7 +84,7 @@ pending_orders_defender_combat = [
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
 
 
-print(g.map.ongoing_fights)  # TODO assert the fight is correct
+print(g.map.ongoing_fights)  
 
 
 putative_retreats_both_sides = [

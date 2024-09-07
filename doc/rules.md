@@ -47,7 +47,7 @@ Note that units (including support) can only be allocated to one Fight per turn.
 - Outcomes are all applied at the same time (meaning retreating units will not contribute to another fight).
 
 4) Upkeep phase
-- For each Fight won (meaning the hex is now vacant) the attacker may pick an unit among the units involved and move it here (this is called an advance).
+- For each Fight won (meaning the hex is now vacant) the attacker may optionally pick an unit among the MELEE units involved and move it here (this is called an advance).
 - Scripted events if applicable.
 
 ## Movement

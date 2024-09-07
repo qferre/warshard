@@ -6,7 +6,7 @@ from warshard.actions import Order
 
 
 # Recreate a game and place units for that
-g = Game()  # TODO set headless to True to run tests once on pytest
+g = Game(random_seed=1234)  # TODO set headless to True to run tests once on pytest
 
 g.players = ["germany", "usa"]
 
@@ -54,21 +54,11 @@ all_orders = [
     Order(unit_id=2, hex_x=4, hex_y=4, map=g.map, order_type="putative"),
 ]
 
-"""TODO BUG : the attacking US mechanised division managed to engage in combat even though it was not adjacent ??
-Ah no okay, it's because it advanced backwards after the fight because the putative retreat was interpreted as a putative advance.
-TODO I likely need to differentiate putative retreats from putative advances to prevent this !!
-Alternatively, just explain this should be handled by the priority system, meaning the advance orders should be
-ahead in the list of orders if they are more desirable. Indeed, one may wish to reorganise and withdraw
-even if they win an attack : just needs to be higher priority.
-"""
-
-
 # Run a full turn
 g.run_a_turn(this_turn_orders=all_orders)
 
 
 ### Try running a second turn, this time it's Germany's turn and not the USA
-
 
 all_orders_2 = [
     Order(unit_id=1, hex_x=3, hex_y=4, map=g.map),

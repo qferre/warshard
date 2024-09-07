@@ -12,3 +12,8 @@ from warshard.mapcreation import read_status_from_yaml
 yaml_path = "C:/Users/Quentin/Documents/Git/warshard/scenarios/boot_camp.yaml" # TODO "../scenarios/boot_camp.yaml"
 
 new_game = read_status_from_yaml(yaml_path = yaml_path, headless=False)
+# NOTE Here, we intentionally leave headless to False to also test drawing and rendering
+
+
+# Ensure we can kill game and display
+new_game.stop()

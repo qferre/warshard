@@ -2,6 +2,7 @@ import pygame
 import math
 import numpy as np
 import pkg_resources
+from threading import Event
 
 from warshard.map import Map
 from warshard.units import Unit
@@ -121,7 +122,8 @@ class Displayer:
                 )
 
                 # TODO draw fights
-                # draw arrows showing attackers in red and defenders in blue (incl support for both) pointing from unit towards fight hex
+                # draw arrows showing attackers in red and defenders in blue
+                #  (incl support for both) pointing from unit towards fight hex
 
                 pygame.display.flip()  # Update display
                 clock.tick(DisplayConfig.FPS)
@@ -132,6 +134,11 @@ class Displayer:
                 print(
                     "Gamestate was updated during the rendering. Skipping this rendering frame."
                 )
+
+            # Do we stop ?
+            if gamestate_to_draw.display_stopping_event.is_set():
+                print("Stopping display")
+                return
 
 
 # Set up display
