@@ -75,6 +75,7 @@ Forest, cities, or rough terrain (trench, hills) cost x2 movement, and give x2 t
 Roads cost x0,5 movement.
 
 Water (incl. rivers) block movement unless on bridge or for special units.
+TODO : rivers may instead only cost more movement and give defender bonus, and bridges are represented by hex borders without a river simply ?
 
 
 ## Combat
