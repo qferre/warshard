@@ -63,6 +63,10 @@ class Map:
     def force_spawn_unit_at_position(
         self, unit_type: str, hex_q: int, hex_r: int, player_side: str, id: int
     ):
+        """
+        Forces a unit of given type for given player to spawn at the position.
+        Does not chheck for stacking.
+        """
 
         from warshard.units import (
             Unit,
@@ -70,8 +74,6 @@ class Map:
 
         # TODO remember to check id is not already allocated
         # return a reference to the unit
-        # NOTE this does NOT check for stacking! say so!
-
         # TODO if id is none, simply use the next available integer number
 
         hexagon_position = self.fetch_hex_by_coordinate(q=hex_q, r=hex_r)
@@ -154,7 +156,8 @@ class Hexagon:
         q = x
         r = q // 2 + y
         # TODO check this
-        # TODO use this when xy coords are given to get the qr that we need since the hexes are stored in all_hexes by their qr coordinates :)
+        # TODO use this when xy coords are given to get the qr that we need
+        # since the hexes are stored in all_hexes by their qr coordinates :)
         return (q, r)
 
     def __str__(self):
@@ -191,7 +194,6 @@ class Hexagon:
             hex_is_not_clear_but_friendly_occupied,
         )
 
-        # TODO also check if the hex is not inherently impassable (mobility cost of np.inf)
 
     def get_neighbors(self, ensure_accessible_to_player_side=None):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]

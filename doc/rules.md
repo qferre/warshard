@@ -74,9 +74,11 @@ Normal plains cost x1 movement.
 Forest, cities, or rough terrain (trench, hills) cost x2 movement, and give x2 to defender combat power.
 Roads cost x0,5 movement.
 
-Water (incl. rivers) block movement unless on bridge or for special units.
-TODO : rivers may instead only cost more movement and give defender bonus, and bridges are represented by hex borders without a river simply ?
+Water hexes are inacessible (to regular units at least)
 
+Rivers are present only on the border between two hexes and do not occupy an entire hex (bridges are represented by hex borders without a river simply)
+Crossing a river means you pay x2 the movement cost of the hex you are trying to get into.
+Melee units that are attacking across a river contribute only half their Power to the Fight, rounded down.
 
 ## Combat
 

@@ -1,6 +1,3 @@
-"""TODO Dispatch this into individual test files, add asserts (not necessarily use pytest at first, but I do need asserts)
-"""
-
 import time
 
 import warshard
@@ -138,18 +135,9 @@ putative_retreats = [
     Order(unit_id=26, hex_x=5, hex_y=5, map=g.map, order_type="putative")
 ]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
-# TODO when the debug_force_dice_roll_to was set to 6, I saw weird attacker retreats ? To double check
 
 
 # TODO Make more Fights so we can test all possible Fight outcomes
-
-
-"""
-TODO : for all functions that take an hex, make it so if a tuple of coordinates is passed
-we try to fetch the hex automatically, this will let us shorten the syntax
-    from u_3.attempt_join_defence_on_hex(g.map.fetch_hex_by_coordinate(4, 5))
-    to u_3.attempt_join_defence_on_hex((4, 5))
-"""
 
 
 # Now test the complete run_a_turn

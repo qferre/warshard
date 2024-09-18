@@ -5,16 +5,8 @@ from warshard.config import Config
 
 
 class Order:
-    # TODO use in pending_orders, as an automatic casting of what is entered (allow the user to enter orders
-    # as (unit_id, hex_x, hex_y) where each is a string
-
     # TODO consider changing API so that the map is not passed when creating and order,
     # but is automatically fetched when interpreting it ?
-
-    # TODO also simplify the naming so it's quicker to type :
-    # unit_id -> id
-    # hex_x -> x
-    # hex_y -> y
 
     def __init__(self, unit_id, hex_x, hex_y, map, order_type="regular"):
         self.map = map
@@ -57,6 +49,7 @@ class Fight:
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
 
         import logging
+
         # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. It works well enough, but consider passing debuggers later to make this more custom
 
         logging.debug(
@@ -66,8 +59,6 @@ class Fight:
         logging.info(
             f"Resolving Fight in ({self.fight_hexagon.q},{self.fight_hexagon.r})"
         )
-
-
 
         if debug_force_dice_roll_to is not None:
             assert 1 <= debug_force_dice_roll_to <= 6
