@@ -20,10 +20,9 @@ class Unit:
 
         stats = Config.UNIT_CHARACTERISTICS[self.type]
         self.power, self.defence, self.mobility, self.range = stats
-        # TODO : probably won't do it right now, but I should note that this code
-        # is setup specifically so that units have their own power, defence, etc. values and
-        # do not simply check based on their type later in the code. This means that it's already
-        # possible to give unit custom power, defence, etc. and I just have not done it yet
+        # NOTE This code is setup so that units have their own power, defence, etc. values and
+        # do not simply check based on their type later in the code. This means that it's
+        # possible to give individual unit custom stats.
 
         self.hexagon_position: Hexagon = hexagon_position
         self.mobility_remaining = 0
@@ -66,7 +65,7 @@ class Unit:
                 self.mobility_remaining = 0
 
     def attempt_attack_on_hex(self, hex):
-        # Check we are not already involved in a fight
+        # Check we are not already involved in another Fight
         if self.involved_in_fight is not None:
             return
 
@@ -152,5 +151,4 @@ class Unit:
         self.force_move_to(final_retreat_hex)
 
     def destroy_myself(self):
-        # TODO write an unit test for this
         self.parent_map.all_units.pop(self.id)

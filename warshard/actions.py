@@ -2,13 +2,14 @@ import numpy as np
 import random
 
 from warshard.config import Config
+from warshard.map import Map
 
 
 class Order:
     # TODO consider changing API so that the map is not passed when creating and order,
     # but is automatically fetched when interpreting it ?
 
-    def __init__(self, unit_id, hex_x, hex_y, map, order_type="regular"):
+    def __init__(self, unit_id:int, hex_x:int, hex_y:int, map:Map, order_type="regular"):
         self.map = map
         self.unit_id = unit_id
         self.hex_x, self.hex_y = hex_x, hex_y
@@ -50,7 +51,8 @@ class Fight:
 
         import logging
 
-        # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. It works well enough, but consider passing debuggers later to make this more custom
+        # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. 
+        # It works well enough, but consider passing debuggers later to make this more custom
 
         logging.debug(
             "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"

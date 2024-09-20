@@ -74,6 +74,7 @@ class Game:
             )
             self.display_thread.start()
 
+        self.all_orders_ever_given = defaultdict(list)
         # Random seeding to ensure that the game is reproducible if we retrieve all the logged
         # orders and pass them again
         self.random_seed = random_seed
@@ -87,9 +88,14 @@ class Game:
             this_turn_orders (_type_): allows my framework to be easily used with AI ! a list containing pairs of (Unit, Hexagon). When requesting orders, we first check if any pending orders are present and try to execute those first. Orders are executed in FIFO, meaning you can queue movement orders for the same unit.
                 note that we will iterate over this_turn_orders multiple times : first for the movement, then for the attacker combat, then for the defender allocation (the idea being that defender can pre-allocate support by order of priority, we simply skip an allocation if it is not necessary meaning no fight takes place here), etc.
                 We will also separat them if they are putative or not
+
+
+        Attributes:
+            all_orders_ever_given is a dictionary of all orders by turn number ({turn_number : list of Orders}). If the random seed is the same, results will be the same, so executing the same orders
+            would let you essentially re-load a saved game
         """
-        # TODO remember all orders given, but write in documentation that this does not necessarily let one redo the entire game since there are some dice rolls and random events. However if the random seed is fixed, it should be possible :) YEP INDEED, ALSO SET A RANDOM SEED AND RECORD IT AT GAME CREATION okay we have a random seed now great. # So I can write in the documentation that the randm seed combined with the self.all_orders_ever_given can let you replay a game
-        # self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
+        # Remember all orders ever given
+        self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
 
         # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
         # This will likely necessitate passing the logger object to all functions.
@@ -120,6 +126,8 @@ class Game:
         self.resolve_fights(putative_orders_this_turn)
         self.advancing_phase(putative_orders_this_turn)
         self.second_upkeep_phase()
+
+        self.current_turn_number += 1
 
     def stop(self):
         self.display_stopping_event.set()
@@ -248,7 +256,6 @@ class Game:
                                     # In that case, we just ignore the order.
                                     pass
 
-
     def second_upkeep_phase(self):
         # Then destroy all Fights
         self.map.ongoing_fights = {}
@@ -258,12 +265,11 @@ class Game:
             unit.mobility_remaining = 0
 
             # Change controllers of victory point hexes depending on who is standing on it
-            # TODO (careful about stacked units, even though they should all belong to the same player)
             unit.hexagon_position.controller = unit.player_side
 
         # Deploy reinforcements if applicable
         # TODO finish implementing it !
-        # NOTE those appear even if it implies stacking
+        # NOTE those will pop in even if it implies stacking, which must be corrected in the next movement phase
         """
         for planned_reinforcement in self.planned_reinforcements:
             if planned_reinforcement.turn == self.current_turn_number:

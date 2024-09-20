@@ -21,9 +21,6 @@ g.map.force_spawn_unit_at_position(
 
 # ------------- Now test individual turn functions
 
-# TODO : in the turn functions, check player side ! Make sure that only the active player can send movement orders (should already be ok thanks to the mobility points)
-# but also need to check that only active player can send attack orders and advance orders, and only the inactive player can send defend orders
-
 # Player switch
 g.switch_active_player()
 assert g.current_active_player_id == 1
