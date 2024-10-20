@@ -117,7 +117,7 @@ If the defender melee unit is out of supply, add one to the attacker/defender ra
 
 ## Special rules and events
 
-Some events may happen. Most common one is to bring reinforcements on certain hexes at a certain turn. In the code, I think only reinforcements will be implemented ? TODO ensure they are implemented.
+Some events may happen. Most common one is to bring reinforcements on certain hexes at a certain turn (this is the only type of even implemented in code currently)
 
 Special rules depend on scenario. Not implemented in code, but could be used in a paper version, or you can enforce them yourself using the debug functions ("force_*")
 
