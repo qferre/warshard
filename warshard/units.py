@@ -44,6 +44,8 @@ class Unit:
         self.hexagon_position = hex
 
     def attempt_move_to(self, hex: Hexagon):
+
+        logging.debug(f"Unit {self.id} attempting to move to ({hex})")
         # Check that we are trying to move into an ADJACENT HEX
         # If you want to move more than 1 hex per turn you simply need to QUEUE movement orders
         if HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex) > 1:
@@ -59,12 +61,14 @@ class Unit:
             # substract mobility cost of target hex to our mobility_remaining
             self.mobility_remaining -= mobility_cost
             self.force_move_to(hex)  # move there
+            logging.debug(f"Move approved, remaining mobility : {self.mobility_remaining}")
 
             # if in enemy zoc, set remaining mobility to 0
             if not hex_not_in_enemy_zoc:
                 self.mobility_remaining = 0
 
     def attempt_attack_on_hex(self, hex):
+        logging.debug(f"Unit {self.id} attempting to attack ({hex})")
         # Check we are not already involved in another Fight
         if self.involved_in_fight is not None:
             return
@@ -95,8 +99,10 @@ class Unit:
         this_fight = self.parent_map.ongoing_fights[hex]
         this_fight.attacking_units.append(self)
         self.involved_in_fight = this_fight
+        logging.debug(f"Unit {self.id} joined the fight {this_fight}")
 
     def attempt_join_defence_on_hex(self, hex):
+        logging.debug(f"Unit {self.id} attempting to join defence on ({hex})")
         # Check we are not already involved in a fight
         if self.involved_in_fight is not None:
             return
@@ -116,8 +122,10 @@ class Unit:
             this_fight = self.parent_map.ongoing_fights[hex]
             this_fight.defending_support_units.append(self)
             self.involved_in_fight = this_fight
+            logging.debug(f"Unit {self.id} joined the fight {this_fight}")
 
     def try_to_retreat(self, putative_retreat_hex=None):
+        logging.debug(f"Unit {self.id} trying to retreat, will privilege {putative_retreat_hex}")
         # For all neighbor hexes of my position, check if they are occupied by
         # enemy units/zoc or impassable, using the hexagon.is_accessible_to_player_side() function. If it's okay they can be used for retreat
         neighboring_hexes = self.hexagon_position.get_neighbors()
@@ -149,10 +157,12 @@ class Unit:
         else:
             final_retreat_hex = random.choice(potential_retreat_hexes)
         self.force_move_to(final_retreat_hex)
+        logging.debug(f"Unit {self.id} retreated to {final_retreat_hex}")
 
     def destroy_myself(self):
         try:
             self.parent_map.all_units.pop(self.id)
+            logging.debug(f"Unit {self.id} destroyed itself")
         except KeyError:
             logging.error(
                 f"Unit {self.id} tried to destroy itself but was not found in parent_map.all_units"

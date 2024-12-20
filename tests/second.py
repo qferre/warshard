@@ -8,7 +8,7 @@ from warshard.actions import Order
 # Recreate a game and place units for that
 g = Game(random_seed=1234)
 
-g.players = ["germany", "usa"]
+g.players = ["usa", "germany"]
 
 g.map.force_spawn_unit_at_position(
     unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=1
@@ -23,7 +23,7 @@ g.map.force_spawn_unit_at_position(
 
 # Player switch
 g.set_active_player()
-assert g.current_active_player_id == 1
+assert g.current_active_player_id == 0
 assert g.current_active_player == "usa"
 
 # First upkeep phase

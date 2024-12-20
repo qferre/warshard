@@ -6,9 +6,12 @@ from warshard.map import Map
 
 import logging
 
+
 class Order:
 
-    def __init__(self, unit_id:int, hex_x:int, hex_y:int, map:Map, order_type="regular"):
+    def __init__(
+        self, unit_id: int, hex_x: int, hex_y: int, map: Map, order_type="regular"
+    ):
         self.map = map
         self.unit_id = unit_id
         self.hex_x, self.hex_y = hex_x, hex_y
@@ -48,13 +51,20 @@ class Fight:
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
 
-
         logging.debug(
             "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"
         )
 
         logging.info(
             f"Resolving Fight in ({self.fight_hexagon.q},{self.fight_hexagon.r})"
+        )
+
+        logging.debug(
+            f"""
+            Attacking units : {[u.id for u in self.attacking_units]}
+            Defending melee unit : {self.defending_melee_unit.id}
+            Defending support units : {[u.id for u in self.defending_support_units]}
+            """
         )
 
         if debug_force_dice_roll_to is not None:
@@ -81,7 +91,9 @@ class Fight:
             ]
         )
 
-        print("supply", attacker_is_in_supply, defender_is_in_supply)
+        logging.debug(
+            f"In supply: attacker? {attacker_is_in_supply}, defender? {defender_is_in_supply}"
+        )
 
         supply_strength_ratio_modifier = 0
         if not attacker_is_in_supply:
@@ -101,7 +113,9 @@ class Fight:
             + defender_melee_strength
         )
 
-        print(total_attacker_strength, total_defender_strength)
+        logging.debug(
+            f"Total attacker and defender strength : {total_attacker_strength} vs {total_defender_strength}"
+        )
 
         # Compute ratio (remember that support units can have 0 melee defence so avoid divide-by-zero)
         strength_ratio = total_attacker_strength / total_defender_strength + 1e-10
@@ -118,7 +132,7 @@ class Fight:
             default=None,
         )
 
-        print(strength_ratio)
+        logging.debug(f"Strength ratio : {strength_ratio}")
 
         # Determine result
         # Roll dice and fetch result on the table
@@ -129,7 +143,8 @@ class Fight:
 
         fight_result = Config.FIGHT_RESULT_TABLE[strength_ratio][dice_roll]
 
-        print(dice_roll, fight_result)
+        logging.debug(f"Dice roll : {dice_roll}")
+        logging.debug(f"Fight result : {fight_result}")
 
         self.fight_result = fight_result  # Remember the result of the fight, we will need it for the advancing phase
 
@@ -186,7 +201,7 @@ class Fight:
                 least_powerful_attacker
             )  # NOTE this includes potentially support units.
 
-         # --------------------- Application of results ---------------------- #
+        # --------------------- Application of results ---------------------- #
 
         # If applicable, force retreats for units that need to retreat : call unit.try_to_retreat()
         for ur in units_that_must_retreat:
