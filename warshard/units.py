@@ -1,4 +1,5 @@
 import random
+import logging
 
 from warshard.map import Hexagon, HexGrid, Map
 from warshard.actions import Fight
@@ -150,4 +151,9 @@ class Unit:
         self.force_move_to(final_retreat_hex)
 
     def destroy_myself(self):
-        self.parent_map.all_units.pop(self.id)
+        try:
+            self.parent_map.all_units.pop(self.id)
+        except KeyError:
+            logging.error(
+                f"Unit {self.id} tried to destroy itself but was not found in parent_map.all_units"
+            )

@@ -8,7 +8,7 @@ from warshard.actions import Order
 # Recreate a game and place units for that
 g = Game(random_seed=1234)
 
-g.players = ["germany", "usa"]
+g.players = ["usa", "germany"]
 
 g.map.force_spawn_unit_at_position(
     unit_type="armor", hex_q=2, hex_r=3, player_side="germany", id=1
@@ -39,10 +39,9 @@ all_orders = [
     Order(unit_id=2, hex_x=3, hex_y=4, map=g.map),
     Order(unit_id=5, hex_x=3, hex_y=4, map=g.map),
     # Attacker movement
-    Order(unit_id=1, hex_x=3, hex_y=2, map=g.map),
+    Order(unit_id=1, hex_x=3, hex_y=2, map=g.map), # Invalid order (wrong side)
     Order(unit_id=2, hex_x=3, hex_y=4, map=g.map),
-    Order(unit_id=2, hex_x=4, hex_y=5, map=g.map),
-    Order(unit_id=2, hex_x=4, hex_y=7, map=g.map),
+    Order(unit_id=2, hex_x=4, hex_y=5, map=g.map), # Invalid order (too far)
     # Defender combat support
     Order(unit_id=5, hex_x=3, hex_y=4, map=g.map),
     # Retreats and advances
@@ -57,16 +56,17 @@ all_orders = [
 # Run a full turn
 g.run_a_turn(this_turn_orders=all_orders)
 
+assert g.map.ongoing_fights == {}
+
 
 ### Try running a second turn, this time it's Germany's turn and not the USA
 
 all_orders_2 = [
+    Order(unit_id=1, hex_x=3, hex_y=3, map=g.map),
     Order(unit_id=1, hex_x=3, hex_y=4, map=g.map),
-    Order(unit_id=1, hex_x=4, hex_y=4, map=g.map),
-    Order(unit_id=1, hex_x=5, hex_y=4, map=g.map),
-    Order(unit_id=1, hex_x=5, hex_y=5, map=g.map),
     Order(unit_id=4, hex_x=5, hex_y=5, map=g.map),
     Order(unit_id=3, hex_x=2, hex_y=5, map=g.map),
 ]
+
 
 g.run_a_turn(this_turn_orders=all_orders_2)

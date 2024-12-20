@@ -57,6 +57,7 @@ class Game:
         )
         self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
         self.current_turn_number = 0
+        self.scenario_max_turns = 100
 
         # Display
         self.display_thread = None
@@ -95,6 +96,8 @@ class Game:
             would let you essentially re-load a saved game
         """
         # Remember all orders ever given
+        if self.current_turn_number not in self.all_orders_ever_given:
+            self.all_orders_ever_given[self.current_turn_number] = []
         self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
 
         # By default, always send the same this_turn_orders and ignore all non applicable
@@ -108,23 +111,41 @@ class Game:
             order for order in this_turn_orders if order.is_putative
         ]
 
-        # TODO remember to update self.current_turn_phase when necessary
-
-        # TODO check that self.current_turn_number < scenario_max_turns
+        # Check that the current turn number is less than the maximum allowed turns
+        if self.current_turn_number >= self.scenario_max_turns:
+            self.logger.info("Maximum number of turns reached. Ending game.")
+            self.stop()
+            return
 
         # All regular or putative orders are passed at once, since invalid orders should simply be ignored
         # for example, a combat order should be ignored in the movemnt phase since it would be meaningless
-        self.switch_active_player()  # TODO Do not call this on the first turn
-        self.first_upkeep_phase()
-        self.movement_phase(regular_orders_this_turn)
-        self.update_supply()
-        self.attacker_combat_allocation_phase(regular_orders_this_turn)
-        self.defender_combat_allocation_phase(regular_orders_this_turn)
-        self.resolve_fights(putative_orders_this_turn)
-        self.advancing_phase(putative_orders_this_turn)
-        self.second_upkeep_phase()
 
-        self.current_turn_number += 1
+        # Do not call this on the first turn
+        self.set_active_player()
+
+        self.current_turn_phase = "first_upkeep"
+        self.first_upkeep_phase()
+
+        self.current_turn_phase = "movement"
+        self.movement_phase(regular_orders_this_turn)
+
+        self.current_turn_phase = "update_supply"
+        self.update_supply()
+
+        self.current_turn_phase = "attacker_combat_allocation"
+        self.attacker_combat_allocation_phase(regular_orders_this_turn)
+
+        self.current_turn_phase = "defender_combat_allocation"
+        self.defender_combat_allocation_phase(regular_orders_this_turn)
+
+        self.current_turn_phase = "resolve_fights"
+        self.resolve_fights(putative_orders_this_turn)
+
+        self.current_turn_phase = "advancing"
+        self.advancing_phase(putative_orders_this_turn)
+
+        self.current_turn_phase = "second_upkeep"
+        self.second_upkeep_phase()
 
     def stop(self):
         self.display_stopping_event.set()
@@ -133,10 +154,9 @@ class Game:
 
     #############################
 
-    def switch_active_player(self):
-        self.current_active_player_id = (self.current_active_player_id + 1) % len(
-            self.players
-        )
+    def set_active_player(self):
+        self.logger.info(f"Current turn is {self.current_turn_number}")
+        self.current_active_player_id = self.current_turn_number % len(self.players)
         self.current_active_player = self.players[self.current_active_player_id]
 
         self.logger.debug(f"Switching active player to {self.current_active_player}")

@@ -22,7 +22,7 @@ g.map.force_spawn_unit_at_position(
 # ------------- Now test individual turn functions
 
 # Player switch
-g.switch_active_player()
+g.set_active_player()
 assert g.current_active_player_id == 1
 assert g.current_active_player == "usa"
 
@@ -81,14 +81,14 @@ pending_orders_defender_combat = [
 g.defender_combat_allocation_phase(pending_orders_defender_combat)
 
 
-print(g.map.ongoing_fights)  
+print(g.map.ongoing_fights)
 
 
 putative_retreats_both_sides = [
+    Order(unit_id=3, hex_x=2, hex_y=4, map=g.map, order_type="putative"),
     Order(
-        unit_id=3, hex_x=2, hex_y=4, map=g.map, order_type="putative"
-    ),  # This Order will not be executed
-    Order(unit_id=2, hex_x=5, hex_y=5, map=g.map, order_type="putative"),
+        unit_id=2, hex_x=5, hex_y=5, map=g.map, order_type="putative"
+    ),  # This Order will not be executed because this unit won't lose the fight
 ]
 g.resolve_fights(
     putative_retreats_both_sides, debug_force_rolls=[2]  # Force defender to retreat
@@ -99,7 +99,7 @@ putative_advance_orders_both_sides = [
     Order(unit_id=2, hex_x=3, hex_y=4, map=g.map, order_type="putative"),
     Order(
         unit_id=2, hex_x=4, hex_y=4, map=g.map, order_type="putative"
-    ),  # This Order will not be executed
+    ),  # This Order will not be executed because the previous one will be executed first
 ]
 g.advancing_phase(putative_advance_orders_both_sides)
 
