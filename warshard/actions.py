@@ -4,10 +4,9 @@ import random
 from warshard.config import Config
 from warshard.map import Map
 
+import logging
 
 class Order:
-    # TODO consider changing API so that the map is not passed when creating and order,
-    # but is automatically fetched when interpreting it ?
 
     def __init__(self, unit_id:int, hex_x:int, hex_y:int, map:Map, order_type="regular"):
         self.map = map
@@ -21,7 +20,7 @@ class Order:
         self.hexagon_ref = map.fetch_hex_by_coordinate(self.hex_x, self.hex_y)
 
         # Specify an order type. Useful for instance to pre-plan retreats and not have them executed as regular movements in the movement phase
-        # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't wnat it to move during the movement phase
+        # for example, you can say that unit 12 should retreat to hex 4,5 if beaten in combat, but you don't want it to move during the movement phase
         # and abandon the field!
         assert order_type in ["regular", "putative"]
         self.order_type = order_type
@@ -49,10 +48,6 @@ class Fight:
 
     def resolve(self, putative_retreats, debug_force_dice_roll_to: int = None):
 
-        import logging
-
-        # TODO Write somewhere in an issue : for now I use logging.debug, logging.info etc to log on the root debugger. 
-        # It works well enough, but consider passing debuggers later to make this more custom
 
         logging.debug(
             "This message already goes to the correct logger I think, even though I did not pass it explicitly :)"
@@ -138,7 +133,7 @@ class Fight:
 
         self.fight_result = fight_result  # Remember the result of the fight, we will need it for the advancing phase
 
-        # --------------------- Result of the fight
+        # ------------------------ Result of the fight ----------------------- #
         units_that_must_retreat = []
         units_to_destroy = []
 
@@ -191,9 +186,9 @@ class Fight:
                 least_powerful_attacker
             )  # NOTE this includes potentially support units.
 
-        ##### Application of results
+         # --------------------- Application of results ---------------------- #
 
-        # If applicable, force retreats for units that need to retreat : call unit.try_to_retreat
+        # If applicable, force retreats for units that need to retreat : call unit.try_to_retreat()
         for ur in units_that_must_retreat:
             # putative_retreat_order = get the correponding retreat in pending_orders, keeping only first order if multiple
             # NOTE we don't try each retreat order given. We try the first, and if it does not work we pick a random hex. So give only

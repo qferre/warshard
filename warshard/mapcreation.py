@@ -26,7 +26,7 @@ def read_status_from_yaml(
     yd.units = dotdict(yd.units)
 
     """
-    DO STUFF
+    # ------------------------------ DO STUFF -------------------------------- #
     """
     game_to_update.players = yd.players
     game_to_update.current_turn_number = 0

@@ -6,7 +6,7 @@ from warshard.actions import Order
 
 
 # Recreate a game and place units for that
-g = Game(random_seed=1234)  # TODO set headless to True to run tests once on pytest
+g = Game(random_seed=1234)
 
 g.players = ["germany", "usa"]
 

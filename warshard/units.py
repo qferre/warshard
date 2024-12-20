@@ -44,8 +44,7 @@ class Unit:
 
     def attempt_move_to(self, hex: Hexagon):
         # Check that we are trying to move into an ADJACENT HEX
-        # TODO need to write very explicitly in the doc that, for now, if you want to move
-        # more than 1 hex per turn you simply need to QUEUE movement orders
+        # If you want to move more than 1 hex per turn you simply need to QUEUE movement orders
         if HexGrid.manhattan_distance_hex_grid(self.hexagon_position, hex) > 1:
             return
 

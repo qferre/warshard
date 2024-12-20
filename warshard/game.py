@@ -97,10 +97,7 @@ class Game:
         # Remember all orders ever given
         self.all_orders_ever_given[self.current_turn_number] += this_turn_orders
 
-        # TODO REMEMBER TO PRINT LOG OF ALL OF THIS (noting every order, every dice roll, etc., AND HAVE A logger OBJECT TO OUTPUT ALL INTO A TEXT FILE)
-        # This will likely necessitate passing the logger object to all functions.
-
-        # by default, always send the same this_turn_orders and ignore all non applicable
+        # By default, always send the same this_turn_orders and ignore all non applicable
         # orders when processing
 
         # Split orders into regular and putative
@@ -142,12 +139,10 @@ class Game:
         )
         self.current_active_player = self.players[self.current_active_player_id]
 
-        # TODO USE LOGS EVERYWHERE
-        self.logger.debug("This message should go to the log file")
-        self.logger.info("So should this")
-        self.logger.warning("And this, too")
-        self.logger.error("This too.")
-        pass
+        self.logger.debug(f"Switching active player to {self.current_active_player}")
+        self.logger.info(f"Switching active player to {self.current_active_player}")
+        self.logger.warning(f"Switching active player to {self.current_active_player}")
+        self.logger.error(f"Switching active player to {self.current_active_player}")
 
     def first_upkeep_phase(self):
         # Refresh mobility for all units OF THE CURRENT PLAYER

@@ -7,7 +7,7 @@ from warshard.units import Unit
 from warshard.actions import Order
 
 
-g = Game()  # TODO set headless to True to run tests once on pytest
+g = Game(random_seed=1234)
 
 
 TEST_START_TIME = time.time()
@@ -135,12 +135,6 @@ putative_retreats = [
     Order(unit_id=26, hex_x=5, hex_y=5, map=g.map, order_type="putative")
 ]
 this_fight.resolve(putative_retreats, debug_force_dice_roll_to=1)
-
-
-# TODO Make more Fights so we can test all possible Fight outcomes
-
-
-# Now test the complete run_a_turn
 
 
 TEST_END_TIME = time.time()

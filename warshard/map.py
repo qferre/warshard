@@ -1,9 +1,6 @@
 import numpy as np
 from collections import defaultdict
 
-
-# from __future__ import annotations
-# from warshard.units import Unit
 from warshard.config import Config
 from warshard import utils
 
@@ -68,6 +65,7 @@ class Map:
         Does not chheck for stacking.
         """
 
+        # Only imported here and not at the beginning to prevent circular imports
         from warshard.units import (
             Unit,
         )  # TODO Find a way to move it back up so circular import is not a problem
@@ -193,7 +191,6 @@ class Hexagon:
             hex_not_in_enemy_zoc,
             hex_is_not_clear_but_friendly_occupied,
         )
-
 
     def get_neighbors(self, ensure_accessible_to_player_side=None):
         directions = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, -1), (-1, 1)]

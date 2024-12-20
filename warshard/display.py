@@ -14,7 +14,7 @@ class Displayer:
 
     def __init__(self) -> None:
 
-        # IMPORTANT : I think the scale and smoothscale methods are eating up a lot of CPU power !
+        # NOTE The scale and smoothscale methods are eating up a lot of CPU power !
         # So calculate them ONCE AND FOR ALL at the beginning, for all files !
 
         HEX_SIZE = DisplayConfig.HEX_SIZE
@@ -88,13 +88,11 @@ class Displayer:
                 # Draw hexagon grid
                 draw_hex_grid(screen, font_hex, map_to_draw, self.assets)
 
-                # Draw pawns
+                # Draw pawns for Units
                 for unit in gamestate_to_draw.map.all_units.values():
                     draw_unit(unit, screen, font, self.assets)
-                    # TODO careful about stacked units
 
-                # Draw information TODO make it programmatic fetch info
-                # like {gamestate_to_draw.current_turn_number}
+                # Draw game information
                 info_text = f"""
                 CURRENT TURN NUMBER:
                 66/10
@@ -120,8 +118,6 @@ class Displayer:
                     position=(DisplayConfig.WIDTH - 160, 50),
                     font=font_info,
                 )
-
-
 
                 pygame.display.flip()  # Update display
                 clock.tick(DisplayConfig.FPS)
@@ -182,8 +178,6 @@ def draw_hex_grid(screen, font, map_to_draw: Map, assets):
                     top_left_pos[1] + 1.2 * (HEX_SIZE),
                 ),
             )
-
-        # TODO also add hexagon name (ie. Marseille, Bastogne, etc.) if applicable
 
         # Display coordinates at the top part of the hexagon
         text_position = (
@@ -261,6 +255,3 @@ def draw_unit(unit: Unit, screen, font, assets):
         screen, (255, 255, 255), (pixel_x, pixel_y), radius=DisplayConfig.FONT_SIZE // 2
     )
     draw_text(screen, str(unit.id), (pixel_x, pixel_y), font, color=(255, 0, 0))
-
-    # TODO Also add name (both in the display and in the actual code) for special units like naming generals for each HQ
-
