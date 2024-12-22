@@ -55,7 +55,7 @@ class Game:
         self.current_active_player_id = (
             0  # The ID corresponds to a position in the self.players list
         )
-        self.current_turn_phase = None  # TODO Use this in asserts : checking the last phase which was run to ensure we cannot, for example, run attacker_combat_allocation_phase if movement_phase was not run before
+        self.current_turn_phase = None
         self.current_turn_number = 0
         self.scenario_max_turns = 100
 

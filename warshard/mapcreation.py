@@ -31,7 +31,7 @@ def read_status_from_yaml(
     game_to_update.players = yd.players
     game_to_update.current_turn_number = 0
     game_to_update.current_turn_phase = "TBD"  # TODO
-    game_to_update.max_turns = yd.max_turns  # TODO
+    game_to_update.scenario_max_turns = yd.scenario_max_turns  # TODO
 
     # TODO read yd.first_player_turn and set it
 

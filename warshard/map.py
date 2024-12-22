@@ -86,12 +86,6 @@ class Map:
 
         return self.all_units[id]
 
-    """ TODO
-
-    need to write this in doc somewhere, that all "force" functions can be used in debug)
-
-    """
-
 
 class Hexagon:
     def __init__(
@@ -153,9 +147,6 @@ class Hexagon:
     def xy_to_qr(x, y):
         q = x
         r = q // 2 + y
-        # TODO check this
-        # TODO use this when xy coords are given to get the qr that we need
-        # since the hexes are stored in all_hexes by their qr coordinates :)
         return (q, r)
 
     def __str__(self):
